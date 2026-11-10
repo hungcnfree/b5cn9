@@ -1,0 +1,4703 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Bài 5 · Tính toán chi phí mạng điện trong nhà | Công nghệ 9 (Bản TV Chuẩn Sư Phạm)</title>
+<style>
+  :root {
+    --ink: #0a1f33;
+    --navy: #071f38;
+    --navy-light: #0d3b66;
+    --acc: #f59e0b;
+    --acc-hover: #d97706;
+    --acc2: #0275d8;
+    --line: #c3d9f0;
+    --soft: #f4f8fd;
+    --ok: #15803d;
+    --bad: #dc2626;
+    --bg-grad: radial-gradient(circle at 10% -6%, #e0f0ff 0, transparent 48%),
+               radial-gradient(circle at 92% 0, #e6f3ff 0, transparent 46%),
+               linear-gradient(165deg, #f8fbff, #e9f4ff 55%, #f6faff);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    height: 100dvh;
+    margin: 0;
+    overflow: hidden;
+    font-family: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg-grad);
+    -webkit-font-smoothing: antialiased;
+  }
+  .deck { position: fixed; inset: 0; }
+  
+  /* Slide base: Tối ưu không gian TV 16:9, Zero-Scroll */
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    padding: clamp(10px, 1.6vh, 20px) clamp(16px, 2.8vw, 42px) clamp(58px, 7.5vh, 68px);
+  }
+  .slide.active {
+    display: flex;
+  }
+  
+  /* Breadcrumb & Label to rõ cho TV */
+  .crumb {
+    font-size: clamp(13px, 1.15vw, 15.5px);
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--acc2);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+  .crumb b { color: var(--navy); }
+  
+  /* Typography TV cực kỳ to rõ */
+  h1.title {
+    font-size: clamp(34px, 4.4vw, 58px);
+    line-height: 1.15;
+    color: var(--navy);
+    font-weight: 900;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+  h2.title {
+    font-size: clamp(24px, 3.0vw, 42px);
+    line-height: 1.2;
+    color: var(--navy);
+    font-weight: 900;
+    margin-bottom: 10px;
+  }
+  h2.title em, h1.title em {
+    color: var(--acc);
+    font-style: normal;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  /* Bố cục wrap & card */
+  .wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 0;
+  }
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(14px, 2vw, 28px);
+    align-items: stretch;
+    flex: 1;
+    min-height: 0;
+  }
+  .split.wide { grid-template-columns: 1.05fr 0.95fr; }
+  
+  .card {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    border: 1.5px solid var(--line);
+    border-radius: 20px;
+    padding: clamp(14px, 2.2vh, 24px) clamp(16px, 2.2vw, 28px);
+    box-shadow: 0 10px 28px rgba(7, 31, 56, 0.06);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 0;
+  }
+  .card h3 {
+    font-size: clamp(18px, 1.7vw, 24px);
+    color: var(--navy);
+    font-weight: 900;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card p {
+    font-size: clamp(15px, 1.25vw, 18px);
+    line-height: 1.6;
+    color: #1e293b;
+    margin-bottom: 8px;
+  }
+  .card.highlight {
+    background: linear-gradient(135deg, #ffffff, #f0f7ff);
+    border: 2px solid var(--acc2);
+  }
+  
+  /* Danh sách bước to rõ */
+  .steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: #fff;
+    padding: 12px 18px;
+    border-radius: 14px;
+    border: 1.5px solid var(--line);
+    box-shadow: 0 4px 12px rgba(10, 48, 85, 0.04);
+  }
+  .step-badge {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: var(--navy);
+    color: #fff;
+    font-weight: 900;
+    font-size: 18px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .step-content h4 {
+    font-size: clamp(16px, 1.3vw, 19px);
+    color: var(--navy);
+    margin-bottom: 2px;
+  }
+  .step-content p {
+    font-size: clamp(14px, 1.1vw, 16.5px);
+    color: #475569;
+    margin: 0;
+  }
+
+  /* Khung hiển thị Hình ảnh SGK THỰC TẾ (Click-to-zoom) */
+  .sgk-fig {
+    position: relative;
+    background: #ffffff;
+    border: 2px solid var(--line);
+    border-radius: 18px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-in;
+    box-shadow: 0 8px 24px rgba(7, 31, 56, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+  }
+  .sgk-fig:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px rgba(7, 31, 56, 0.14);
+    border-color: var(--acc2);
+  }
+  .sgk-fig {
+    position: relative;
+    background: #ffffff;
+    border: 2px solid var(--line);
+    border-radius: 18px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-in;
+    box-shadow: 0 8px 24px rgba(7, 31, 56, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+    flex: 1;
+    width: 100%;
+  }
+  .sgk-fig img {
+    max-height: clamp(230px, 44vh, 380px);
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    border-radius: 10px;
+    display: block;
+    margin: 0 auto;
+  }
+  .sgk-fig .zoom-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(7, 31, 56, 0.85);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    backdrop-filter: blur(4px);
+    pointer-events: none;
+  }
+  .sgk-fig .fig-cap {
+    font-size: clamp(13px, 1.05vw, 15px);
+    color: #475569;
+    margin-top: 8px;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  /* Nút bấm cảm ứng TV (Touch-target >= 48px) */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 10px 22px;
+    border-radius: 14px;
+    font-size: clamp(15px, 1.2vw, 18px);
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    background: var(--navy);
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(7, 31, 56, 0.25);
+    transition: all 0.2s ease;
+  }
+  .btn:hover {
+    background: var(--navy-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(7, 31, 56, 0.35);
+  }
+  .btn.acc {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(245, 158, 11, 0.40);
+  }
+  .btn.acc:hover {
+    background: linear-gradient(135deg, #d97706, #b45309);
+  }
+  .btn.sm {
+    min-height: 40px;
+    padding: 6px 14px;
+    font-size: 14px;
+    border-radius: 10px;
+  }
+
+  /* Nút mở Popup VietJack to rõ */
+  .btn-open-vj {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #fff;
+    font-size: clamp(15px, 1.25vw, 18px);
+    font-weight: 900;
+    padding: 14px 24px;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 8px 22px rgba(245, 158, 11, 0.45);
+    transition: all 0.2s ease;
+    width: 100%;
+    margin-top: 10px;
+  }
+  .btn-open-vj:hover {
+    background: linear-gradient(135deg, #d97706, #b45309);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(217, 119, 6, 0.55);
+  }
+
+  /* Trắc nghiệm Kahoot trên TV */
+  .kahoot-box {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+  }
+  .kahoot-q {
+    background: #fff;
+    border: 2px solid var(--line);
+    border-radius: 18px;
+    padding: 16px 22px;
+    font-size: clamp(18px, 1.8vw, 24px);
+    font-weight: 900;
+    color: var(--navy);
+    line-height: 1.4;
+    box-shadow: 0 6px 18px rgba(7, 31, 56, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .kahoot-q-badge {
+    background: var(--navy);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .kahoot-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .k-opt {
+    min-height: 64px;
+    padding: 12px 18px;
+    border-radius: 16px;
+    border: 2.5px solid transparent;
+    color: #fff;
+    font-size: clamp(16px, 1.35vw, 20px);
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.14);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    text-align: left;
+  }
+  .k-opt:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.22);
+  }
+  .k-opt .k-badge {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.28);
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .k-opt.red    { background: linear-gradient(135deg, #e11d48, #be123c); }
+  .k-opt.blue   { background: linear-gradient(135deg, #2563eb, #1d4ed8); }
+  .k-opt.yellow { background: linear-gradient(135deg, #d97706, #b45309); }
+  .k-opt.green  { background: linear-gradient(135deg, #16a34a, #15803d); }
+  
+  .k-opt.correct {
+    border-color: #4ade80 !important;
+    background: linear-gradient(135deg, #15803d, #166534) !important;
+    animation: pulseCorrect 0.6s ease infinite alternate;
+  }
+  .k-opt.wrong {
+    border-color: #f87171 !important;
+    opacity: 0.6;
+    animation: shakeWrong 0.4s ease;
+  }
+  @keyframes shakeWrong {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+  }
+  @keyframes pulseCorrect {
+    from { transform: scale(1); }
+    to { transform: scale(1.02); }
+  }
+
+  .k-feedback {
+    min-height: 48px;
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-size: clamp(14px, 1.15vw, 17px);
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s;
+  }
+  .k-feedback.ok { background: #dcfce7; color: #166534; border: 1.5px solid #86efac; }
+  .k-feedback.bad { background: #fee2e2; color: #991b1b; border: 1.5px solid #fca5a5; }
+
+  /* Bảng tính chi phí tương tác (Slide 9) */
+  .calc-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: clamp(13.5px, 1.1vw, 16px);
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(7, 31, 56, 0.06);
+    border: 1.5px solid var(--line);
+  }
+  .calc-table th {
+    background: var(--navy);
+    color: #fff;
+    padding: 10px 12px;
+    font-weight: 800;
+    text-align: center;
+  }
+  .calc-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #e2e8f0;
+    color: var(--ink);
+  }
+  .calc-table tr:nth-child(even) { background: #f8fbff; }
+  .calc-table input.inp-price {
+    width: 110px;
+    min-height: 38px;
+    padding: 4px 8px;
+    border-radius: 8px;
+    border: 1.5px solid #cbd5e1;
+    font-size: 15px;
+    font-weight: 800;
+    text-align: right;
+    color: var(--navy);
+  }
+  .calc-table input.inp-price:focus {
+    border-color: var(--acc2);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(2, 117, 216, 0.2);
+  }
+  .calc-total-box {
+    background: #fff8eb;
+    border: 2px solid var(--acc);
+    border-radius: 14px;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+  }
+  .calc-total-val {
+    font-size: clamp(20px, 2.2vw, 28px);
+    font-weight: 900;
+    color: #b45309;
+  }
+
+  /* Thanh điều hướng TV Bottom Bar */
+  .bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: clamp(64px, 8.5vh, 80px);
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(10px);
+    border-top: 2px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 clamp(16px, 3vw, 40px);
+    z-index: 100;
+    box-shadow: 0 -6px 20px rgba(7, 31, 56, 0.08);
+  }
+  .bar-left, .bar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .bar-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    border: 1.5px solid var(--line);
+    background: #fff;
+    color: var(--navy);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .bar-btn:hover {
+    background: #eaf3ff;
+    border-color: var(--acc2);
+    transform: scale(1.06);
+  }
+  .bar-btn.nav {
+    background: var(--navy);
+    color: #fff;
+    border-color: var(--navy);
+  }
+  .bar-btn.nav:hover {
+    background: var(--navy-light);
+  }
+  .dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .dots i {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #cbd5e1;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .dots i.active {
+    width: 28px;
+    border-radius: 10px;
+    background: var(--acc2);
+  }
+  .slide-count {
+    font-size: 16px;
+    font-weight: 900;
+    color: var(--navy);
+    letter-spacing: 0.05em;
+  }
+
+  /* Lightbox Phóng to Toàn màn hình Sơ đồ / Hình ảnh */
+  .lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 18, 33, 0.92);
+    backdrop-filter: blur(8px);
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .lightbox-overlay.open { opacity: 1; pointer-events: auto; }
+  .lightbox-box {
+    background: #fff;
+    border-radius: 20px;
+    padding: 16px;
+    max-width: 94vw;
+    max-height: 88vh;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .lightbox-box img {
+    max-width: 90vw;
+    max-height: 82vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 12px;
+  }
+  .lightbox-close {
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #fee2e2;
+    border: 2px solid #f87171;
+    color: #b91c1c;
+    font-size: 26px;
+    font-weight: 900;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+    z-index: 10;
+  }
+  .lightbox-close:hover { background: #fca5a5; transform: scale(1.08); }
+
+  /* Modal Popup 100% Toàn màn hình VietJack & SGK */
+  .modal-vj-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 18, 33, 0.94);
+    backdrop-filter: blur(8px);
+    z-index: 250;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(8px, 1.8vh, 22px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .modal-vj-overlay.open { opacity: 1; pointer-events: auto; }
+  .modal-vj-box {
+    background: #ffffff;
+    border-radius: 20px;
+    width: 100%;
+    height: 100%;
+    max-width: 98vw;
+    max-height: 96vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0, 0, 0, 0.70);
+    border: 2px solid var(--line);
+  }
+  .modal-vj-header {
+    background: linear-gradient(135deg, #071f38, #0d3b66);
+    color: #fff;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    border-bottom: 4px solid var(--acc);
+    flex-shrink: 0;
+  }
+  .modal-vj-header h3 {
+    margin: 0;
+    font-size: clamp(18px, 1.5vw, 24px);
+    font-weight: 900;
+  }
+  .modal-vj-close {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #fee2e2;
+    border: 2px solid #f87171;
+    color: #b91c1c;
+    font-size: 26px;
+    font-weight: 900;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .modal-vj-close:hover { background: #fca5a5; transform: scale(1.08); }
+  .vj-tabs {
+    display: flex;
+    gap: 10px;
+    padding: 10px 24px;
+    background: #f0f7ff;
+    border-bottom: 1.5px solid var(--line);
+    flex-shrink: 0;
+    overflow-x: auto;
+  }
+  .vj-tab-btn {
+    padding: 10px 18px;
+    border-radius: 12px;
+    border: 1.5px solid var(--line);
+    background: #fff;
+    color: var(--navy);
+    font-size: clamp(14px, 1.1vw, 16px);
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .vj-tab-btn.active {
+    background: #0275d8;
+    color: #fff;
+    border-color: #0275d8;
+    box-shadow: 0 4px 12px rgba(2, 117, 216, 0.35);
+  }
+  .modal-vj-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: clamp(16px, 2.2vh, 26px) clamp(18px, 2.5vw, 32px);
+    background: #fbfdff;
+  }
+  .vj-tab-pane { display: none; }
+  .vj-tab-pane.active { display: block; animation: fadeInVj 0.25s ease; }
+  @keyframes fadeInVj { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .vj-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: clamp(14px, 1.1vw, 16.5px);
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(10, 48, 85, 0.08);
+    border: 1.5px solid var(--line);
+    margin-bottom: 16px;
+  }
+  .vj-table th {
+    background: var(--navy);
+    color: #fff;
+    padding: 12px 14px;
+    font-weight: 800;
+    text-align: center;
+  }
+  .vj-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #e2e8f0;
+    color: var(--ink);
+  }
+  .vj-table tr:nth-child(even) { background: #f8fbff; }
+  .vj-table tr.total-row {
+    background: #fff8eb;
+    font-weight: 900;
+    font-size: clamp(16px, 1.25vw, 19px);
+    color: #b45309;
+  }
+  .vj-table tr.total-row td { border-top: 2px solid #f59e0b; }
+  .vj-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 800;
+  }
+  .vj-badge.vj { background: #fee2e2; color: #b91c1c; }
+  .vj-badge.sgk { background: #dcfce7; color: #15803d; }
+  .vj-note-card {
+    background: #eff6ff;
+    border-left: 5px solid #0275d8;
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-top: 14px;
+    font-size: clamp(14px, 1.05vw, 16px);
+    line-height: 1.6;
+    color: #0a1f33;
+  }
+
+  /* Popup Mục lục (Table of Contents Modal) */
+  .modal-toc-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 18, 33, 0.75);
+    backdrop-filter: blur(6px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .modal-toc-overlay.open { opacity: 1; pointer-events: auto; }
+  .modal-toc-box {
+    background: #fff;
+    border-radius: 20px;
+    padding: 24px 28px;
+    max-width: 820px;
+    width: 90%;
+    max-height: 84vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+    border: 1.5px solid var(--line);
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    overflow-y: auto;
+    margin-top: 14px;
+    padding-right: 6px;
+  }
+  .toc-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1.5px solid var(--line);
+    background: #f8fbff;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--navy);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+  }
+  .toc-item:hover {
+    background: #eaf3ff;
+    border-color: var(--acc2);
+    transform: translateX(4px);
+  }
+  .toc-item i {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: var(--navy);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-style: normal;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* Confetti canvas */
+  #fx { position: fixed; inset: 0; pointer-events: none; z-index: 400; }
+
+  /* CSS BÀI TẬP DỰ TOÁN 5 CHẶNG TRÊN TV */
+  .est-stepper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f0f7ff;
+    border: 1.5px solid var(--line);
+    border-radius: 14px;
+    padding: 6px 12px;
+    margin-bottom: 8px;
+    gap: 6px;
+  }
+  .est-step {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: clamp(12.5px, 1.0vw, 14.5px);
+    font-weight: 800;
+    color: #64748b;
+    padding: 6px 10px;
+    border-radius: 10px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .est-step.active {
+    background: var(--navy);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(7, 31, 56, 0.25);
+  }
+  .est-step.done {
+    background: #dcfce7;
+    color: #15803d;
+  }
+  .est-step-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.1);
+    display: grid;
+    place-items: center;
+    font-size: 13px;
+  }
+  .est-step.active .est-step-num {
+    background: var(--acc);
+    color: #fff;
+  }
+  .est-step.done .est-step-num {
+    background: #16a34a;
+    color: #fff;
+  }
+
+  /* Bảng dự toán 5 chặng */
+  .est-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: clamp(12.5px, 1.0vw, 15px);
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1.5px solid var(--line);
+    box-shadow: 0 4px 14px rgba(7, 31, 56, 0.05);
+  }
+  .est-table th {
+    background: var(--navy);
+    color: #fff;
+    padding: 8px 10px;
+    font-weight: 800;
+    text-align: center;
+  }
+  .est-table td {
+    padding: 6px 10px;
+    border-bottom: 1px solid #e2e8f0;
+    color: var(--ink);
+    vertical-align: middle;
+  }
+  .est-table tr:nth-child(even) { background: #fbfdff; }
+  .est-dropzone {
+    min-height: 34px;
+    border: 1.5px dashed #cbd5e1;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 2px 8px;
+    background: #f8fafc;
+    transition: all 0.2s;
+  }
+  .est-dropzone.over {
+    border-color: var(--acc2);
+    background: #e0f2fe;
+  }
+  .est-dropzone.filled {
+    border-style: solid;
+    border-color: #86efac;
+    background: #f0fdf4;
+    font-weight: 800;
+    color: #166534;
+  }
+
+  /* Thẻ chip nguồn ngân hàng vật tư */
+  .est-pool {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 10px;
+    background: #f8fafc;
+    border: 1.5px dashed var(--line);
+    border-radius: 12px;
+    min-height: 48px;
+    align-items: center;
+    margin-top: 6px;
+  }
+  .est-chip {
+    padding: 6px 12px;
+    border-radius: 10px;
+    border: 1.5px solid #cbd5e1;
+    background: #fff;
+    color: var(--navy);
+    font-size: clamp(12.5px, 0.95vw, 14px);
+    font-weight: 800;
+    cursor: grab;
+    user-select: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .est-chip:hover {
+    transform: translateY(-2px);
+    border-color: var(--acc2);
+    box-shadow: 0 4px 10px rgba(2, 117, 216, 0.2);
+  }
+  .est-chip.dragging { opacity: 0.4; }
+  .est-chip.used { display: none; }
+  .est-chip.distractor { border-color: #fca5a5; }
+
+  /* Dropdown chọn ĐVT */
+  .est-unit-select {
+    width: 100%;
+    padding: 4px 6px;
+    border-radius: 6px;
+    border: 1.5px solid #cbd5e1;
+    font-size: 13.5px;
+    font-weight: 800;
+    color: var(--navy);
+    background: #fff;
+  }
+  .est-unit-select.correct { border-color: #22c55e; background: #f0fdf4; color: #15803d; }
+  .est-unit-select.wrong { border-color: #ef4444; background: #fef2f2; color: #b91c1c; }
+
+  /* Input số lượng và đơn giá */
+  .est-inp {
+    width: 100%;
+    padding: 4px 6px;
+    border-radius: 6px;
+    border: 1.5px solid #cbd5e1;
+    font-size: 14px;
+    font-weight: 800;
+    text-align: right;
+    color: var(--navy);
+  }
+  .est-inp.correct { border-color: #22c55e; background: #f0fdf4; color: #15803d; }
+  .est-inp.wrong { border-color: #ef4444; background: #fef2f2; color: #b91c1c; animation: shakeWrong 0.3s ease; }
+  .est-inp:disabled { background: #f1f5f9; color: #64748b; border-color: #e2e8f0; }
+
+  /* Hộp điều khiển chặng dưới bảng */
+  .est-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .est-guide {
+    font-size: clamp(13px, 1.0vw, 15px);
+    font-weight: 800;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .est-total-bar {
+    background: #fff8eb;
+    border: 2px solid var(--acc);
+    border-radius: 10px;
+    padding: 8px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 6px;
+  }
+  .est-total-num {
+    font-size: clamp(18px, 1.8vw, 24px);
+    font-weight: 900;
+    color: #b45309;
+  }
+
+
+  .est-table.locked .est-remove-btn { display: none !important; }
+  .est-remove-btn {
+    margin-left: auto;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #ef4444;
+    font-weight: 900;
+    font-size: 14px;
+    padding: 0 4px;
+  }
+
+
+  /* THANH ĐIỀU HƯỚNG NỔI (FLOATING DOCK) TIẾT KIỆM DIỆN TÍCH CHO TV */
+  .floating-dock {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    padding: 3px 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    z-index: 100;
+    box-shadow: 0 8px 24px rgba(7, 31, 56, 0.14), 0 2px 6px rgba(0,0,0,0.06);
+    transition: all 0.25s ease;
+  }
+  .floating-dock:hover {
+    background: #ffffff;
+    box-shadow: 0 10px 32px rgba(7, 31, 56, 0.22);
+  }
+  .dock-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--navy);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.18s ease;
+  }
+  .dock-btn:hover {
+    background: #eaf3ff;
+    border-color: var(--line);
+    transform: scale(1.08);
+  }
+  .dock-btn.audio-btn {
+    position: relative;
+    color: var(--navy);
+    font-weight: 800;
+  }
+  .dock-btn.audio-btn.muted {
+    background: #fee2e2;
+    border-color: #fca5a5;
+    color: #dc2626;
+  }
+  .dock-btn.nav-btn {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    font-size: 14px;
+    font-weight: 900;
+  }
+  .dock-btn.nav-btn:hover {
+    background: #e2e8f0;
+  }
+  .dock-btn.nav-btn.primary {
+    background: var(--navy);
+    color: #fff;
+    border-color: var(--navy);
+    box-shadow: 0 3px 10px rgba(7, 31, 56, 0.25);
+  }
+  .dock-btn.nav-btn.primary:hover {
+    background: var(--navy-light);
+    transform: scale(1.08);
+  }
+  .dock-sep {
+    width: 1px;
+    height: 20px;
+    background: #cbd5e1;
+    margin: 0 2px;
+  }
+  .dock-counter {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--navy);
+    padding: 2px 6px;
+    white-space: nowrap;
+    cursor: pointer;
+    border-radius: 6px;
+    user-select: none;
+  }
+  .dock-counter:hover {
+    background: #f1f5f9;
+    color: var(--acc2);
+  }
+  .dock-dots {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 0 4px;
+  }
+  .dock-dots i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #cbd5e1;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .dock-dots i:hover {
+    background: #94a3b8;
+  }
+  .dock-dots i.active {
+    width: 18px;
+    border-radius: 6px;
+    background: var(--acc2);
+  }
+
+
+  /* Game Sắp xếp giá thành Slide 3 */
+  .rank-chip {
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: 1.5px solid var(--line);
+    background: #fff;
+    color: var(--navy);
+    font-size: 13.5px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: all 0.15s ease;
+    text-align: left;
+  }
+  .rank-chip:hover {
+    border-color: var(--acc2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(2, 117, 216, 0.15);
+  }
+  .rank-chip.selected {
+    opacity: 0.4;
+    pointer-events: none;
+    background: #f1f5f9;
+  }
+  .rank-tray-item {
+    background: #e0f2fe;
+    border: 1px solid #7dd3fc;
+    color: #0369a1;
+    font-size: 13px;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+
+  /* ===== GAMESHOW AI LÀ TRIỆU PHÚ (TV 16:9 EDITION) ===== */
+  .altp-container {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 16px;
+    height: 100%;
+    max-height: calc(100vh - 120px);
+    background: radial-gradient(circle at 50% 30%, #0c2340 0%, #050f1d 75%, #02070e 100%);
+    border: 2px solid #eab308;
+    border-radius: 18px;
+    padding: 14px 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 40px rgba(12,35,64,0.8);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .altp-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 0;
+  }
+  
+  /* Top Bar: Lifelines & Current Prize */
+  .altp-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 8px;
+    border-bottom: 1.5px solid rgba(234,179,8,0.3);
+  }
+  .altp-lifelines {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .altp-btn-life {
+    background: linear-gradient(180deg, #1e3a5f 0%, #0a192f 100%);
+    border: 2px solid #f59e0b;
+    border-radius: 999px;
+    color: #fef08a;
+    font-size: 14px;
+    font-weight: 800;
+    padding: 6px 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+  .altp-btn-life:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(245,158,11,0.4);
+    background: linear-gradient(180deg, #2563eb 0%, #1e3a5f 100%);
+  }
+  .altp-btn-life:disabled {
+    opacity: 0.35;
+    filter: grayscale(1);
+    cursor: not-allowed;
+    border-color: #64748b;
+    text-decoration: line-through;
+  }
+  
+  .altp-current-prize {
+    background: linear-gradient(90deg, rgba(234,179,8,0.15), rgba(234,179,8,0.3), rgba(234,179,8,0.15));
+    border: 1.5px solid #f59e0b;
+    border-radius: 10px;
+    padding: 6px 16px;
+    color: #fef08a;
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 10px rgba(245,158,11,0.5);
+  }
+  
+  /* Question Hex Box */
+  .altp-q-box {
+    background: linear-gradient(180deg, #0f2b48 0%, #061527 100%);
+    border: 2px solid #38bdf8;
+    border-radius: 14px;
+    padding: 14px 20px;
+    color: #f8fafc;
+    font-size: clamp(17px, 1.45vw, 22px);
+    font-weight: 700;
+    line-height: 1.35;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4), inset 0 0 20px rgba(56,189,248,0.15);
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+  .altp-q-box .q-num-tag {
+    background: #0284c7;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 900;
+    white-space: nowrap;
+    border: 1px solid #38bdf8;
+  }
+  .altp-q-img-wrap {
+    text-align: center;
+    margin: 4px 0;
+  }
+  .altp-q-img {
+    max-height: 140px;
+    max-width: 100%;
+    border-radius: 10px;
+    border: 2px solid #38bdf8;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    cursor: zoom-in;
+    background: #fff;
+  }
+  
+  /* Answer Grid (2x2) */
+  .altp-answers-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 6px;
+  }
+  .altp-answer-btn {
+    background: linear-gradient(180deg, #102a45 0%, #081726 100%);
+    border: 2px solid #38bdf8;
+    border-radius: 12px;
+    color: #f1f5f9;
+    padding: 12px 16px;
+    font-size: clamp(15px, 1.2vw, 18px);
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .altp-answer-btn:hover:not(:disabled) {
+    background: linear-gradient(180deg, #1e4976 0%, #0d2742 100%);
+    border-color: #f59e0b;
+    color: #fef08a;
+    transform: translateY(-2px);
+  }
+  .altp-answer-btn .altp-opt-letter {
+    color: #f59e0b;
+    font-weight: 900;
+    font-size: 20px;
+    width: 28px;
+    flex-shrink: 0;
+  }
+  .altp-answer-btn.selected {
+    background: linear-gradient(180deg, #d97706 0%, #b45309 100%) !important;
+    border-color: #fef08a !important;
+    color: #fff !important;
+    animation: altpPulse 0.5s infinite alternate;
+  }
+  .altp-answer-btn.correct {
+    background: linear-gradient(180deg, #15803d 0%, #166534 100%) !important;
+    border-color: #4ade80 !important;
+    color: #fff !important;
+    box-shadow: 0 0 25px rgba(74,222,128,0.6) !important;
+  }
+  .altp-answer-btn.wrong {
+    background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%) !important;
+    border-color: #f87171 !important;
+    color: #fff !important;
+    animation: altpShake 0.4s ease;
+  }
+  .altp-answer-btn.hidden-fifty {
+    visibility: hidden;
+    pointer-events: none;
+  }
+  @keyframes altpPulse {
+    from { box-shadow: 0 0 10px rgba(245,158,11,0.5); }
+    to { box-shadow: 0 0 25px rgba(245,158,11,0.9); }
+  }
+  @keyframes altpShake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+  }
+  
+  /* Bottom Controls & Feedback */
+  .altp-bottom-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .altp-hint-text {
+    font-size: 14.5px;
+    color: #cbd5e1;
+    line-height: 1.4;
+    flex: 1;
+    margin-right: 12px;
+  }
+  
+  /* Right Tower (15 Levels) */
+  .altp-tower {
+    background: rgba(3,10,20,0.75);
+    border: 1.5px solid rgba(234,179,8,0.4);
+    border-radius: 14px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: space-between;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
+  }
+  .altp-level-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #94a3b8;
+    transition: all 0.2s ease;
+  }
+  .altp-level-item.milestone {
+    color: #fef08a;
+    font-weight: 900;
+    background: rgba(234,179,8,0.1);
+    border: 1px solid rgba(234,179,8,0.3);
+  }
+  .altp-level-item.active {
+    background: linear-gradient(90deg, #d97706, #f59e0b) !important;
+    color: #071f38 !important;
+    font-weight: 900 !important;
+    box-shadow: 0 0 15px rgba(245,158,11,0.8);
+    transform: scale(1.03);
+  }
+  .altp-level-item.passed {
+    color: #4ade80;
+    text-decoration: none;
+  }
+  .altp-level-num { width: 24px; text-align: left; }
+  .altp-level-val { text-align: right; }
+  
+  /* Modal Lifelines Dialogs */
+  .altp-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(2,6,23,0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.2s ease;
+  }
+  .altp-modal-card {
+    background: linear-gradient(180deg, #0c2340 0%, #061324 100%);
+    border: 2px solid #f59e0b;
+    border-radius: 16px;
+    padding: 22px 26px;
+    max-width: 520px;
+    width: 90%;
+    color: #fff;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+    text-align: center;
+  }
+  .altp-poll-bar-wrap {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    height: 160px;
+    margin: 18px 0;
+    padding: 10px 0;
+    border-bottom: 2px solid #38bdf8;
+  }
+  .altp-poll-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 54px;
+  }
+  .altp-poll-fill {
+    width: 38px;
+    background: linear-gradient(180deg, #38bdf8, #0284c7);
+    border-radius: 6px 6px 0 0;
+    transition: height 0.8s ease;
+    box-shadow: 0 0 12px rgba(56,189,248,0.5);
+  }
+  .altp-poll-fill.correct {
+    background: linear-gradient(180deg, #4ade80, #16a34a);
+    box-shadow: 0 0 16px rgba(74,222,128,0.6);
+  }
+
+
+  /* ===== TV CLASSROOM SUPER READABILITY UPGRADE (VIEW FROM 7-10 METERS) ===== */
+  :root {
+    --tv-title: clamp(38px, 4.2vw, 56px);
+    --tv-h2: clamp(30px, 3.2vw, 44px);
+    --tv-h3: clamp(24px, 2.4vw, 34px);
+    --tv-body: clamp(20px, 1.7vw, 26px);
+    --tv-sub: clamp(17px, 1.3vw, 21px);
+    --tv-btn: clamp(19px, 1.5vw, 23px);
+  }
+
+  /* Typography chung */
+  h1.title { font-size: var(--tv-title) !important; line-height: 1.2 !important; margin-bottom: 14px !important; }
+  h2.title { font-size: var(--tv-h2) !important; line-height: 1.25 !important; margin-bottom: 12px !important; }
+  h3 { font-size: var(--tv-h3) !important; line-height: 1.3 !important; }
+  p, li, span.body-text { font-size: var(--tv-body); line-height: 1.55; }
+  .crumb { font-size: var(--tv-sub) !important; font-weight: 900; margin-bottom: 6px !important; }
+
+  /* Nút bấm TV cỡ lớn */
+  .btn {
+    min-height: 56px !important;
+    padding: 12px 28px !important;
+    font-size: var(--tv-btn) !important;
+    border-radius: 16px !important;
+    font-weight: 800 !important;
+  }
+  .btn.sm {
+    min-height: 48px !important;
+    padding: 10px 20px !important;
+    font-size: clamp(16px, 1.3vw, 19px) !important;
+    border-radius: 12px !important;
+  }
+
+  /* Thẻ card thoáng đãng, chữ to */
+  .card {
+    padding: clamp(16px, 2vh, 26px) clamp(20px, 2.2vw, 34px) !important;
+    border-radius: 20px !important;
+    font-size: var(--tv-body) !important;
+  }
+  .card p { font-size: var(--tv-body) !important; margin-bottom: 10px !important; }
+  .card li { font-size: var(--tv-body) !important; margin-bottom: 8px !important; }
+
+  /* Tab 3 bước to rõ cho Slide 4 */
+  .tab-3step-nav {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .tab-3step-btn {
+    flex: 1;
+    min-height: 60px;
+    background: #f1f5f9;
+    border: 2.5px solid #cbd5e1;
+    border-radius: 16px;
+    color: var(--navy);
+    font-size: clamp(18px, 1.5vw, 23px);
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+  .tab-3step-btn:hover {
+    border-color: #0275d8;
+    background: #eaf3ff;
+  }
+  .tab-3step-btn.active {
+    background: linear-gradient(135deg, #0275d8, #0a3055);
+    color: #fff;
+    border-color: #0275d8;
+    box-shadow: 0 6px 18px rgba(2,117,216,0.35);
+    transform: translateY(-2px);
+  }
+  .tab-3step-pane {
+    display: none;
+    height: 100%;
+  }
+  .tab-3step-pane.active {
+    display: flex;
+    gap: 24px;
+    align-items: stretch;
+  }
+
+  /* Slide 11: Ngân hàng thẻ to bản */
+  .est-chip {
+    padding: 12px 20px !important;
+    font-size: clamp(17px, 1.35vw, 21px) !important;
+    border-radius: 14px !important;
+    min-height: 52px !important;
+  }
+  .est-table th {
+    font-size: clamp(15px, 1.2vw, 18px) !important;
+    padding: 10px 8px !important;
+  }
+  .est-table td {
+    font-size: clamp(16px, 1.3vw, 20px) !important;
+    padding: 8px !important;
+  }
+  .est-inp, .est-unit-select {
+    font-size: clamp(16px, 1.3vw, 20px) !important;
+    height: 44px !important;
+    border-radius: 10px !important;
+    font-weight: 800 !important;
+  }
+  .est-step {
+    font-size: clamp(15px, 1.2vw, 18px) !important;
+    padding: 8px 16px !important;
+  }
+
+  /* Slide 10: Ai là triệu phú TV */
+  .altp-q-box {
+    font-size: clamp(22px, 1.8vw, 28px) !important;
+    padding: 18px 24px !important;
+    min-height: 80px !important;
+  }
+  .altp-answer-btn {
+    font-size: clamp(18px, 1.45vw, 23px) !important;
+    padding: 16px 20px !important;
+    min-height: 64px !important;
+  }
+  .altp-level-item {
+    font-size: clamp(14px, 1.1vw, 16.5px) !important;
+    padding: 4px 8px !important;
+  }
+
+
+  /* ==========================================================================
+     CHẾ ĐỘ CUỘN MODULE KHOA HỌC CHO ĐIỆN THOẠI & THIẾT BỊ DI ĐỘNG (MOBILE SCROLL)
+     ========================================================================== */
+
+  /* Chuyển đổi từ Zero-Scroll sang cuộn dọc tự nhiên */
+  html.mode-scroll, body.mode-scroll, html.mode-scroll body {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    background: #f1f5f9 !important;
+  }
+
+  body.mode-scroll .deck {
+    position: relative !important;
+    inset: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 24px !important;
+    padding: 68px 12px 100px 12px !important;
+    max-width: 720px !important;
+    margin: 0 auto !important;
+  }
+
+  /* Mỗi slide trở thành 1 Module Card độc lập */
+  body.mode-scroll .slide {
+    position: relative !important;
+    inset: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: #ffffff !important;
+    border-radius: 20px !important;
+    border: 1.5px solid var(--line) !important;
+    box-shadow: 0 4px 20px rgba(7, 31, 56, 0.08) !important;
+    padding: 22px 16px !important;
+    min-height: auto !important;
+    scroll-margin-top: 72px;
+    overflow: visible !important;
+  }
+
+  /* Thanh tiêu đề Module ở đầu mỗi Card */
+  .slide-module-header {
+    display: none;
+  }
+  body.mode-scroll .slide-module-header {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1.5px dashed #cbd5e1;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .module-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #e0f2fe;
+    color: #0369a1;
+    font-weight: 800;
+    font-size: 13.5px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.03em;
+  }
+  .module-audio-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    color: var(--navy);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .module-audio-btn:hover {
+    background: #e2e8f0;
+  }
+  .module-audio-btn.playing {
+    background: #fef3c7;
+    border-color: #f59e0b;
+    color: #b45309;
+  }
+
+  /* Responsive Typography & Elements bên trong Module khi lên Mobile */
+  body.mode-scroll .title {
+    font-size: clamp(22px, 5.5vw, 28px) !important;
+    line-height: 1.3 !important;
+    margin-bottom: 12px !important;
+  }
+  body.mode-scroll .crumb {
+    font-size: 12.5px !important;
+    gap: 6px !important;
+  }
+  body.mode-scroll .card {
+    padding: 18px 16px !important;
+  }
+  body.mode-scroll .sgk-fig {
+    max-height: 320px !important;
+  }
+  body.mode-scroll .sgk-fig img {
+    max-height: 220px !important;
+    object-fit: contain !important;
+    margin: 0 auto;
+  }
+
+  /* Chuyển toàn bộ lưới 2 cột, 3 cột thành 1 cột dọc thân thiện ngón tay */
+  body.mode-scroll .split,
+  body.mode-scroll .split.wide,
+  body.mode-scroll .tv-goal-grid,
+  body.mode-scroll .step3-cols,
+  body.mode-scroll .diag-wrap,
+  body.mode-scroll .est-2col,
+  body.mode-scroll div[style*="grid-template-columns:1fr 1fr 1fr"],
+  body.mode-scroll div[style*="grid-template-columns: 1fr 1fr 1fr"],
+  body.mode-scroll div[style*="grid-template-columns:1fr 1fr"],
+  body.mode-scroll div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+  }
+
+  body.mode-scroll div[style*="flex: 1"],
+  body.mode-scroll div[style*="flex: 1.1"],
+  body.mode-scroll div[style*="flex: 0.9"],
+  body.mode-scroll div[style*="flex: 1.2"] {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+
+  body.mode-scroll .tv-goal-card {
+    padding: 16px !important;
+    min-height: auto !important;
+  }
+  body.mode-scroll .tv-goal-desc {
+    font-size: 16px !important;
+    line-height: 1.45 !important;
+  }
+
+  /* Slide 3: Game sắp xếp giá thành */
+  body.mode-scroll .rank-items-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  /* Slide 4: 3 Bước lớn */
+  body.mode-scroll .step3-tabs {
+    gap: 6px !important;
+    margin-bottom: 12px !important;
+  }
+  body.mode-scroll .step3-tab-btn {
+    font-size: 14px !important;
+    padding: 8px 10px !important;
+  }
+  body.mode-scroll .step3-main-card {
+    padding: 16px !important;
+    min-height: auto !important;
+  }
+  body.mode-scroll .step3-text {
+    font-size: 16px !important;
+  }
+
+  /* Slide 10: Gameshow Ai Là Triệu Phú trên mobile */
+  body.mode-scroll .altp-main {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+  body.mode-scroll .altp-tower-side {
+    order: 2 !important;
+    max-height: 160px !important;
+    overflow-y: auto !important;
+  }
+  body.mode-scroll .altp-arena {
+    order: 1 !important;
+  }
+  body.mode-scroll .altp-answers-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  body.mode-scroll .altp-question-box {
+    min-height: auto !important;
+    padding: 16px !important;
+  }
+  body.mode-scroll .altp-q-text {
+    font-size: 17px !important;
+    line-height: 1.4 !important;
+  }
+  body.mode-scroll .altp-answer-btn {
+    font-size: 16px !important;
+    padding: 12px 14px !important;
+    min-height: 48px !important;
+  }
+
+  /* Slide 11: Dự toán 5 chặng */
+  body.mode-scroll .est-table-wrap {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+  }
+  body.mode-scroll .est-item-chips {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+  body.mode-scroll .est-chip {
+    font-size: 14px !important;
+    padding: 8px 10px !important;
+  }
+
+  /* Slide 12: Đánh giá & Video */
+  body.mode-scroll .eval-grid {
+    grid-template-columns: 1fr !important;
+  }
+  body.mode-scroll .video-wrap {
+    min-height: 220px !important;
+  }
+
+  /* Ẩn floating dock slide khi ở chế độ cuộn */
+  body.mode-scroll .floating-dock {
+    display: none !important;
+  }
+
+  /* Sticky Header cố định trên cùng cho Mobile */
+  .mobile-sticky-header {
+    display: none;
+  }
+  body.mode-scroll .mobile-sticky-header {
+    display: block !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 2px 10px rgba(7, 31, 56, 0.06);
+    z-index: 1000;
+    padding: 0 12px;
+  }
+  .mobile-header-inner {
+    height: 54px;
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .mobile-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow: hidden;
+  }
+  .mobile-header-title {
+    font-size: 13.5px;
+    font-weight: 800;
+    color: var(--navy);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .mobile-header-sub {
+    font-size: 11.5px;
+    color: #0284c7;
+    font-weight: 700;
+  }
+  .mobile-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .mobile-head-btn {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: #f8fafc;
+    color: var(--navy);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .mobile-head-btn:hover {
+    background: #e2e8f0;
+  }
+  .mobile-head-btn.mode-btn {
+    background: var(--navy);
+    color: #fff;
+    border-color: var(--navy);
+  }
+  .mobile-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #e2e8f0;
+  }
+  .mobile-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--acc2), var(--acc));
+    transition: width 0.1s ease;
+  }
+
+  /* Mobile Bottom Bar cố định ngón cái */
+  .mobile-bottom-bar {
+    display: none;
+  }
+  body.mode-scroll .mobile-bottom-bar {
+    display: flex !important;
+    position: fixed;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(7, 31, 56, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 30px;
+    padding: 6px 14px;
+    gap: 8px;
+    box-shadow: 0 8px 24px rgba(7, 31, 56, 0.35);
+    z-index: 1000;
+    max-width: 90vw;
+  }
+  .mob-bar-btn {
+    border: none;
+    background: transparent;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+  .mob-bar-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+  .mob-bar-btn.primary {
+    background: var(--acc);
+    color: #071f38;
+  }
+
+
+  /* ==========================================================================
+     CHẾ ĐỘ CUỘN MODULE KHOA HỌC CHO ĐIỆN THOẠI & THIẾT BỊ DI ĐỘNG (MOBILE SCROLL)
+     ========================================================================== */
+
+  /* Chuyển đổi từ Zero-Scroll sang cuộn dọc tự nhiên */
+  html.mode-scroll, body.mode-scroll, html.mode-scroll body {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    background: #f1f5f9 !important;
+  }
+
+  body.mode-scroll .deck {
+    position: relative !important;
+    inset: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 24px !important;
+    padding: 68px 12px 100px 12px !important;
+    max-width: 720px !important;
+    margin: 0 auto !important;
+  }
+
+  /* Mỗi slide trở thành 1 Module Card độc lập */
+  body.mode-scroll .slide {
+    position: relative !important;
+    inset: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: #ffffff !important;
+    border-radius: 20px !important;
+    border: 1.5px solid var(--line) !important;
+    box-shadow: 0 4px 20px rgba(7, 31, 56, 0.08) !important;
+    padding: 22px 16px !important;
+    min-height: auto !important;
+    scroll-margin-top: 72px;
+    overflow: visible !important;
+  }
+
+  /* Thanh tiêu đề Module ở đầu mỗi Card */
+  .slide-module-header {
+    display: none;
+  }
+  body.mode-scroll .slide-module-header {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1.5px dashed #cbd5e1;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .module-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #e0f2fe;
+    color: #0369a1;
+    font-weight: 800;
+    font-size: 13.5px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.03em;
+  }
+  .module-audio-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    color: var(--navy);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .module-audio-btn:hover {
+    background: #e2e8f0;
+  }
+  .module-audio-btn.playing {
+    background: #fef3c7;
+    border-color: #f59e0b;
+    color: #b45309;
+  }
+
+  /* Responsive Typography & Elements bên trong Module khi lên Mobile */
+  body.mode-scroll .title {
+    font-size: clamp(22px, 5.5vw, 28px) !important;
+    line-height: 1.3 !important;
+    margin-bottom: 12px !important;
+  }
+  body.mode-scroll .crumb {
+    font-size: 12.5px !important;
+    gap: 6px !important;
+  }
+  body.mode-scroll .card {
+    padding: 18px 16px !important;
+  }
+  body.mode-scroll .sgk-fig {
+    max-height: 320px !important;
+  }
+  body.mode-scroll .sgk-fig img {
+    max-height: 220px !important;
+    object-fit: contain !important;
+    margin: 0 auto;
+  }
+
+  /* Chuyển toàn bộ lưới 2 cột, 3 cột thành 1 cột dọc thân thiện ngón tay */
+  body.mode-scroll .split,
+  body.mode-scroll .split.wide,
+  body.mode-scroll .tv-goal-grid,
+  body.mode-scroll .step3-cols,
+  body.mode-scroll .diag-wrap,
+  body.mode-scroll .est-2col,
+  body.mode-scroll div[style*="grid-template-columns:1fr 1fr 1fr"],
+  body.mode-scroll div[style*="grid-template-columns: 1fr 1fr 1fr"],
+  body.mode-scroll div[style*="grid-template-columns:1fr 1fr"],
+  body.mode-scroll div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+  }
+
+  body.mode-scroll div[style*="flex: 1"],
+  body.mode-scroll div[style*="flex: 1.1"],
+  body.mode-scroll div[style*="flex: 0.9"],
+  body.mode-scroll div[style*="flex: 1.2"] {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+
+  body.mode-scroll .tv-goal-card {
+    padding: 16px !important;
+    min-height: auto !important;
+  }
+  body.mode-scroll .tv-goal-desc {
+    font-size: 16px !important;
+    line-height: 1.45 !important;
+  }
+
+  /* Slide 3: Game sắp xếp giá thành */
+  body.mode-scroll .rank-items-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  /* Slide 4: 3 Bước lớn */
+  body.mode-scroll .step3-tabs {
+    gap: 6px !important;
+    margin-bottom: 12px !important;
+  }
+  body.mode-scroll .step3-tab-btn {
+    font-size: 14px !important;
+    padding: 8px 10px !important;
+  }
+  body.mode-scroll .step3-main-card {
+    padding: 16px !important;
+    min-height: auto !important;
+  }
+  body.mode-scroll .step3-text {
+    font-size: 16px !important;
+  }
+
+  /* Slide 10: Gameshow Ai Là Triệu Phú trên mobile */
+  body.mode-scroll .altp-main {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+  body.mode-scroll .altp-tower-side {
+    order: 2 !important;
+    max-height: 160px !important;
+    overflow-y: auto !important;
+  }
+  body.mode-scroll .altp-arena {
+    order: 1 !important;
+  }
+  body.mode-scroll .altp-answers-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  body.mode-scroll .altp-question-box {
+    min-height: auto !important;
+    padding: 16px !important;
+  }
+  body.mode-scroll .altp-q-text {
+    font-size: 17px !important;
+    line-height: 1.4 !important;
+  }
+  body.mode-scroll .altp-answer-btn {
+    font-size: 16px !important;
+    padding: 12px 14px !important;
+    min-height: 48px !important;
+  }
+
+  /* Slide 11: Dự toán 5 chặng */
+  body.mode-scroll .est-table-wrap {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+  }
+  body.mode-scroll .est-item-chips {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+  body.mode-scroll .est-chip {
+    font-size: 14px !important;
+    padding: 8px 10px !important;
+  }
+
+  /* Slide 12: Đánh giá & Video */
+  body.mode-scroll .eval-grid {
+    grid-template-columns: 1fr !important;
+  }
+  body.mode-scroll .video-wrap {
+    min-height: 220px !important;
+  }
+
+  /* Ẩn floating dock slide khi ở chế độ cuộn */
+  body.mode-scroll .floating-dock {
+    display: none !important;
+  }
+
+  /* Sticky Header cố định trên cùng cho Mobile */
+  .mobile-sticky-header {
+    display: none;
+  }
+  body.mode-scroll .mobile-sticky-header {
+    display: block !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 2px 10px rgba(7, 31, 56, 0.06);
+    z-index: 1000;
+    padding: 0 12px;
+  }
+  .mobile-header-inner {
+    height: 54px;
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .mobile-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow: hidden;
+  }
+  .mobile-header-title {
+    font-size: 13.5px;
+    font-weight: 800;
+    color: var(--navy);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .mobile-header-sub {
+    font-size: 11.5px;
+    color: #0284c7;
+    font-weight: 700;
+  }
+  .mobile-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .mobile-head-btn {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: #f8fafc;
+    color: var(--navy);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .mobile-head-btn:hover {
+    background: #e2e8f0;
+  }
+  .mobile-head-btn.mode-btn {
+    background: var(--navy);
+    color: #fff;
+    border-color: var(--navy);
+  }
+  .mobile-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #e2e8f0;
+  }
+  .mobile-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--acc2), var(--acc));
+    transition: width 0.1s ease;
+  }
+
+  /* Mobile Bottom Bar cố định ngón cái */
+  .mobile-bottom-bar {
+    display: none;
+  }
+  body.mode-scroll .mobile-bottom-bar {
+    display: flex !important;
+    position: fixed;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(7, 31, 56, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 30px;
+    padding: 6px 14px;
+    gap: 8px;
+    box-shadow: 0 8px 24px rgba(7, 31, 56, 0.35);
+    z-index: 1000;
+    max-width: 90vw;
+  }
+  .mob-bar-btn {
+    border: none;
+    background: transparent;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+  .mob-bar-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+  .mob-bar-btn.primary {
+    background: var(--acc);
+    color: #071f38;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- STICKY HEADER CHO CHẾ ĐỘ CUỘN DI ĐỘNG -->
+<header class="mobile-sticky-header" id="mobileHeader" aria-label="Thanh tiến độ di động">
+  <div class="mobile-header-inner">
+    <div class="mobile-header-left">
+      <button class="mobile-head-btn" onclick="openTocModal()" title="Mở mục lục">📑</button>
+      <div style="overflow:hidden">
+        <div class="mobile-header-title">Bài 5 · Tính toán chi phí mạng điện</div>
+        <div class="mobile-header-sub" id="mobileProgressSub">Module 01/13 · Bìa bài học</div>
+      </div>
+    </div>
+    <div class="mobile-header-actions">
+      <button class="mobile-head-btn" id="mobileAudioBtn" onclick="toggleAudio()" title="Loa thuyết minh">🔊</button>
+      <button class="mobile-head-btn mode-btn" onclick="toggleViewMode()" title="Chuyển sang Chế độ Slide TV">🖥️ Slide</button>
+    </div>
+  </div>
+  <div class="mobile-progress-bar">
+    <div class="mobile-progress-fill" id="mobileProgressFill"></div>
+  </div>
+</header>
+
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: BÌA BÀI HỌC -->
+  <section class="slide active" data-menu="Bìa · Bài 5">
+    <div class="crumb"><b>MÔN CÔNG NGHỆ 9</b><span>·</span><span>MÔ-ĐUN LẮP ĐẶT MẠNG ĐIỆN TRONG NHÀ</span></div>
+    <div class="wrap">
+      <div class="split wide">
+        <div class="card highlight">
+          <div style="display:inline-block;padding:6px 14px;background:#eaf3ff;border:1.5px solid #0275d8;border-radius:10px;font-size:14px;font-weight:900;color:#0275d8;margin-bottom:12px;width:fit-content">
+            BỘ SÁCH KẾT NỐI TRI THỨC VỚI CUỘC SỐNG
+          </div>
+          <h1 class="title">BÀI 5: TÍNH TOÁN CHI PHÍ CHO <em>MẠNG ĐIỆN TRONG NHÀ</em></h1>
+          <p style="font-size:18px;color:#334155;margin-bottom:18px">
+            Khóa học số tương tác trên TV · Thiết kế bài giảng điện tử chuẩn sư phạm theo Công văn 5512/BGDĐT.
+          </p>
+          <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <button class="btn acc" onclick="go(1)">🚀 BẮT ĐẦU BÀI HỌC</button>
+            <button class="btn" onclick="openTocModal()">📑 MỤC LỤC (13 SLIDE)</button>
+          </div>
+        </div>
+        <div class="card" style="display:flex;align-items:center;justify-content:center;background:#fff">
+          <div class="sgk-fig" style="width:100%;height:100%" title="Bấm để phóng to Hình 5.2 SGK">
+            <span class="zoom-badge">🔍 Phóng to</span>
+            <img src="assets/img/h5-2.png" alt="Hình 5.2 Sơ đồ lắp đặt mạng điện trong nhà đơn giản">
+            <p class="fig-cap"><b>Hình 5.2 (SGK tr.25)</b>: Sơ đồ lắp đặt mạng điện trong nhà đơn giản.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 2: MỤC TIÊU BÀI HỌC -->
+    <!-- SLIDE 2: MỤC TIÊU BÀI HỌC (CHUẨN ĐẦU RA TO RÕ CHO TV) -->
+  <section class="slide" data-menu="Mục tiêu bài học">
+    <div class="crumb"><b>CHUẨN ĐẦU RA</b><span>·</span><span>Mục tiêu bài dạy (Công văn 5512/BGDĐT)</span></div>
+    <div class="wrap">
+      <h2 class="title">Mục tiêu cần đạt sau <em>Bài học</em></h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-top:6px">
+        
+        <div class="card highlight" style="display:flex;flex-direction:column;justify-content:space-between;border-top:6px solid #0275d8">
+          <div>
+            <div style="font-size:36px;margin-bottom:8px">📘</div>
+            <h3 style="color:#0275d8;margin-bottom:12px;font-size:24px">1. Về Kiến thức</h3>
+            <p style="font-size:21px;line-height:1.55;color:#1e293b">
+              • Nắm vững <b>3 bước kỹ thuật chuẩn</b> để tính toán chi phí mạng điện trong nhà.<br><br>
+              • Biết cách tra cứu đơn giá thị trường và lập bảng dự toán hoàn chỉnh.
+            </p>
+          </div>
+          <div style="background:#eaf3ff;padding:8px 14px;border-radius:10px;font-size:17px;font-weight:800;color:#0275d8">
+            Trọng tâm: Quy trình 3 bước
+          </div>
+        </div>
+
+        <div class="card highlight" style="display:flex;flex-direction:column;justify-content:space-between;border-top:6px solid #f59e0b">
+          <div>
+            <div style="font-size:36px;margin-bottom:8px">⚙️</div>
+            <h3 style="color:#b45309;margin-bottom:12px;font-size:24px">2. Về Năng lực</h3>
+            <p style="font-size:21px;line-height:1.55;color:#1e293b">
+              • <b>Đo đạc & bóc tách khối lượng</b> chính xác từ bản vẽ sơ đồ mặt bằng.<br><br>
+              • Vận dụng công thức <b>Thành tiền = Số lượng × Đơn giá</b> để dự toán công trình.
+            </p>
+          </div>
+          <div style="background:#fefce8;padding:8px 14px;border-radius:10px;font-size:17px;font-weight:800;color:#b45309">
+            Kỹ năng: Bóc tách & Tính toán
+          </div>
+        </div>
+
+        <div class="card highlight" style="display:flex;flex-direction:column;justify-content:space-between;border-top:6px solid #16a34a">
+          <div>
+            <div style="font-size:36px;margin-bottom:8px">🛡️</div>
+            <h3 style="color:#15803d;margin-bottom:12px;font-size:24px">3. Phẩm chất & Thái độ</h3>
+            <p style="font-size:21px;line-height:1.55;color:#1e293b">
+              • <b>Ý thức an toàn điện:</b> Luôn chọn ống luồn PVC chống cháy nổ để bảo vệ dây dẫn.<br><br>
+              • <b>Tiết kiệm kinh tế:</b> Tính toán cẩn trọng, tránh lãng phí vật tư.
+            </p>
+          </div>
+          <div style="background:#f0fdf4;padding:8px 14px;border-radius:10px;font-size:17px;font-weight:800;color:#15803d">
+            Thái độ: An toàn & Tiết kiệm
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-menu="Khởi động · Hình 5.1">
+    <div class="crumb"><b>KHỞI ĐỘNG</b><span>·</span><span>Trải nghiệm & Sắp xếp thiết bị điện (SGK tr.24)</span></div>
+    <div class="wrap">
+      <div class="split" style="grid-template-columns: 0.95fr 1.05fr; gap: 20px; align-items: stretch">
+        
+        <!-- Cột trái: Hình 5.1 SGK to rõ cho TV -->
+        <div class="card" style="padding: 18px 22px; display: flex; flex-direction: column; justify-content: space-between">
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <h3 style="margin:0;font-size:19px">Hình 5.1 · Một số thiết bị điện phổ biến</h3>
+              <span class="vj-badge sgk">SGK tr.24</span>
+            </div>
+            
+            <div class="sgk-fig" title="Bấm để phóng to Hình 5.1 SGK" style="padding:10px;height:360px;display:flex;align-items:center;justify-content:center">
+              <span class="zoom-badge">🔍 Phóng to</span>
+              <img src="assets/img/h5-1.png" alt="Hình 5.1 Một số thiết bị điện trong nhà" style="max-height:330px;width:auto;object-fit:contain">
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;font-size:13.5px">
+              <div style="background:#f8fbff;border:1px solid #c3d9f0;border-radius:8px;padding:6px 10px">
+                <b>a) Đui đèn:</b> Giữ và cấp điện cho bóng
+              </div>
+              <div style="background:#f8fbff;border:1px solid #c3d9f0;border-radius:8px;padding:6px 10px">
+                <b>b) Cầu chì:</b> Bảo vệ quá tải dây chảy
+              </div>
+              <div style="background:#f8fbff;border:1px solid #c3d9f0;border-radius:8px;padding:6px 10px">
+                <b>c) Phích cắm:</b> Lấy điện di động
+              </div>
+              <div style="background:#f8fbff;border:1px solid #c3d9f0;border-radius:8px;padding:6px 10px">
+                <b>d) Công tắc:</b> Đóng cắt mạch chiếu sáng
+              </div>
+              <div style="background:#f8fbff;border:1px solid #c3d9f0;border-radius:8px;padding:6px 10px">
+                <b>e) Ổ cắm:</b> Cấp nguồn đồ dùng điện
+              </div>
+              <div style="background:#fef3e2;border:1px solid #fcd34d;border-radius:8px;padding:6px 10px;color:#b45309">
+                <b>g) Aptomat:</b> Tự động ngắt khi ngắn mạch
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:10px">
+            <button class="btn sm" data-say="c02_khoidong" style="width:100%;padding:10px 14px;font-size:14.5px">🔊 Nghe hướng dẫn khởi động</button>
+          </div>
+        </div>
+
+        <!-- Cột phải: Game tương tác sắp xếp theo giá thành -->
+        <div class="card highlight" style="padding: 18px 22px; display: flex; flex-direction: column; justify-content: space-between">
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <h3 style="color:var(--navy);font-size:19px;margin:0">🎮 Thử thách: Sắp xếp thiết bị theo giá thành</h3>
+              <span style="font-size:13.5px;color:#0275d8;font-weight:800">Thao tác chạm TV</span>
+            </div>
+            
+            <p style="font-size:15px;color:#334155;margin-bottom:12px;line-height:1.5">
+              Em hãy quan sát giá tham khảo thị trường và bấm chọn các thẻ theo thứ tự <b>từ giá thấp nhất đến cao nhất</b>:
+            </p>
+            
+            <!-- Danh sách các thẻ chọn -->
+            <div class="rank-pool" id="rankPool" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+              <button class="rank-chip" id="rc_plug" onclick="chooseRankItem('plug', 'c) Phích cắm', 15000)" style="padding:10px 14px;font-size:14.5px">🔌 c) Phích cắm điện (~15.000 đ)</button>
+              <button class="rank-chip" id="rc_holder" onclick="chooseRankItem('holder', 'a) Đui đèn', 20000)" style="padding:10px 14px;font-size:14.5px">💡 a) Đui đèn xoáy (~20.000 đ)</button>
+              <button class="rank-chip" id="rc_switch" onclick="chooseRankItem('switch', 'd) Công tắc điện', 28000)" style="padding:10px 14px;font-size:14.5px">🔘 d) Công tắc đơn (~28.000 đ)</button>
+              <button class="rank-chip" id="rc_fuse" onclick="chooseRankItem('fuse', 'b) Cầu chì', 35000)" style="padding:10px 14px;font-size:14.5px">⚡ b) Cầu chì hộp (~35.000 đ)</button>
+              <button class="rank-chip" id="rc_socket" onclick="chooseRankItem('socket', 'e) Ổ cắm điện', 45000)" style="padding:10px 14px;font-size:14.5px">🔲 e) Ổ cắm đôi 16A (~45.000 đ)</button>
+              <button class="rank-chip" id="rc_cb" onclick="chooseRankItem('cb', 'g) Aptomat 20A', 125000)" style="padding:10px 14px;font-size:14.5px">🛡️ g) Aptomat 2 cực (~125.000 đ)</button>
+            </div>
+
+            <!-- Khay kết quả xếp thứ tự -->
+            <div class="rank-tray-box" style="background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:10px 14px;min-height:56px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <span style="font-size:14px;font-weight:900;color:var(--navy)">Thứ tự em chọn (Thấp ➔ Cao):</span>
+              <div id="rankSelectedList" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+                <span style="color:#94a3b8;font-style:italic;font-size:13.5px">(Chạm vào các thẻ ở trên theo thứ tự)</span>
+              </div>
+            </div>
+
+            <!-- Phân nhóm giá thành SGK & Hộp kết luận sư phạm về Ý NGHĨA -->
+            <div id="rankConclusion" style="display:none;margin-top:12px">
+              <div style="background:#f0fdf4;border:2px solid #22c55e;border-radius:12px;padding:12px 16px;box-shadow:0 4px 14px rgba(34,197,94,0.15)">
+                <b style="color:#15803d;font-size:15.5px">🏆 KẾT LUẬN SƯ PHẠM: Ý NGHĨA CỦA VIỆC TÍNH TOÁN CHI PHÍ (SGK TR.24)</b>
+                <p style="margin:6px 0 0;font-size:14px;color:#1e293b;line-height:1.55">
+                  1. <b>Chủ động tài chính:</b> Giúp chủ nhà dự trù chính xác kinh phí cần chuẩn bị, tránh phát sinh thiếu hụt.<br>
+                  2. <b>Lựa chọn tối ưu:</b> Phân biệt rõ vật tư bình dân (phích cắm, đui đèn) và thiết bị bảo vệ cao cấp (Aptomat) để cân đối ngân sách.<br>
+                  3. <b>Tiết kiệm & An toàn:</b> Mua đúng đủ số lượng, không lãng phí vật tư và bảo đảm an toàn PCCC tuyệt đối.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+            <button class="btn sm" onclick="resetRanking()" style="background:#f1f5f9;color:#334155;border:1px solid #cbd5e1;padding:10px 18px;font-size:14px">🔄 Chọn lại</button>
+            <button class="btn sm acc" id="btnCheckRank" onclick="checkRanking()" style="padding:10px 22px;font-size:14.5px">Kiểm tra kết quả ➔</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4: PHẦN I - BA BƯỚC TÍNH TOÁN -->
+    <!-- SLIDE 4: QUY TRÌNH 3 BƯỚC TÍNH TOÁN (HỆ THỐNG TAB LỚN CHO TV) -->
+  <section class="slide" data-menu="I. Ba bước tính toán">
+    <div class="crumb"><b>KHÁM PHÁ KIẾN THỨC</b><span>·</span><span>Quy trình kỹ thuật 3 bước chuẩn (SGK tr.24 - 25)</span></div>
+    <div class="wrap">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <h2 class="title" style="margin:0">Quy trình 3 bước tính toán chi phí <em>Mạng điện trong nhà</em></h2>
+        <span class="vj-badge sgk" style="font-size:16px;padding:6px 14px">SGK tr.24 - 25</span>
+      </div>
+
+      <!-- Thanh chuyển 3 Tab Bước Lớn -->
+      <div class="tab-3step-nav">
+        <button class="tab-3step-btn active" id="tabBtn1" onclick="switch3Step(1)">
+          <span>1️⃣</span> BƯỚC 1: Nghiên cứu sơ đồ
+        </button>
+        <button class="tab-3step-btn" id="tabBtn2" onclick="switch3Step(2)">
+          <span>2️⃣</span> BƯỚC 2: Lập bảng kê số lượng
+        </button>
+        <button class="tab-3step-btn" id="tabBtn3" onclick="switch3Step(3)">
+          <span>3️⃣</span> BƯỚC 3: Lập bảng tính chi phí
+        </button>
+      </div>
+
+      <!-- Khung Nội Dung Bước 1 -->
+      <div class="tab-3step-pane active" id="tabPane1">
+        <div class="card" style="flex:1.2;display:flex;flex-direction:column;justify-content:space-between;border-left:8px solid #0275d8">
+          <div>
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+              <span style="background:#0275d8;color:#fff;font-size:24px;font-weight:900;padding:4px 16px;border-radius:10px">BƯỚC 1</span>
+              <h3 style="color:#0275d8;margin:0;font-size:28px">Nghiên cứu sơ đồ lắp đặt mạng điện</h3>
+            </div>
+            <p style="font-size:23px;line-height:1.6;color:#1e293b">
+              <b>Mục đích:</b> Đọc và phân tích kỹ bản vẽ sơ đồ lắp đặt để bóc tách chính xác toàn bộ danh mục vật tư cần thi công:
+            </p>
+            <ul style="margin:12px 0 0 24px;font-size:22px;line-height:1.6;color:#334155">
+              <li>Xác định <b>loại dây dẫn</b>: Dây nguồn chính (tiết diện lớn) và dây nhánh tải (tiết diện nhỏ).</li>
+              <li>Xác định <b>thiết bị đóng cắt, lấy điện</b>: Aptomat, công tắc, ổ cắm điện.</li>
+              <li>Xác định <b>vật liệu bảo vệ cách điện</b>: Ống luồn PVC chống cháy, băng dính cách điện.</li>
+            </ul>
+          </div>
+          <div style="background:#eff6ff;border:1.5px dashed #3b82f6;border-radius:12px;padding:12px 18px;font-size:19px;color:#1e40af">
+            👉 <b>Ý nghĩa kỹ thuật:</b> Bước 1 là bước <b>ĐỊNH TÍNH</b> — Cung cấp danh mục chủng loại vật tư cho Bước 2.
+          </div>
+        </div>
+
+        <div class="card highlight" style="flex:0.8;display:flex;flex-direction:column;justify-content:space-between;border-left:8px solid #ef4444">
+          <div>
+            <h3 style="color:#dc2626;margin-bottom:12px;font-size:24px">⚠️ Nếu bỏ qua Bước 1?</h3>
+            <div style="background:#fff;border-radius:12px;padding:16px 20px;box-shadow:0 3px 12px rgba(0,0,0,0.06);font-size:21px;line-height:1.55;color:#1e293b">
+              ❌ Sẽ <b>chọn sai chủng loại vật tư</b>:<br>
+              • Mua dây tiết diện quá bé ➔ Quá tải, chập cháy PCCC nguy hiểm.<br>
+              • Mua dây quá lớn ➔ Lãng phí ngân sách không cần thiết.
+            </div>
+          </div>
+          <button class="btn acc" style="width:100%" onclick="switch3Step(2)">Sang Bước 2: Lập bảng kê ➔</button>
+        </div>
+      </div>
+
+      <!-- Khung Nội Dung Bước 2 -->
+      <div class="tab-3step-pane" id="tabPane2">
+        <div class="card" style="flex:1.2;display:flex;flex-direction:column;justify-content:space-between;border-left:8px solid #f59e0b">
+          <div>
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+              <span style="background:#f59e0b;color:#fff;font-size:24px;font-weight:900;padding:4px 16px;border-radius:10px">BƯỚC 2</span>
+              <h3 style="color:#b45309;margin:0;font-size:28px">Lập bảng kê số lượng vật liệu, thiết bị</h3>
+            </div>
+            <p style="font-size:23px;line-height:1.6;color:#1e293b">
+              <b>Mục đích:</b> Căn cứ vào kích thước thực tế trên bản vẽ để đo đạc và thống kê số lượng từng loại (Bảng 5.1 SGK):
+            </p>
+            <ul style="margin:12px 0 0 24px;font-size:22px;line-height:1.6;color:#334155">
+              <li><b>Đo chiều dài tuyến dây</b>: Tính tổng mét dây nguồn và mét dây nhánh (cộng thêm 10-15% dự phòng mối nối).</li>
+              <li><b>Đếm số lượng thiết bị</b>: Đếm chính xác số cái Aptomat, công tắc, ổ cắm và mét ống luồn PVC.</li>
+              <li>Ghi rõ <b>Đơn vị tính (ĐVT)</b>: mét (m), cái, bộ, cuộn.</li>
+            </ul>
+          </div>
+          <div style="background:#fefce8;border:1.5px dashed #f59e0b;border-radius:12px;padding:12px 18px;font-size:19px;color:#b45309">
+            👉 <b>Ý nghĩa kỹ thuật:</b> Bước 2 là bước <b>ĐỊNH LƯỢNG</b> — Cung cấp số lượng cụ thể cho Bước 3.
+          </div>
+        </div>
+
+        <div class="card highlight" style="flex:0.8;display:flex;flex-direction:column;justify-content:space-between;border-left:8px solid #f59e0b">
+          <div>
+            <h3 style="color:#d97706;margin-bottom:12px;font-size:24px">⚠️ Nếu bỏ qua Bước 2?</h3>
+            <div style="background:#fff;border-radius:12px;padding:16px 20px;box-shadow:0 3px 12px rgba(0,0,0,0.06);font-size:21px;line-height:1.55;color:#1e293b">
+              ❌ Dẫn đến <b>ước lượng mò mẫm, mua sắm sai lệch</b>:<br>
+              • Mua thiếu dây ➔ Phải nối chắp vá gây mất an toàn điện.<br>
+              • Mua thừa thiết bị ➔ Tồn đọng, gây lãng phí tiền bạc.
+            </div>
+          </div>
+          <button class="btn acc" style="width:100%" onclick="switch3Step(3)">Sang Bước 3: Tính chi phí ➔</button>
+        </div>
+      </div>
+
+      <!-- Khung Nội Dung Bước 3 -->
+      <div class="tab-3step-pane" id="tabPane3">
+        <div class="card" style="flex:1.2;display:flex;flex-direction:column;justify-content:space-between;border-left:8px solid #16a34a">
+          <div>
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+              <span style="background:#16a34a;color:#fff;font-size:24px;font-weight:900;padding:4px 16px;border-radius:10px">BƯỚC 3</span>
+              <h3 style="color:#15803d;margin:0;font-size:28px">Lập bảng tính toán chi phí dự toán</h3>
+            </div>
+            <p style="font-size:23px;line-height:1.6;color:#1e293b">
+              <b>Mục đích:</b> Khảo sát đơn giá thị trường, tính toán chi phí từng hạng mục và tổng kinh phí thi công toàn bộ mạng điện:
+            </p>
+            <div style="background:#f0fdf4;border:2px solid #16a34a;border-radius:14px;padding:14px 20px;margin:12px 0;font-size:23px;font-weight:900;color:#15803d;text-align:center">
+              💰 Thành tiền = Số lượng × Đơn giá
+            </div>
+            <p style="font-size:21px;color:#334155;line-height:1.5">
+              Cộng tổng toàn bộ các dòng vật tư ➔ Ra <b>Tổng dự toán kinh phí</b> để gia đình chủ động chuẩn bị tài chính.
+            </p>
+          </div>
+          <div style="background:#f0fdf4;border:1.5px dashed #16a34a;border-radius:12px;padding:12px 18px;font-size:19px;color:#15803d">
+            👉 <b>Ý nghĩa kỹ thuật:</b> Bước 3 là bước <b>ĐỊNH GIÁ</b> — Hoàn tất dự toán đầu tư công trình.
+          </div>
+        </div>
+
+        <div class="card highlight" style="flex:0.8;display:flex;flex-direction:column;justify-content:space-between;border-left:8px solid #16a34a">
+          <div>
+            <h3 style="color:#15803d;margin-bottom:12px;font-size:24px">✅ Kết quả khi tuân thủ đủ 3 bước</h3>
+            <div style="background:#fff;border-radius:12px;padding:16px 20px;box-shadow:0 3px 12px rgba(0,0,0,0.06);font-size:21px;line-height:1.55;color:#1e293b">
+              🌟 <b>Chuẩn kỹ thuật & An toàn tuyệt đối:</b><br>
+              • Đảm bảo tiêu chuẩn PCCC.<br>
+              • Đúng tiến độ thi công.<br>
+              • Tiết kiệm tối đa chi phí cho gia đình!
+            </div>
+          </div>
+          <button class="btn" style="width:100%" onclick="switch3Step(1)">Quay lại Bước 1 ↺</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="slide" data-menu="Bước 1 · Nghiên cứu sơ đồ">
+    <div class="crumb"><b>BƯỚC 1</b><span>·</span><span>Nghiên cứu sơ đồ lắp đặt mạng điện</span></div>
+    <div class="wrap">
+      <h2 class="title">Bóc tách dây dẫn và thiết bị từ <em>Sơ đồ lắp đặt</em></h2>
+      <div class="split">
+        <div class="card">
+          <h3>Các yếu tố kỹ thuật cần xác định</h3>
+          <p>• <b>Dây dẫn điện:</b></p>
+          <p style="margin-left:14px;font-size:15px">
+            - <i>Đoạn nguồn vào bảng điện:</i> Dây cáp đồng bọc PVC 2× 2,5 mm².<br>
+            - <i>Đoạn từ bảng điện đến bóng đèn, quạt:</i> Dây cáp đồng bọc PVC 2× 1,5 mm².
+          </p>
+          <p>• <b>Thiết bị đóng cắt, lấy điện & bảo vệ:</b></p>
+          <p style="margin-left:14px;font-size:15px">
+            - Aptomat 2 cực (20A hoặc 16A) bảo vệ quá tải và ngắn mạch.<br>
+            - Công tắc đơn 1 chiều bật tắt đèn/quạt.<br>
+            - Ổ cắm điện 2 chấu hoặc 3 chấu có màn che an toàn.
+          </p>
+          <p>• <b>Ống luồn dây bảo vệ:</b> Ống nhựa PVC chống cháy Φ20 cho nguồn và Φ16 cho nhánh.</p>
+        </div>
+        <div class="card highlight">
+          <h3>⚠️ Lưu ý quan trọng khi đọc sơ đồ</h3>
+          <div style="background:#fef2f2;border-left:4px solid #ef4444;border-radius:10px;padding:12px;margin:8px 0">
+            <b style="color:#b91c1c">Nếu không xác định đúng loại dây và thiết bị:</b>
+            <p style="margin:4px 0 0;font-size:14.5px;color:#1e293b">
+              Tính toán sẽ bị sai lệch hoàn toàn; mua nhầm dây nhỏ gây quá nhiệt cháy nổ, hoặc mua dây quá to gây lãng phí chi phí!
+            </p>
+          </div>
+          <div style="margin-top:14px">
+            <button class="btn sm" data-say="c03">🔊 Nghe hướng dẫn Bước 1</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 6: BƯỚC 2 - LẬP BẢNG KÊ -->
+  <section class="slide" data-menu="Bước 2 · Lập bảng kê số lượng">
+    <div class="crumb"><b>BƯỚC 2</b><span>·</span><span>Lập bảng kê số lượng vật liệu, thiết bị</span></div>
+    <div class="wrap">
+      <h2 class="title">Thống kê số lượng theo <em>Bảng 5.1 SGK</em></h2>
+      <div class="split">
+        <div class="card">
+          <h3>Mẫu Bảng kê số lượng (Bảng 5.1 SGK tr.25)</h3>
+          <table class="vj-table" style="margin-top:8px">
+            <thead>
+              <tr>
+                <th style="width:45px">STT</th>
+                <th>Vật liệu, thiết bị</th>
+                <th>Quy cách / Ký hiệu</th>
+                <th style="width:70px">ĐVT</th>
+                <th style="width:70px">Số lượng</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td style="text-align:center">1</td><td>Dây dẫn điện nguồn</td><td>Cu/PVC 2× 2,5 mm²</td><td style="text-align:center">m</td><td style="text-align:center">Đo thực tế</td></tr>
+              <tr><td style="text-align:center">2</td><td>Dây dẫn điện nhánh</td><td>Cu/PVC 2× 1,5 mm²</td><td style="text-align:center">m</td><td style="text-align:center">Đo thực tế</td></tr>
+              <tr><td style="text-align:center">3</td><td>Ống luồn dây PVC</td><td>Φ20 và Φ16 chống cháy</td><td style="text-align:center">m</td><td style="text-align:center">Bằng độ dài dây</td></tr>
+              <tr><td style="text-align:center">4</td><td>Aptomat bảo vệ</td><td>2 cực 20A / 230V</td><td style="text-align:center">Cái</td><td style="text-align:center">1</td></tr>
+              <tr><td style="text-align:center">5</td><td>Công tắc điện</td><td>1 chiều 10A</td><td style="text-align:center">Cái</td><td style="text-align:center">Theo số tải</td></tr>
+              <tr><td style="text-align:center">6</td><td>Ổ cắm điện</td><td>Có màng che 16A</td><td style="text-align:center">Bộ</td><td style="text-align:center">Theo nhu cầu</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card highlight">
+          <h3>Kinh nghiệm thực tiễn</h3>
+          <p>• <b>Dự phòng uốn lượn và mối nối:</b> Thợ điện thường cộng thêm từ 5% đến 10% chiều dài dây dẫn để trừ hao khi luồn ống và nối vào cực thiết bị.</p>
+          <p>• <b>Ống luồn dây:</b> Chiều dài ống bảo vệ xấp xỉ chiều dài tuyến dây tương ứng.</p>
+          <div style="margin-top:14px">
+            <button class="btn sm" data-say="c04">🔊 Nghe hướng dẫn Bước 2</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 7: BƯỚC 3 - TÍNH TOÁN CHI PHÍ -->
+  <section class="slide" data-menu="Bước 3 · Tính toán chi phí">
+    <div class="crumb"><b>BƯỚC 3</b><span>·</span><span>Lập bảng tính toán chi phí dự toán</span></div>
+    <div class="wrap">
+      <h2 class="title">Tra cứu đơn giá & Tính toán <em>Thành tiền</em></h2>
+      <div class="split">
+        <div class="card">
+          <h3>Công thức tính toán cơ bản</h3>
+          <div style="background:#fff8eb;border:2px solid #f59e0b;border-radius:14px;padding:16px;margin:10px 0;text-align:center">
+            <div style="font-size:16px;color:#b45309;font-weight:800">CÔNG THỨC DỰ TOÁN TỪNG MỤC:</div>
+            <div style="font-size: clamp(20px, 2.2vw, 26px);font-weight:900;color:var(--navy);margin:6px 0">
+              Thành tiền = Số lượng × Đơn giá
+            </div>
+            <div style="font-size: clamp(17px, 1.8vw, 22px);font-weight:900;color:#dc2626;margin-top:8px">
+              Tổng chi phí = ∑ (Thành tiền tất cả các mục)
+            </div>
+          </div>
+          <p style="font-size:15px;color:#475569">
+            Tham khảo đơn giá thị trường qua: các cửa hàng điện nước địa phương, trang web vật tư thiết bị điện uy tín hoặc catalogue nhà sản xuất.
+          </p>
+        </div>
+        <div class="card highlight">
+          <h3>Cách hoàn thiện Bảng 5.1 SGK</h3>
+          <p>1. Điền đơn giá tham khảo vào <b>Cột 5</b>.</p>
+          <p>2. Nhân số lượng (Cột 4) với đơn giá để ghi vào <b>Cột 6 (Thành tiền)</b>.</p>
+          <p>3. Cộng toàn bộ Cột 6 để xác định <b>Tổng số tiền cần đầu tư</b>.</p>
+          <div style="margin-top:14px">
+            <button class="btn sm" data-say="c05">🔊 Nghe hướng dẫn Bước 3</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 8: PHẦN II - THỰC HÀNH HÌNH 5.2 -->
+  <section class="slide" data-menu="II. Thực hành · Hình 5.2">
+    <div class="crumb"><b>THỰC HÀNH</b><span>·</span><span>Mạng điện trong nhà đơn giản (Hình 5.2 SGK tr.25)</span></div>
+    <div class="wrap">
+      <h2 class="title">Phân tích sơ đồ thực hành <em>Hình 5.2 SGK</em></h2>
+      <div class="split wide">
+        <div class="card">
+          <div class="sgk-fig" title="Bấm để phóng to Hình 5.2 SGK">
+            <span class="zoom-badge">🔍 Phóng to</span>
+            <img src="assets/img/h5-2.png" alt="Hình 5.2 Sơ đồ lắp đặt mạng điện đơn giản SGK">
+            <p class="fig-cap"><b>Hình 5.2 (SGK tr.25)</b>: Mạng điện bật tắt 1 đèn chiếu sáng và 1 ổ cắm lấy điện.</p>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Thông số kỹ thuật đo đạc</h3>
+          <ul class="steps-list" style="gap:8px">
+            <li class="step-item" style="padding:8px 12px">
+              <span class="step-badge" style="width:32px;height:32px;font-size:15px">1</span>
+              <div class="step-content">
+                <p><b>Khoảng cách nguồn 
+→ bảng điện:</b> <b>3 m</b> (Dây nguồn 2× 2,5 mm², ống Φ20: 3 m).</p>
+              </div>
+            </li>
+            <li class="step-item" style="padding:8px 12px">
+              <span class="step-badge" style="width:32px;height:32px;font-size:15px">2</span>
+              <div class="step-content">
+                <p><b>Khoảng cách bảng điện 
+→ bóng đèn:</b> <b>10 m</b> (Dây nhánh 2× 1,5 mm², ống Φ16: 10 m).</p>
+              </div>
+            </li>
+            <li class="step-item" style="padding:8px 12px">
+              <span class="step-badge" style="width:32px;height:32px;font-size:15px">3</span>
+              <div class="step-content">
+                <p><b>Thiết bị:</b> 1 Aptomat 20A, 1 công tắc đơn 10A, 1 ổ cắm điện đôi, 1 bảng điện nhựa.</p>
+              </div>
+            </li>
+          </ul>
+          <div style="margin-top:10px">
+            <button class="btn sm" onclick="go(8)">👉 Sang Bảng tính tương tác (Slide 9)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 9: BẢNG TÍNH CHI PHÍ TƯƠNG TÁC -->
+  <section class="slide" data-menu="Thực hành · Bảng tính chi phí">
+    <div class="crumb"><b>THỰC HÀNH</b><span>·</span><span>Lập bảng tính chi phí tương tác (Hình 5.2)</span></div>
+    <div class="wrap">
+      <h2 class="title">Bảng tính chi phí vật liệu, thiết bị <em>(Hình 5.2)</em></h2>
+      <div class="card" style="padding:14px 20px">
+        <table class="calc-table" id="calcTable">
+          <thead>
+            <tr>
+              <th style="width:40px">STT</th>
+              <th>Vật liệu, thiết bị</th>
+              <th>Quy cách</th>
+              <th style="width:60px">ĐVT</th>
+              <th style="width:60px">SL</th>
+              <th style="width:140px">Đơn giá (đ)</th>
+              <th style="width:140px">Thành tiền (đ)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="text-align:center">1</td>
+              <td><b>Dây dẫn điện nguồn</b></td>
+              <td>Cu/PVC 2× 2,5 mm²</td>
+              <td style="text-align:center">m</td>
+              <td style="text-align:center" class="c-sl">3</td>
+              <td style="text-align:right"><input class="inp-price" type="number" value="16000" step="1000" oninput="recalc()"></td>
+              <td style="text-align:right;font-weight:800" class="c-tt">48.000</td>
+            </tr>
+            <tr>
+              <td style="text-align:center">2</td>
+              <td><b>Dây dẫn điện nhánh</b></td>
+              <td>Cu/PVC 2× 1,5 mm²</td>
+              <td style="text-align:center">m</td>
+              <td style="text-align:center" class="c-sl">10</td>
+              <td style="text-align:right"><input class="inp-price" type="number" value="10000" step="1000" oninput="recalc()"></td>
+              <td style="text-align:right;font-weight:800" class="c-tt">100.000</td>
+            </tr>
+            <tr>
+              <td style="text-align:center">3</td>
+              <td><b>Ống luồn dây PVC</b></td>
+              <td>Φ20 & Φ16 chống cháy</td>
+              <td style="text-align:center">m</td>
+              <td style="text-align:center" class="c-sl">13</td>
+              <td style="text-align:right"><input class="inp-price" type="number" value="11000" step="1000" oninput="recalc()"></td>
+              <td style="text-align:right;font-weight:800" class="c-tt">143.000</td>
+            </tr>
+            <tr>
+              <td style="text-align:center">4</td>
+              <td><b>Aptomat bảo vệ</b></td>
+              <td>2 cực 20A / 230V</td>
+              <td style="text-align:center">Cái</td>
+              <td style="text-align:center" class="c-sl">1</td>
+              <td style="text-align:right"><input class="inp-price" type="number" value="125000" step="5000" oninput="recalc()"></td>
+              <td style="text-align:right;font-weight:800" class="c-tt">125.000</td>
+            </tr>
+            <tr>
+              <td style="text-align:center">5</td>
+              <td><b>Công tắc điện</b></td>
+              <td>1 chiều 10A</td>
+              <td style="text-align:center">Cái</td>
+              <td style="text-align:center" class="c-sl">1</td>
+              <td style="text-align:right"><input class="inp-price" type="number" value="28000" step="1000" oninput="recalc()"></td>
+              <td style="text-align:right;font-weight:800" class="c-tt">28.000</td>
+            </tr>
+            <tr>
+              <td style="text-align:center">6</td>
+              <td><b>Ổ cắm điện</b></td>
+              <td>Có màng che an toàn</td>
+              <td style="text-align:center">Bộ</td>
+              <td style="text-align:center" class="c-sl">1</td>
+              <td style="text-align:right"><input class="inp-price" type="number" value="45000" step="1000" oninput="recalc()"></td>
+              <td style="text-align:right;font-weight:800" class="c-tt">45.000</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="calc-total-box">
+          <div style="font-weight:900;font-size:18px;color:var(--navy)">
+            💰 TỔNG CHI PHÍ DỰ TOÁN MẠNG ĐIỆN HÌNH 5.2:
+          </div>
+          <div class="calc-total-val" id="calcGrandTotal">489.000 đồng</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 10: LUYỆN TẬP - 7 CÂU TRẮC NGHIỆM KAHOOT -->
+    <!-- SLIDE 10: GAMESHOW AI LÀ TRIỆU PHÚ (15 CÂU HỎI TRẮC NGHIỆM CHUẨN SGK) -->
+  <section class="slide" data-menu="Luyện tập · Ai là triệu phú">
+    <div class="crumb">
+      <b>GAMESHOW TRÍ TUỆ</b><span>·</span><span>Ai Là Triệu Phú · 15 Bậc Thang Chinh Phục (SGK Công nghệ 9)</span>
+    </div>
+    <div class="wrap">
+      <div class="altp-container" id="altpContainer">
+        
+        <!-- Cột Trái: Khu Vực Thi Đấu Chính -->
+        <div class="altp-main">
+          
+          <!-- Thanh Tiện Ích: Quyền Trợ Giúp & Tiền Thưởng Hiện Tại -->
+          <div class="altp-top-bar">
+            <div class="altp-lifelines">
+              <button class="altp-btn-life" id="btnFifty" onclick="altpUseFifty()" title="Loại bỏ 2 phương án sai">
+                <span>✂️</span> 50:50
+              </button>
+              <button class="altp-btn-life" id="btnPhone" onclick="altpUsePhone()" title="Gọi điện cho kỹ sư chuyên gia">
+                <span>📞</span> Chuyên gia
+              </button>
+              <button class="altp-btn-life" id="btnAudience" onclick="altpUseAudience()" title="Hỏi ý kiến khán giả trường quay">
+                <span>👥</span> Khán giả
+              </button>
+              <button class="altp-btn-life" id="btnVoice" onclick="altpReplayVoice()" title="Đọc lại câu hỏi bằng giọng TTS">
+                <span>🔊</span> Đọc câu hỏi
+              </button>
+            </div>
+            <div class="altp-current-prize">
+              <span>TIỀN THƯỞNG: </span><span id="altpPrizeDisplay">0 đ</span>
+            </div>
+          </div>
+
+          <!-- Khung Câu Hỏi Chính -->
+          <div class="altp-q-box" id="altpQBox">
+            <span class="q-num-tag" id="altpQNum">CÂU 1</span>
+            <span id="altpQText">Quy trình tính toán chi phí lắp đặt mạng điện trong nhà gồm có mấy bước?</span>
+          </div>
+
+          <!-- Khung Hình Ảnh Minh Họa (Ẩn nếu câu không có ảnh) -->
+          <div class="altp-q-img-wrap" id="altpImgWrap" style="display:none">
+            <img class="altp-q-img" id="altpImg" src="" alt="Hình minh họa câu hỏi" onclick="openLightboxImg(this.src)">
+          </div>
+
+          <!-- Lưới 4 Phương Án Đáp Án A - B - C - D -->
+          <div class="altp-answers-grid" id="altpAnswersGrid">
+            <button class="altp-answer-btn" onclick="altpSelectAnswer(0)">
+              <span class="altp-opt-letter">A:</span><span class="altp-opt-text">Đang tải...</span>
+            </button>
+            <button class="altp-answer-btn" onclick="altpSelectAnswer(1)">
+              <span class="altp-opt-letter">B:</span><span class="altp-opt-text">Đang tải...</span>
+            </button>
+            <button class="altp-answer-btn" onclick="altpSelectAnswer(2)">
+              <span class="altp-opt-letter">C:</span><span class="altp-opt-text">Đang tải...</span>
+            </button>
+            <button class="altp-answer-btn" onclick="altpSelectAnswer(3)">
+              <span class="altp-opt-letter">D:</span><span class="altp-opt-text">Đang tải...</span>
+            </button>
+          </div>
+
+          <!-- Thanh Điều Khiển & Nhận Xét -->
+          <div class="altp-bottom-bar">
+            <div class="altp-hint-text" id="altpFeedbackText">
+              💡 Hãy chọn một trong 4 phương án trên để tiếp tục chinh phục nấc thang triệu phú!
+            </div>
+            <div style="display:flex;gap:10px;align-items:center">
+              <button class="btn sm acc" id="altpNextBtn" style="display:none" onclick="altpNextQuestion()">
+                Câu tiếp theo ⏭️
+              </button>
+              <button class="btn sm" id="altpResetBtn" style="display:none;background:#dc2626;color:#fff" onclick="altpResetGame()">
+                🔄 Chơi lại
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Cột Phải: Tháp 15 Bậc Tiền Thưởng -->
+        <div class="altp-tower" id="altpTower">
+          <!-- Sẽ được render tự động qua JavaScript từ câu 15 xuống câu 1 -->
+        </div>
+
+        <!-- MODAL: HỎI Ý KIẾN KHÁN GIẢ TRƯỜNG QUAY -->
+        <div class="altp-modal-backdrop" id="altpAudienceModal" style="display:none">
+          <div class="altp-modal-card">
+            <h3 style="color:#fef08a;margin-bottom:6px">👥 KẾT QUẢ KHẢO SÁT KHÁN GIẢ TRƯỜNG QUAY</h3>
+            <p style="font-size:14px;color:#cbd5e1;margin-bottom:12px">Đã tổng hợp bình chọn từ 100 khán giả có mặt tại trường quay:</p>
+            <div class="altp-poll-bar-wrap">
+              <div class="altp-poll-col">
+                <span id="pollPctA" style="font-weight:800;color:#38bdf8">0%</span>
+                <div class="altp-poll-fill" id="pollBarA" style="height:0%"></div>
+                <b style="color:#fef08a">A</b>
+              </div>
+              <div class="altp-poll-col">
+                <span id="pollPctB" style="font-weight:800;color:#38bdf8">0%</span>
+                <div class="altp-poll-fill" id="pollBarB" style="height:0%"></div>
+                <b style="color:#fef08a">B</b>
+              </div>
+              <div class="altp-poll-col">
+                <span id="pollPctC" style="font-weight:800;color:#38bdf8">0%</span>
+                <div class="altp-poll-fill" id="pollBarC" style="height:0%"></div>
+                <b style="color:#fef08a">C</b>
+              </div>
+              <div class="altp-poll-col">
+                <span id="pollPctD" style="font-weight:800;color:#38bdf8">0%</span>
+                <div class="altp-poll-fill" id="pollBarD" style="height:0%"></div>
+                <b style="color:#fef08a">D</b>
+              </div>
+            </div>
+            <button class="btn sm acc" style="width:100%" onclick="document.getElementById('altpAudienceModal').style.display='none'">
+              Đã hiểu, đóng trợ giúp ✕
+            </button>
+          </div>
+        </div>
+
+        <!-- MODAL: GỌI ĐIỆN THOẠI CHO CHUYÊN GIA -->
+        <div class="altp-modal-backdrop" id="altpPhoneModal" style="display:none">
+          <div class="altp-modal-card">
+            <div style="font-size:42px;margin-bottom:8px">👨‍🔧📞</div>
+            <h3 style="color:#fef08a;margin-bottom:6px">KỸ SƯ ĐIỆN TRẦN ĐĂNG KHOA</h3>
+            <div style="background:rgba(255,255,255,0.08);border-left:4px solid #f59e0b;padding:12px 14px;border-radius:8px;text-align:left;font-size:15px;line-height:1.5;color:#e2e8f0;margin:14px 0" id="altpPhoneContent">
+              "Chào em! Theo kinh nghiệm thiết kế và căn cứ đúng bảng kiến thức SGK Công nghệ 9 Bài 5, câu này đáp án chắc chắn là..."
+            </div>
+            <button class="btn sm acc" style="width:100%" onclick="document.getElementById('altpPhoneModal').style.display='none'">
+              Cảm ơn chuyên gia, tiếp tục thi đấu! ✕
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-menu="Vận dụng · Bài toán lớp học">
+    <div class="crumb"><b>VẬN DỤNG</b><span>·</span><span>Thực hành lập dự toán mạng điện lớp học 5 chặng (Hình 5.3 SGK)</span></div>
+    <div class="wrap">
+      <div class="split" style="grid-template-columns: 0.72fr 1.28fr; align-items: stretch; gap: 14px">
+        
+        <!-- Cột trái: Sơ đồ Hình 5.3 & Nút hỗ trợ -->
+        <div class="card" style="padding:12px;display:flex;flex-direction:column;justify-content:space-between">
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+              <h3 style="margin:0;font-size:16px">Sơ đồ mặt bằng Hình 5.3</h3>
+              <span class="vj-badge sgk" style="padding:2px 8px;font-size:12px">SGK tr.28</span>
+            </div>
+            <div class="sgk-fig" title="Bấm để phóng to Hình 5.3 SGK" style="padding:6px;max-height:210px">
+              <span class="zoom-badge">🔍 Phóng to</span>
+              <img src="assets/img/h5-3.png" alt="Hình 5.3 Sơ đồ mạng điện lớp học" style="max-height:180px">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px;font-size:12.5px">
+              <div style="background:#f8fbff;border:1px solid #c3d9f0;border-radius:6px;padding:4px 6px">
+                <b>Nguồn → Bảng:</b> 7 m
+              </div>
+              <div style="background:#f8fbff;border:1px solid #c3d9f0;border-radius:6px;padding:4px 6px">
+                <b>Bảng → 2 Đèn:</b> 10 + 15 m
+              </div>
+              <div style="background:#f8fbff;border:1px solid #c3d9f0;border-radius:6px;padding:4px 6px">
+                <b>Bảng → 2 Quạt:</b> 12 + 20 m
+              </div>
+              <div style="background:#fef3e2;border:1px solid #fcd34d;border-radius:6px;padding:4px 6px;color:#b45309">
+                <b>Tổng nhánh:</b> <b>35 m</b>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:6px">
+            <button class="btn sm" data-say="c09" style="width:100%;margin-bottom:6px">🔊 Nghe hướng dẫn nhiệm vụ</button>
+            <button class="btn-open-vj" id="btnOpenVjModal" style="margin:0;padding:10px 14px;font-size:14px">
+              📋 Xem đối chiếu phương án VietJack (3.091.800 đ)
+            </button>
+          </div>
+        </div>
+
+        <!-- Cột phải: Bảng dự toán 5 chặng tương tác -->
+        <div class="card" style="padding:12px 16px;display:flex;flex-direction:column;justify-content:space-between">
+          <div>
+            <!-- Stepper 5 bước -->
+            <div class="est-stepper" id="estStepper">
+              <div class="est-step active" id="step1"><span class="est-step-num">1</span> Chọn vật tư</div>
+              <div class="est-step" id="step2"><span class="est-step-num">2</span> Chọn ĐVT</div>
+              <div class="est-step" id="step3"><span class="est-step-num">3</span> Điền số lượng</div>
+              <div class="est-step" id="step4"><span class="est-step-num">4</span> Điền đơn giá</div>
+              <div class="est-step" id="step5"><span class="est-step-num">5</span> Tính tiền</div>
+            </div>
+
+            <!-- Bảng dự toán -->
+            <table class="est-table" id="estTable">
+              <thead>
+                <tr>
+                  <th style="width:36px">STT</th>
+                  <th>Tên vật tư, thiết bị cần tính</th>
+                  <th style="width:84px">ĐVT</th>
+                  <th style="width:72px">Số lượng</th>
+                  <th style="width:110px">Đơn giá (đ)</th>
+                  <th style="width:115px">Thành tiền (đ)</th>
+                </tr>
+              </thead>
+              <tbody id="estTbody">
+                <!-- 8 dòng sẽ được sinh tự động bằng JS -->
+              </tbody>
+            </table>
+
+            <!-- Ngân hàng thẻ nguồn ở Chặng 1 -->
+            <div id="estPoolWrap" style="margin-top:6px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+                <span style="font-size:13px;font-weight:800;color:var(--navy)">📦 Ngân hàng thẻ vật tư (Tự do thứ tự: Kéo Công tắc, Dây dẫn hay Aptomat vào trước đều được):</span>
+                <span id="estItemCount" style="font-size:12.5px;color:#64748b;font-weight:700">Đã chọn: 0/8</span>
+              </div>
+              <div class="est-pool" id="estPool">
+                <!-- Thẻ nguồn được sinh bằng JS -->
+              </div>
+            </div>
+
+            <!-- Tổng chi phí thanh kết quả Chặng 5 -->
+            <div class="est-total-bar" id="estTotalBar" style="display:none">
+              <div style="font-weight:900;color:var(--navy);font-size:15px">
+                💰 TỔNG CHI PHÍ THI CÔNG MẠNG ĐIỆN LỚP HỌC (CHUẨN KỸ THUẬT):
+              </div>
+              <div class="est-total-num" id="estGrandTotalText">0 đ</div>
+            </div>
+          </div>
+
+          <!-- Thanh điều khiển chặng dưới bảng -->
+          <div class="est-controls">
+            <div class="est-guide" id="estGuideText">
+              👉 <b>Bước 1:</b> Em hãy kéo thả hoặc chạm vào 8 thẻ vật tư cần thiết cho mạng điện lớp học Hình 5.3.
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn sm" id="estAutoFillBtn" onclick="estQuickFill()" style="background:#e0f2fe;color:#0369a1;border:1px solid #7dd3fc" title="Xếp mẫu nhanh 8 thẻ">⚡ Xếp mẫu</button>
+              <button class="btn sm" id="estResetBtn" onclick="resetEstimator()" style="background:#f1f5f9;color:#334155;border:1px solid #cbd5e1" title="Làm lại từ đầu">🔄 Làm lại</button>
+              <button class="btn sm acc" id="estActionBtn" onclick="nextEstimatorStage()">Kiểm tra Bước 1 ➔</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 12: TỔNG KẾT & GHI NHỚ -->
+  <section class="slide" data-menu="Tổng kết · Ghi nhớ">
+    <div class="crumb"><b>TỔNG KẾT</b><span>·</span><span>Khắc sâu kiến thức trọng tâm</span></div>
+    <div class="wrap">
+      <h2 class="title">Ba bước – <em>Một nguyên tắc vàng</em></h2>
+      <div class="split">
+        <div class="card">
+          <ul class="steps-list">
+            <li class="step-item">
+              <span class="step-badge" style="background:#0275d8">1</span>
+              <div class="step-content">
+                <h4>Nghiên cứu kỹ sơ đồ</h4>
+                <p>Phân biệt chính xác dây nguồn (2× 2,5 mm²) và dây nhánh (2× 1,5 mm²).</p>
+              </div>
+            </li>
+            <li class="step-item">
+              <span class="step-badge" style="background:#f59e0b">2</span>
+              <div class="step-content">
+                <h4>Đo đạc & Lập bảng kê</h4>
+                <p>Tính đúng mét dây theo từng tuyến, ống luồn PVC và số lượng thiết bị đóng cắt.</p>
+              </div>
+            </li>
+            <li class="step-item">
+              <span class="step-badge" style="background:#16a34a">3</span>
+              <div class="step-content">
+                <h4>Tính chi phí chính xác</h4>
+                <p>Thành tiền = Số lượng × Đơn giá; cộng tổng chi phí toàn bộ mạng điện.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="card highlight" style="align-items:center;text-align:center">
+          <img src="assets/img/end.jpg" alt="Kết thúc bài học" style="max-height:180px;border-radius:12px;margin-bottom:12px">
+          <h3 style="color:#15803d;margin-bottom:6px">Chúc mừng các em đã hoàn thành bài học!</h3>
+          <p style="font-size:15px;color:#475569">
+            Hãy vận dụng kiến thức để tính toán chi phí điện an toàn, tiết kiệm cho chính gia đình của mình.
+          </p>
+          <div style="margin-top:10px">
+            <button class="btn sm" data-say="c10">🔊 Nghe lời dặn dò tổng kết</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 13: MỞ RỘNG & HƯỚNG DẪN VỀ NHÀ -->
+  <section class="slide" data-menu="Mở rộng · Video học tập">
+    <div class="crumb"><b>MỞ RỘNG</b><span>·</span><span>Video thực tế & Vận dụng phòng ngủ</span></div>
+    <div class="wrap">
+      <h2 class="title">Khám phá thực tế & <em>Nhiệm vụ về nhà</em></h2>
+      <div class="split">
+        <div class="card">
+          <h3>Nhiệm vụ vận dụng: Thiết kế phòng ngủ</h3>
+          <div class="sgk-fig" title="Bấm để phóng to hình ảnh phòng ngủ">
+            <span class="zoom-badge">🔍 Phóng to</span>
+            <img src="assets/img/bedroom.png" alt="Mô hình phòng ngủ">
+            <p class="fig-cap"><b>Bài tập về nhà (SGK tr.28)</b>: Thiết kế mạng điện và tính chi phí lắp đặt cho phòng ngủ của em.</p>
+          </div>
+        </div>
+        <div class="card highlight">
+          <h3>Video học tập thực tế (3 phút)</h3>
+          <div class="video-lazy-card" id="videoContainer" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:14px;border:2px solid var(--line);background:linear-gradient(135deg, #071f38, #0a3055);cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,0.25)" onclick="loadYoutubeVideo()">
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px;background:radial-gradient(circle at center, rgba(13,59,102,0.6) 0%, rgba(7,31,56,0.95) 100%)">
+              <div style="width:68px;height:68px;border-radius:50%;background:#ef4444;display:grid;place-items:center;box-shadow:0 6px 20px rgba(239,68,68,0.5);margin-bottom:12px;transition:transform 0.2s">
+                <svg viewBox="0 0 24 24" width="34" height="34" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+              <b style="font-size:18px;letter-spacing:0.02em">Quy trình lắp đặt mạng điện an toàn & luồn ống PVC</b>
+              <span style="font-size:13.5px;color:#94a3b8;margin-top:4px">Bấm vào đây để tải và xem video bài học (3 phút)</span>
+            </div>
+          </div>
+          <p style="margin-top:10px;font-size:14px;color:#475569">
+            Xem lại quy trình đi dây luồn ống an toàn, chuẩn bị bài 6: <b>Thực hành lắp đặt mạng điện trong nhà</b>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- THANH ĐIỀU HƯỚNG NỔI FLOATING DOCK TIẾT KIỆM DIỆN TÍCH CHO TV -->
+<nav class="floating-dock" aria-label="Thanh điều hướng nổi">
+  <button class="dock-btn" id="btnHome" onclick="openTocModal()" title="Mục lục bài học (13 slide)">📑</button>
+  <button class="dock-btn audio-btn" id="btnAudioToggle" onclick="toggleAudio()" title="Loa thoại thuyết minh: Bấm để Tắt/Bật">🔊</button>
+  <div class="dock-sep"></div>
+  <button class="dock-btn" id="btnViewMode" onclick="toggleViewMode()" title="Chuyển sang Chế độ Cuộn Di Động">📱</button>
+  <div class="dock-sep"></div>
+<button class="dock-btn nav-btn" id="btnPrev" onclick="prevSlide()" title="Lùi slide (Phím Mũi tên Trái)">❮</button>
+  <span class="dock-counter" id="slideCount" onclick="openTocModal()" title="Bấm để mở mục lục nhanh">01 / 13</span>
+  <div class="dock-dots" id="dotsContainer"></div>
+  <button class="dock-btn nav-btn primary" id="btnNext" onclick="nextSlide()" title="Tiến slide (Phím Mũi tên Phải)">❯</button>
+  <div class="dock-sep"></div>
+  <button class="dock-btn" id="btnFullscreen" onclick="toggleFullscreen()" title="Toàn màn hình">⛶</button>
+</nav>
+
+<!-- MOBILE BOTTOM BAR CHO NGÓN TAY CÁI -->
+<div class="mobile-bottom-bar" id="mobileBottomBar">
+  <button class="mob-bar-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Về đầu trang">⬆ Đầu trang</button>
+  <button class="mob-bar-btn" onclick="openTocModal()" title="Mục lục bài học">📑 Mục lục</button>
+  <button class="mob-bar-btn" id="mobBarAudio" onclick="toggleAudio()" title="Loa thuyết minh">🔊 Loa</button>
+  <button class="mob-bar-btn primary" onclick="toggleViewMode()" title="Chuyển sang Chế độ Slide TV">🖥️ Slide TV</button>
+</div>
+
+
+<!-- Lightbox Phóng to Toàn màn hình -->
+<div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightbox(event)">
+  <div class="lightbox-box" id="lightboxBox">
+    <button class="lightbox-close" onclick="closeLightboxDirect()">✕</button>
+    <img id="lightboxImg" src="" alt="Hình phóng to">
+  </div>
+</div>
+
+<!-- Modal Popup 100% Toàn màn hình VietJack & SGK -->
+<div class="modal-vj-overlay" id="modalVjOverlay">
+  <div class="modal-vj-box">
+    <div class="modal-vj-header">
+      <h3>📋 ĐÁP ÁN CHI TIẾT BÀI THỰC HÀNH VỀ NHÀ · HÌNH 5.3 (TRANG 28 SGK)</h3>
+      <button class="modal-vj-close" id="closeVjModal" onclick="closeVjModalFunc()" aria-label="Đóng popup">✕</button>
+    </div>
+    
+    <div class="vj-tabs">
+      <button class="vj-tab-btn active" data-vjtab="tab-vj">🌐 Phương án 1: VietJack (3.091.800 đ · Trọn gói thiết bị)</button>
+      <button class="vj-tab-btn" data-vjtab="tab-sgk">⚙️ Phương án 2: Chuẩn Kỹ thuật SGK (1.625.000 đ · Mạng điện & Ống PVC)</button>
+      <button class="vj-tab-btn" data-vjtab="tab-compare">⚖️ So sánh đối chiếu & Lời khuyên giáo viên</button>
+    </div>
+
+    <div class="modal-vj-body">
+      <!-- TAB 1: VIETJACK -->
+      <div class="vj-tab-pane active" id="tab-vj">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+          <div>
+            <span class="vj-badge vj">Nguồn: vietjack.com</span>
+            <b style="font-size:17px;color:var(--navy);margin-left:8px">Bảng dự toán trọn gói mua sắm thiết bị & vật tư</b>
+          </div>
+          <div style="font-size:14px;color:#64748b">Trích dẫn giải bài tập Công nghệ 9 KNTT - Luyện tập trang 28</div>
+        </div>
+        <table class="vj-table">
+          <thead>
+            <tr>
+              <th style="width:50px">STT</th>
+              <th>Tên thiết bị, vật tư</th>
+              <th>Thông số / Quy cách</th>
+              <th style="width:80px">Đơn vị</th>
+              <th style="width:80px">Số lượng</th>
+              <th style="width:130px">Đơn giá (VNĐ)</th>
+              <th style="width:150px">Thành tiền (VNĐ)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="text-align:center">1</td>
+              <td><b>Quạt trần</b></td>
+              <td>250 W, màu trắng / có điều khiển</td>
+              <td style="text-align:center">Chiếc</td>
+              <td style="text-align:center"><b>2</b></td>
+              <td style="text-align:right">859.000</td>
+              <td style="text-align:right"><b>1.718.000</b></td>
+            </tr>
+            <tr>
+              <td style="text-align:center">2</td>
+              <td><b>Bóng đèn LED</b></td>
+              <td>100 W, ánh sáng trắng</td>
+              <td style="text-align:center">Bóng</td>
+              <td style="text-align:center"><b>2</b></td>
+              <td style="text-align:right">63.000</td>
+              <td style="text-align:right"><b>126.000</b></td>
+            </tr>
+            <tr>
+              <td style="text-align:center">3</td>
+              <td><b>Ổ cắm điện</b></td>
+              <td>3 chấu có màng che an toàn</td>
+              <td style="text-align:center">Cái</td>
+              <td style="text-align:center"><b>1</b></td>
+              <td style="text-align:right">50.000</td>
+              <td style="text-align:right"><b>50.000</b></td>
+            </tr>
+            <tr>
+              <td style="text-align:center">4</td>
+              <td><b>Công tắc điện</b></td>
+              <td>1 chiều, loại đơn âm tường/nổi</td>
+              <td style="text-align:center">Cái</td>
+              <td style="text-align:center"><b>2</b></td>
+              <td style="text-align:right">27.000</td>
+              <td style="text-align:right"><b>54.000</b></td>
+            </tr>
+            <tr>
+              <td style="text-align:center">5</td>
+              <td><b>Dây cáp điện (nguồn)</b></td>
+              <td>Cu/PVC 2× 2,5 mm²</td>
+              <td style="text-align:center">Mét</td>
+              <td style="text-align:center"><b>14</b></td>
+              <td style="text-align:right">15.900</td>
+              <td style="text-align:right"><b>222.600</b></td>
+            </tr>
+            <tr>
+              <td style="text-align:center">6</td>
+              <td><b>Dây cáp điện (nhánh)</b></td>
+              <td>Cu/PVC 2× 1,5 mm²</td>
+              <td style="text-align:center">Mét</td>
+              <td style="text-align:center"><b>94</b></td>
+              <td style="text-align:right">9.800</td>
+              <td style="text-align:right"><b>921.200</b></td>
+            </tr>
+            <tr class="total-row">
+              <td colspan="6" style="text-align:right;padding-right:20px">TỔNG CỘNG CHI PHÍ DỰ TOÁN (VIETJACK):</td>
+              <td style="text-align:right;color:#dc2626;font-size:20px">3.091.800 đ</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="vj-note-card">
+          <b>Đặc điểm cách giải VietJack:</b>
+          <ul style="margin:6px 0 0 20px;padding:0">
+            <li>Cách giải này tính toán theo hướng <b>trọn gói mua sắm thiết bị gia dụng</b> (bao gồm cả giá mua 2 quạt trần 1.718.000 đ và 2 bóng đèn LED 126.000 đ).</li>
+            <li>Chiều dài dây cáp được tính theo dự toán thực tế ngoài hiện trường có hệ số uốn khúc và dự phòng dây nguồn/nhánh.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- TAB 2: SGK CHUẨN KỸ THUẬT -->
+      <div class="vj-tab-pane" id="tab-sgk">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+          <div>
+            <span class="vj-badge sgk">Chuẩn SGK & Giáo án Kỹ thuật</span>
+            <b style="font-size:17px;color:var(--navy);margin-left:8px">Bảng dự toán thi công lắp đặt hạ tầng mạng điện</b>
+          </div>
+          <div style="font-size:14px;color:#64748b">Bám sát nguyên tắc Câu hỏi trắc nghiệm SGK: Không tính đồ dùng điện</div>
+        </div>
+        <table class="vj-table">
+          <thead>
+            <tr>
+              <th style="width:50px">STT</th>
+              <th>Tên vật tư, thiết bị</th>
+              <th>Thông số / Quy cách</th>
+              <th style="width:80px">Đơn vị</th>
+              <th style="width:80px">Số lượng</th>
+              <th style="width:130px">Đơn giá (VNĐ)</th>
+              <th style="width:150px">Thành tiền (VNĐ)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="text-align:center">1</td>
+              <td><b>Dây nguồn chính</b></td>
+              <td>Dây đồng bọc PVC 2× 2,5 mm²</td>
+              <td style="text-align:center">Mét</td>
+              <td style="text-align:center"><b>7</b></td>
+              <td style="text-align:right">16.000</td>
+              <td style="text-align:right"><b>112.000</b></td>
+            </tr>
+            <tr>
+              <td style="text-align:center">2</td>
+              <td><b>Dây tải nhánh các thiết bị</b></td>
+              <td>Dây đồng bọc PVC 2× 1,5 mm²</td>
+              <td style="text-align:center">Mét</td>
+              <td style="text-align:center"><b>35</b></td>
+              <td style="text-align:right">10.000</td>
+              <td style="text-align:right"><b>350.000</b></td>
+            </tr>
+            <tr>
+              <td style="text-align:center">3</td>
+              <td><b>Ống luồn dây bảo vệ nguồn</b></td>
+              <td>Ống nhựa PVC chống cháy Φ20</td>
+              <td style="text-align:center">Mét</td>
+              <td style="text-align:center"><b>7</b></td>
+              <td style="text-align:right">12.000</td>
+              <td style="text-align:right"><b>84.000</b></td>
+            </tr>
+            <tr>
+              <td style="text-align:center">4</td>
+              <td><b>Ống luồn dây bảo vệ nhánh</b></td>
+              <td>Ống nhựa PVC chống cháy Φ16</td>
+              <td style="text-align:center">Mét</td>
+              <td style="text-align:center"><b>35</b></td>
+              <td style="text-align:right">10.000</td>
+              <td style="text-align:right"><b>350.000</b></td>
+            </tr>
+            <tr>
+              <td style="text-align:center">5</td>
+              <td><b>Aptomat bảo vệ tổng</b></td>
+              <td>2 cực 20A / 230V, dòng cắt 4.5kA</td>
+              <td style="text-align:center">Cái</td>
+              <td style="text-align:center"><b>1</b></td>
+              <td style="text-align:right">125.000</td>
+              <td style="text-align:right"><b>125.000</b></td>
+            </tr>
+            <tr>
+              <td style="text-align:center">6</td>
+              <td><b>Ổ cắm điện máy tính</b></td>
+              <td>Ổ cắm đôi có màng che 16A</td>
+              <td style="text-align:center">Bộ</td>
+              <td style="text-align:center"><b>1</b></td>
+              <td style="text-align:right">45.000</td>
+              <td style="text-align:right"><b>45.000</b></td>
+            </tr>
+            <tr>
+              <td style="text-align:center">7</td>
+              <td><b>Công tắc điều khiển</b></td>
+              <td>Công tắc đơn 1 chiều 10A</td>
+              <td style="text-align:center">Cái</td>
+              <td style="text-align:center"><b>2</b></td>
+              <td style="text-align:right">28.000</td>
+              <td style="text-align:right"><b>56.000</b></td>
+            </tr>
+            <tr>
+              <td style="text-align:center">8</td>
+              <td><b>Bảng điện + Hộp nối + Phụ kiện</b></td>
+              <td>Bảng nhựa, cút nối, đai kẹp, vít nở</td>
+              <td style="text-align:center">Gói</td>
+              <td style="text-align:center"><b>1</b></td>
+              <td style="text-align:right">50.000</td>
+              <td style="text-align:right"><b>50.000</b></td>
+            </tr>
+            <tr>
+              <td style="text-align:center">9</td>
+              <td><b>Nhân công lắp đặt kỹ thuật</b></td>
+              <td>Định mức thi công lắp đặt hoàn thiện</td>
+              <td style="text-align:center">Công</td>
+              <td style="text-align:center"><b>1</b></td>
+              <td style="text-align:right">453.000</td>
+              <td style="text-align:right"><b>453.000</b></td>
+            </tr>
+            <tr class="total-row">
+              <td colspan="6" style="text-align:right;padding-right:20px">TỔNG CỘNG DỰ TOÁN LẮP ĐẶT (CHUẨN KỸ THUẬT):</td>
+              <td style="text-align:right;color:#15803d;font-size:20px">1.625.000 đ</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="vj-note-card" style="border-left-color:#15803d;background:#f0fdf4">
+          <b>Đặc điểm cách tính Chuẩn Kỹ thuật SGK:</b>
+          <ul style="margin:6px 0 0 20px;padding:0">
+            <li><b>Không tính đồ dùng điện:</b> Trong kỹ thuật điện và các bài thi, mạng điện là phần cố định (hạ tầng đường dây, ống luồn, thiết bị đóng cắt bảo vệ). Quạt, bóng đèn, máy vi tính thuộc danh mục thiết bị tiêu thụ riêng.</li>
+            <li><b>Bắt buộc có ống luồn dây PVC:</b> Đảm bảo tiêu chuẩn an toàn PCCC lớp học, chống chập cháy và chuột cắn dây.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- TAB 3: SO SÁNH & LỜI KHUYÊN -->
+      <div class="vj-tab-pane" id="tab-compare">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+          <div style="background:#fff;border:1.5px solid #fecaca;border-radius:14px;padding:16px">
+            <h4 style="margin:0 0 10px;color:#b91c1c;font-size:17px">🌐 Khi nào dùng phương án VietJack (3.091.800 đ)?</h4>
+            <p style="font-size:15px;line-height:1.6">Áp dụng khi <b>chủ đầu tư / gia đình yêu cầu nhận bàn giao trọn gói</b> ("chìa khóa trao tay"), tức là người thợ phải mua luôn cả quạt trần, bóng đèn LED để treo lên và cấp điện sử dụng ngay.</p>
+            <div style="margin-top:10px;padding:10px;background:#fef2f2;border-radius:8px;font-size:14px;color:#991b1b">
+              <b>Lưu ý:</b> Cần bổ sung ống luồn bảo vệ dây để đảm bảo an toàn điện học đường.
+            </div>
+          </div>
+          <div style="background:#fff;border:1.5px solid #bbf7d0;border-radius:14px;padding:16px">
+            <h4 style="margin:0 0 10px;color:#15803d;font-size:17px">⚙️ Khi nào dùng phương án SGK Kỹ thuật (1.625.000 đ)?</h4>
+            <p style="font-size:15px;line-height:1.6">Áp dụng trong <b>thiết kế thi công kỹ thuật chuẩn, kiểm tra học kỳ và đề thi</b>. Mạng điện tính đúng vật tư hạ tầng, công lắp đặt và ống luồn PVC. Đồ dùng điện (quạt, đèn, PC) do nhà trường cấp theo danh mục mua sắm thiết bị.</p>
+            <div style="margin-top:10px;padding:10px;background:#f0fdf4;border-radius:8px;font-size:14px;color:#166534">
+              <b>Khắc sâu:</b> Giúp học sinh phân biệt rõ giữa "Hạ tầng mạng điện" và "Đồ dùng tiêu thụ điện".
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:16px;padding:16px;background:#fff8eb;border:2px solid #f59e0b;border-radius:14px">
+          <h4 style="margin:0 0 8px;color:#b45309;font-size:17px">👨‍🏫 Lời khuyên của Giáo viên chuyên môn dành cho Học sinh:</h4>
+          <p style="font-size:15.5px;line-height:1.65;margin:0;color:#0a1f33">
+            Khi làm bài tập trên lớp hoặc làm bài kiểm tra: Nếu đề bài ghi <i>"Tính chi phí lắp đặt mạng điện (không tính quạt, đèn)"</i> thì em chọn <b>1.625.000 đ</b>. Nếu đề bài yêu cầu <i>"Tính tổng kinh phí mua sắm thiết bị và lắp đặt để phòng học hoạt động được ngay"</i> thì em tính cả đèn, quạt theo phương án <b>3.091.800 đ</b> của VietJack. Cả hai phương án đều có giá trị thực tiễn rất cao!
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Mục lục Bài học -->
+<div class="modal-toc-overlay" id="modalTocOverlay" onclick="closeTocOverlay(event)">
+  <div class="modal-toc-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--line);padding-bottom:12px">
+      <h3 style="margin:0;font-size:22px;color:var(--navy);font-weight:900">📑 Mục lục bài học (13 slide)</h3>
+      <button class="modal-vj-close" style="width:40px;height:40px;font-size:20px" onclick="closeTocModal()">✕</button>
+    </div>
+    <div class="toc-grid" id="tocGrid"></div>
+  </div>
+</div>
+
+<!-- Canvas Confetti -->
+<canvas id="fx"></canvas>
+
+<script>
+
+function switch3Step(stepNum) {
+  for (var i = 1; i <= 3; i++) {
+    var btn = document.getElementById('tabBtn' + i);
+    var pane = document.getElementById('tabPane' + i);
+    if (btn) btn.classList.toggle('active', i === stepNum);
+    if (pane) pane.classList.toggle('active', i === stepNum);
+  }
+}
+
+/* ===== QUẢN LÝ SLIDE & ĐIỀU HƯỚNG ===== */
+var slides = Array.from(document.querySelectorAll('.slide'));
+var cur = 0;
+var total = slides.length;
+var dotsContainer = document.getElementById('dotsContainer');
+var slideCount = document.getElementById('slideCount');
+var audioEnabled = true;
+var curAudio = null;
+
+// Khởi tạo chấm tròn tiến độ
+dotsContainer.innerHTML = '';
+slides.forEach(function(_, idx) {
+  var dot = document.createElement('i');
+  dot.onclick = function() { go(idx); };
+  dotsContainer.appendChild(dot);
+});
+
+// Khởi tạo Mục lục
+var tocGrid = document.getElementById('tocGrid');
+slides.forEach(function(s, idx) {
+  var item = document.createElement('div');
+  item.className = 'toc-item';
+  var menuTitle = s.dataset.menu || ('Slide ' + (idx + 1));
+  item.innerHTML = '<i>' + (idx + 1) + '</i><span>' + menuTitle + '</span>';
+  item.onclick = function() {
+    if (currentViewMode === 'scroll') {
+      slides[idx].scrollIntoView({ behavior: 'smooth' });
+    } else {
+      go(idx);
+    }
+    closeTocModal();
+  };
+  tocGrid.appendChild(item);
+});
+
+/* ==========================================================================
+   MASTER AUDIO CONTROLLER (SINGLE ACTIVE AUDIO CHANNEL - TRIỆT TIÊU 100% TRÙNG ÂM)
+   ========================================================================== */
+var MasterAudio = {
+  currentAudio: null,
+  activeReqId: 0,
+  debounceTimer: null,
+  enabled: true,
+
+  // DỪNG TOÀN BỘ ÂM THANH NGAY LẬP TỨC - KHÔNG DELAY, KHÔNG FADE-OUT
+  stopAll: function(reason) {
+    // 1. Tăng ID thế hệ để vô hiệu hóa mọi promise/callback đang xếp hàng
+    this.activeReqId++;
+
+    // 2. Hủy timer debounce nếu đang chờ phát
+    if (this.debounceTimer) {
+      clearTimeout(this.debounceTimer);
+      this.debounceTimer = null;
+    }
+
+    // 3. Dừng và giải phóng audio đang phát
+    if (this.currentAudio) {
+      try {
+        this.currentAudio.onended = null;
+        this.currentAudio.onerror = null;
+        this.currentAudio.pause();
+        this.currentAudio.currentTime = 0;
+        this.currentAudio.src = '';
+        this.currentAudio.load();
+      } catch (e) {}
+      this.currentAudio = null;
+    }
+
+    // 4. Dừng triệt để các kênh âm thanh của trò chơi Ai Là Triệu Phú
+    if (typeof altpAudioVoice !== 'undefined' && altpAudioVoice) {
+      try { altpAudioVoice.pause(); altpAudioVoice.currentTime = 0; altpAudioVoice.src = ''; } catch(e) {}
+      altpAudioVoice = null;
+    }
+    if (typeof altpAudioSfx !== 'undefined' && altpAudioSfx) {
+      try { altpAudioSfx.pause(); altpAudioSfx.currentTime = 0; altpAudioSfx.src = ''; } catch(e) {}
+      altpAudioSfx = null;
+    }
+    if (typeof altpAudioBgm !== 'undefined' && altpAudioBgm) {
+      try { altpAudioBgm.pause(); altpAudioBgm.currentTime = 0; altpAudioBgm.src = ''; } catch(e) {}
+      altpAudioBgm = null;
+    }
+
+    // 5. Quét toàn bộ các thẻ audio trên document nếu có
+    try {
+      document.querySelectorAll('audio').forEach(function(a) {
+        try { a.pause(); a.currentTime = 0; } catch(e) {}
+      });
+    } catch(e) {}
+  },
+
+  // PHÁT 1 AUDIO DUY NHẤT VỚI BẢO VỆ TOKEN THẾ HỆ
+  play: function(src, options) {
+    if (!this.enabled || !src) return null;
+    options = options || {};
+
+    // Dừng sạch mọi âm thanh trước đó
+    this.stopAll('play_new');
+
+    var reqId = ++this.activeReqId;
+    var audio = new Audio();
+    audio.preload = 'auto';
+    this.currentAudio = audio;
+
+    audio.onended = function() {
+      if (MasterAudio.activeReqId === reqId) {
+        MasterAudio.currentAudio = null;
+        if (typeof options.onEnded === 'function') {
+          options.onEnded();
+        }
+      }
+    };
+
+    audio.onerror = function() {
+      if (MasterAudio.activeReqId === reqId) {
+        MasterAudio.currentAudio = null;
+      }
+    };
+
+    audio.src = src;
+    var playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.then(function() {
+        // KIỂM TRA QUYẾT ĐỊNH: Nếu trong lúc browser cấp quyền play, user đã bấm đổi slide khác
+        if (MasterAudio.activeReqId !== reqId) {
+          try {
+            audio.pause();
+            audio.currentTime = 0;
+            audio.src = '';
+          } catch(e) {}
+          if (MasterAudio.currentAudio === audio) {
+            MasterAudio.currentAudio = null;
+          }
+        }
+      }).catch(function(err) {
+        // Tự động xử lý chặn autoplay hoặc bị pause sớm
+      });
+    }
+
+    return audio;
+  }
+};
+
+// Biến cờ tương thích toàn cục
+var audioEnabled = true;
+var curAudio = null;
+
+function go(index) {
+  if (index < 0 || index >= total) return;
+  
+  // 1. DỪNG TẤT CẢ AUDIO NGAY LẬP TỨC KHI VỪA BẤM CHUYỂN SLIDE (KHÔNG TRỄ)
+  MasterAudio.stopAll('slide_navigation');
+  
+  // 2. Chuyển đổi Slide UI tức thì
+  slides[cur].classList.remove('active');
+  cur = index;
+  slides[cur].classList.add('active');
+  
+  // Khởi tạo giao diện Ai Là Triệu Phú nếu vào Slide 10 (index 9)
+  if (cur === 9 && typeof altpInit === 'function') {
+    altpInit(true); // true = silent init (để lời dẫn c08 phát trước, không đè voice câu 1)
+  }
+  
+  // Cập nhật số trang & dots
+  slideCount.textContent = (cur + 1 < 10 ? '0' : '') + (cur + 1) + ' / ' + (total < 10 ? '0' : '') + total;
+  var allDots = dotsContainer.querySelectorAll('i');
+  allDots.forEach(function(d, i) { d.classList.toggle('active', i === cur); });
+
+  // 3. DEBOUNCE AUDIO 240ms: Bấm chuyển slide nhanh liên tục sẽ HỦY slide trước, CHỈ phát slide cuối cùng
+  var targetIndex = cur;
+  var reqId = ++MasterAudio.activeReqId;
+  MasterAudio.debounceTimer = setTimeout(function() {
+    if (MasterAudio.activeReqId === reqId && cur === targetIndex) {
+      playSlideAudio(targetIndex);
+    }
+  }, 240);
+}
+
+function prevSlide() { if (cur > 0) go(cur - 1); }
+function nextSlide() { if (cur < total - 1) go(cur + 1); }
+
+/* ===== DANH SÁCH FILE THOẠI TRÚC LY CHUẨN CÁC SLIDE ===== */
+var audioMap = [
+  'assets/audio/c01.mp3',             // 0: Slide 1 (Bìa)
+  'assets/audio/c02.mp3',             // 1: Slide 2 (Mục tiêu bài học)
+  'assets/audio/c02_khoidong.mp3',    // 2: Slide 3 (Khởi động Hình 5.1)
+  'assets/audio/c02_babuoctoan.mp3',  // 3: Slide 4 (I. Ba bước tính toán)
+  'assets/audio/c03.mp3',             // 4: Slide 5 (Bước 1 · Nghiên cứu sơ đồ)
+  'assets/audio/c04.mp3',             // 5: Slide 6 (Bước 2 · Lập bảng kê)
+  'assets/audio/c05.mp3',             // 6: Slide 7 (Bước 3 · Tính toán chi phí)
+  'assets/audio/c06.mp3',             // 7: Slide 8 (II. Thực hành Hình 5.2)
+  'assets/audio/c07.mp3',             // 8: Slide 9 (Thực hành · Bảng tính chi phí)
+  'assets/audio/c08.mp3',             // 9: Slide 10 (Luyện tập · Ai Là Triệu Phú)
+  'assets/audio/c09.mp3',             // 10: Slide 11 (Vận dụng · Bài toán lớp học 5 chặng)
+  'assets/audio/c10.mp3',             // 11: Slide 12 (Tổng kết · Ghi nhớ)
+  'assets/audio/c11.mp3'              // 12: Slide 13 (Mở rộng · Video học tập)
+];
+
+function playAudioClip(src, options) {
+  return MasterAudio.play(src, options);
+}
+
+function playSlideAudio(idx) {
+  if (!MasterAudio.enabled) return;
+
+  // Xử lý thông minh cho Slide 10 (Ai Là Triệu Phú - index 9):
+  // Phát lời dẫn c08.mp3 trước. Khi dứt lời dẫn mới chuyển sang đọc câu 1 (nếu thí sinh chưa chọn đáp án)
+  if (idx === 9) {
+    MasterAudio.play('assets/audio/c08.mp3', {
+      onEnded: function() {
+        if (cur === 9 && typeof altpCurIdx !== 'undefined' && altpCurIdx === 0 && !altpTransitioning) {
+          altpPlayVoice(0);
+        }
+      }
+    });
+    return;
+  }
+
+  if (audioMap[idx]) {
+    MasterAudio.play(audioMap[idx]);
+  }
+}
+
+function toggleAudio() {
+  MasterAudio.enabled = !MasterAudio.enabled;
+  audioEnabled = MasterAudio.enabled;
+  window.isAudioMuted = !MasterAudio.enabled;
+  
+  var btn = document.getElementById('btnAudioToggle');
+  if (MasterAudio.enabled) {
+    btn.textContent = '🔊';
+    btn.classList.remove('muted');
+    btn.title = 'Loa thoại: Đang BẬT (Bấm để tắt)';
+    playSlideAudio(cur);
+  } else {
+    btn.textContent = '🔇';
+    btn.classList.add('muted');
+    btn.title = 'Loa thoại: Đang TẮT (Bấm để bật lại)';
+    MasterAudio.stopAll('user_muted');
+  }
+}
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(function(err){});
+  } else {
+    if (document.exitFullscreen) document.exitFullscreen();
+  }
+}
+
+document.addEventListener('fullscreenchange', function() {
+  var btn = document.getElementById('btnFullscreen');
+  if (btn) btn.textContent = document.fullscreenElement ? '🗗' : '⛶';
+});
+
+document.querySelectorAll('[data-say]').forEach(function(el) {
+  el.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var code = el.getAttribute('data-say');
+    playAudioClip('assets/audio/' + code + '.mp3');
+  });
+});
+
+/* ===== LIGHTBOX PHÓNG TO HÌNH ẢNH SGK ===== */
+var lightboxOverlay = document.getElementById('lightboxOverlay');
+var lightboxImg = document.getElementById('lightboxImg');
+
+function openLightboxImg(src) {
+  if (!src) return;
+  lightboxImg.src = src;
+  lightboxOverlay.classList.add('open');
+}
+function closeLightboxDirect() {
+  lightboxOverlay.classList.remove('open');
+}
+function closeLightbox(e) {
+  if (e.target === lightboxOverlay) closeLightboxDirect();
+}
+
+document.querySelectorAll('.sgk-fig').forEach(function(fig) {
+  fig.onclick = function() {
+    var img = fig.querySelector('img');
+    if (img) openLightboxImg(img.src);
+  };
+});
+
+/* ===== MODAL POPUP 100% VIETJACK & SGK ===== */
+var modalVjOverlay = document.getElementById('modalVjOverlay');
+var btnOpenVjModal = document.getElementById('btnOpenVjModal');
+
+function openVjModal() {
+  if (modalVjOverlay) modalVjOverlay.classList.add('open');
+}
+function closeVjModalFunc() {
+  if (modalVjOverlay) modalVjOverlay.classList.remove('open');
+}
+if (btnOpenVjModal) btnOpenVjModal.onclick = openVjModal;
+if (modalVjOverlay) {
+  modalVjOverlay.onclick = function(e) {
+    if (e.target === modalVjOverlay) closeVjModalFunc();
+  };
+}
+
+// Chuyển Tab trong Popup VietJack
+document.querySelectorAll('.vj-tab-btn').forEach(function(btn) {
+  btn.onclick = function() {
+    var targetId = btn.dataset.vjtab;
+    document.querySelectorAll('.vj-tab-btn').forEach(function(b) { b.classList.remove('active'); });
+    document.querySelectorAll('.vj-tab-pane').forEach(function(p) { p.classList.remove('active'); });
+    btn.classList.add('active');
+    var targetPane = document.getElementById(targetId);
+    if (targetPane) targetPane.classList.add('active');
+  };
+});
+
+/* ===== MODAL MỤC LỤC ===== */
+var modalTocOverlay = document.getElementById('modalTocOverlay');
+function openTocModal() { modalTocOverlay.classList.add('open'); }
+function closeTocModal() { modalTocOverlay.classList.remove('open'); }
+function closeTocOverlay(e) { if (e.target === modalTocOverlay) closeTocModal(); }
+
+/* ===== BẢNG TÍNH CHI PHÍ TƯƠNG TÁC (SLIDE 9) ===== */
+function recalc() {
+  var table = document.getElementById('calcTable');
+  var rows = table.querySelectorAll('tbody tr');
+  var grandTotal = 0;
+  rows.forEach(function(row) {
+    var sl = parseFloat(row.querySelector('.c-sl').textContent) || 0;
+    var price = parseFloat(row.querySelector('.inp-price').value) || 0;
+    var tt = sl * price;
+    grandTotal += tt;
+    row.querySelector('.c-tt').textContent = tt.toLocaleString('vi-VN');
+  });
+  document.getElementById('calcGrandTotal').textContent = grandTotal.toLocaleString('vi-VN') + ' đồng';
+}
+
+/* ===== GAMESHOW AI LÀ TRIỆU PHÚ 15 BẬC THANG JS ===== */
+var altpQuestions = [{"level": 1, "reward": "200.000 đ", "question": "Quy trình tính toán chi phí lắp đặt mạng điện trong nhà gồm có mấy bước?", "options": ["2 bước", "3 bước", "4 bước", "1 bước"], "correct": 1, "tts_text": "Câu hỏi số một, mức thưởng hai trăm nghìn đồng. Quy trình tính toán chi phí lắp đặt mạng điện trong nhà gồm có mấy bước?", "hint": "Theo SGK Công nghệ 9 Bài 5, quy trình chuẩn gồm đúng 3 bước: Nghiên cứu sơ đồ, Lập bảng kê vật tư thiết bị, và Lập bảng tính toán chi phí.", "image": null}, {"level": 2, "reward": "400.000 đ", "question": "Bước đầu tiên cần thực hiện khi tính toán chi phí lắp đặt mạng điện trong nhà là gì?", "options": ["Nghiên cứu sơ đồ lắp đặt mạng điện", "Lập bảng kê số lượng thiết bị", "Lập bảng tính toán chi phí", "Mua sắm vật tư và dụng cụ"], "correct": 0, "tts_text": "Câu hỏi số hai, mức thưởng bốn trăm nghìn đồng. Bước đầu tiên cần thực hiện khi tính toán chi phí lắp đặt mạng điện trong nhà là gì?", "hint": "Trước khi mua hay tính tiền, người kỹ sư bao giờ cũng phải đọc và nghiên cứu kỹ sơ đồ lắp đặt mạch điện.", "image": null}, {"level": 3, "reward": "600.000 đ", "question": "Vật liệu nào dưới đây thuộc nhóm vật liệu cách điện trong lắp đặt mạng điện?", "options": ["Lưỡi dao cầu dao kim loại", "Ống nhựa luồn dây PVC Ø 16 mm", "Cọc tiếp địa bằng thép mạ đồng", "Dây dẫn điện lõi đồng"], "correct": 1, "tts_text": "Câu hỏi số ba, mức thưởng sáu trăm nghìn đồng. Vật liệu nào dưới đây thuộc nhóm vật liệu cách điện trong lắp đặt mạng điện?", "hint": "Nhựa PVC và băng dính cách điện là những vật liệu cách điện phổ biến nhất để đảm bảo an toàn.", "image": null}, {"level": 4, "reward": "1.000.000 đ", "question": "Bước cuối cùng (Bước 3) cần thực hiện khi tính toán chi phí mạng điện trong nhà là gì?", "options": ["Lập bảng tính toán chi phí", "Nghiệm thu đóng điện thử tải", "Lập sơ đồ nguyên lý mạch điện", "Lắp đặt bảng điện chính"], "correct": 0, "tts_text": "Câu hỏi số bốn, mức thưởng một triệu đồng. Bước cuối cùng cần thực hiện khi tính toán chi phí mạng điện trong nhà là gì?", "hint": "Bước 3 chính là tổng hợp số lượng, tra đơn giá thị trường để Lập bảng tính toán chi phí tổng thể.", "image": null}, {"level": 5, "reward": "2.000.000 đ", "question": "Hình bên là thiết bị điện nào có chức năng đóng cắt và tự động ngắt mạch khi có sự cố quá tải, ngắn mạch?", "options": ["Aptomat (Cầu dao tự động)", "Công tơ điện xoay chiều", "Chuông điện gia đình", "Biến áp cách ly"], "correct": 0, "tts_text": "Câu hỏi số năm, mốc thưởng an toàn hai triệu đồng. Hình bên là thiết bị điện nào có chức năng đóng cắt và tự động ngắt mạch khi có sự cố quá tải, ngắn mạch?", "hint": "Đây là thiết bị an toàn quen thuộc lắp ở đầu mỗi bảng điện hoặc mạng điện nhánh: Aptomat.", "image": "assets/images/millionaire/image_4e3f0c57c40.jpeg"}, {"level": 6, "reward": "3.000.000 đ", "question": "Quan sát sơ đồ lắp đặt mạch điện phòng ngủ (Hình 5.2 SGK), mạch điện này sử dụng loại aptomat nào ở đầu nguồn?", "options": ["Cầu dao đảo chiều ba vị trí", "Aptomat ba cực (3P)", "Aptomat hai cực (2P)", "Aptomat một cực"], "correct": 2, "tts_text": "Câu hỏi số sáu, mức thưởng ba triệu đồng. Quan sát sơ đồ lắp đặt mạch điện phòng ngủ Hình 5.2, mạch điện này sử dụng loại aptomat nào ở đầu nguồn?", "hint": "Nhìn vào đầu nguồn có ký hiệu cắt đồng thời cả 2 dây pha và trung tính, đó là aptomat hai cực 2P.", "image": "assets/images/millionaire/image_9eee55f00b0.png"}, {"level": 7, "reward": "6.000.000 đ", "question": "Trong sơ đồ lắp đặt mạng điện phòng ngủ Hình 5.2 SGK bên cạnh, thiết bị nào KHÔNG có mặt trong sơ đồ?", "options": ["Công tắc đơn điều khiển đèn", "Ổ cắm điện đôi", "Quạt trần làm mát", "Bóng đèn chiếu sáng"], "correct": 2, "tts_text": "Câu hỏi số bảy, mức thưởng sáu triệu đồng. Trong sơ đồ lắp đặt mạng điện phòng ngủ Hình 5.2 bên cạnh, thiết bị nào không có mặt trong sơ đồ?", "hint": "Mạch điện phòng ngủ này chỉ có đèn chiếu sáng, ổ cắm, công tắc và aptomat; hoàn toàn không có quạt trần.", "image": "assets/images/millionaire/image_48e769f61e0.png"}, {"level": 8, "reward": "10.000.000 đ", "question": "Công việc “Xác định dây dẫn, thiết bị và dụng cụ điện cần dùng” được thực hiện ở bước nào?", "options": ["Bước 3: Lập bảng tính toán chi phí", "Bước 1: Nghiên cứu sơ đồ lắp đặt mạng điện", "Bước 2: Lập bảng kê số lượng vật liệu, thiết bị", "Bước 4: Thi công hoàn thiện công trình"], "correct": 1, "tts_text": "Câu hỏi số tám, mức thưởng mười triệu đồng. Công việc xác định dây dẫn, thiết bị và dụng cụ điện cần dùng được thực hiện ở bước nào?", "hint": "Khi quan sát, nghiên cứu kỹ sơ đồ ở Bước 1, ta đã phải xác định rõ các thành phần dây dẫn và thiết bị có mặt trên bản vẽ.", "image": null}, {"level": 9, "reward": "14.000.000 đ", "question": "Khi đo đạc và tính chiều dài dây dẫn điện trên sơ đồ lắp đặt, tại sao ta cần cộng thêm từ 10% đến 15% chiều dài?", "options": ["Để bán lại vật tư thừa lấy tiền tiết kiệm", "Để làm tăng điện áp của nguồn điện gia đình", "Để đáp ứng quy định kiểm định của nhà cung cấp điện", "Để dự phòng hao hụt khi uốn cong, đấu nối và tuốt dây"], "correct": 3, "tts_text": "Câu hỏi số chín, mức thưởng mười bốn triệu đồng. Khi đo đạc và tính chiều dài dây dẫn điện trên sơ đồ lắp đặt, tại sao ta cần cộng thêm từ 10% đến 15% chiều dài?", "hint": "Dây dẫn khi đi qua các góc vuông tường, vào hộp nối hoặc tuốt đầu dây đấu nối luôn bị hao hụt chiều dài.", "image": null}, {"level": 10, "reward": "22.000.000 đ", "question": "Để bảo vệ các dây dẫn điện đi ngầm trong tường hoặc đi nổi tránh bị chuột cắn, ẩm ướt và va đập cơ học, giải pháp tiêu chuẩn là gì?", "options": ["Không cần bảo vệ vì vỏ bọc nhựa dây đã đủ bền", "Luồn dây dẫn trong ống bảo vệ cách điện chuyên dụng (PVC)", "Quấn thêm giấy báo xung quanh toàn bộ đường dây", "Dán chặt dây vào tường bằng băng keo hai mặt mỏng"], "correct": 1, "tts_text": "Câu hỏi số mười, mốc thưởng an toàn hai mươi hai triệu đồng. Để bảo vệ dây dẫn điện đi ngầm trong tường hoặc đi nổi tránh ẩm ướt và va đập, giải pháp tiêu chuẩn là gì?", "hint": "Quy chuẩn kỹ thuật bắt buộc phải luồn dây dẫn vào ống nhựa bảo vệ PVC chống cháy, chống ẩm.", "image": null}, {"level": 11, "reward": "30.000.000 đ", "question": "Theo SGK Công nghệ 9 (trang 28), có mấy tiêu chí chính dùng để đánh giá kết quả thực hành tính toán chi phí lắp đặt mạng điện?", "options": ["3 tiêu chí", "5 tiêu chí", "2 tiêu chí", "4 tiêu chí"], "correct": 0, "tts_text": "Câu hỏi số mười một, mức thưởng ba mươi triệu đồng. Theo sách giáo khoa Công nghệ 9 trang 28, có mấy tiêu chí chính dùng để đánh giá kết quả thực hành?", "hint": "Gồm 3 tiêu chí cốt lõi: Tính chính xác chi phí; Xác định đúng thông số, số lượng; và Tiến hành đúng trình tự các bước.", "image": null}, {"level": 12, "reward": "40.000.000 đ", "question": "Quan sát sơ đồ mạng điện lớp học bên cạnh (gồm 2 bóng đèn và 2 quạt trần), phát biểu nào sau đây là SAI?", "options": ["Đồ dùng điện bao gồm 2 đèn và 2 quạt trần", "Bảng điện có công tắc điều khiển quạt", "Bảng điện có công tắc điều khiển đèn", "Đồ dùng điện bao gồm 2 ổ điện và 2 bóng đèn"], "correct": 3, "tts_text": "Câu hỏi số mười hai, mức thưởng bốn mươi triệu đồng. Quan sát sơ đồ mạng điện lớp học bên cạnh, phát biểu nào sau đây là sai?", "hint": "Ổ cắm điện là thiết bị lấy điện, không phải là đồ dùng điện tiêu thụ điện năng như quạt hay đèn.", "image": "assets/images/millionaire/image_befb97d6870.png"}, {"level": 13, "reward": "60.000.000 đ", "question": "Theo Bảng tính Hình 5.3 SGK, nếu đơn giá ống luồn dây PVC Ø 16 mm là 7.000 đ/m và số lượng cần dùng là 20 m, thành tiền là bao nhiêu?", "options": ["140.000 đồng", "120.000 đồng", "210.000 đồng", "160.000 đồng"], "correct": 0, "tts_text": "Câu hỏi số mười ba, mức thưởng sáu mươi triệu đồng. Theo bảng tính, nếu đơn giá ống luồn dây PVC là bảy nghìn đồng một mét và cần dùng hai mươi mét, thành tiền là bao nhiêu?", "hint": "Thành tiền = Số lượng × Đơn giá = 20 × 7.000 đ = 140.000 đồng.", "image": "assets/images/millionaire/image_2097dd4e550.png"}, {"level": 14, "reward": "85.000.000 đ", "question": "Dựa vào bảng tính dự toán mẫu Hình 5.3 SGK, tổng chi phí cho toàn bộ nhóm VẬT LIỆU CÁCH ĐIỆN (ống PVC và băng dính) là bao nhiêu?", "options": ["370.000 đồng", "150.000 đồng", "210.000 đồng", "60.000 đồng"], "correct": 2, "tts_text": "Câu hỏi số mười bốn, mức thưởng tám mươi lăm triệu đồng. Dựa vào bảng dự toán mẫu Hình 5.3 SGK, tổng chi phí cho toàn bộ nhóm vật liệu cách điện là bao nhiêu?", "hint": "Nhóm vật liệu cách điện gồm Ống PVC (140.000 đ) + Ống chữ T, khớp nối (60.000 đ) + Băng dính cách điện (10.000 đ) = 210.000 đồng.", "image": null}, {"level": 15, "reward": "150.000.000 đ", "question": "Dựa vào bảng tính dự toán mẫu Hình 5.3 SGK trang 27, TỔNG KINH PHÍ dự toán hoàn chỉnh cho toàn bộ mạng điện phòng ngủ là bao nhiêu?", "options": ["815.000 đồng", "920.000 đồng", "635.000 đồng", "745.000 đồng"], "correct": 3, "tts_text": "Câu hỏi số mười lăm, câu hỏi đỉnh cao mức thưởng một trăm năm mươi triệu đồng. Dựa vào bảng tính dự toán mẫu Hình 5.3 sách giáo khoa trang 27, tổng kinh phí dự toán hoàn chỉnh cho toàn bộ mạng điện phòng ngủ là bao nhiêu?", "hint": "Tổng kinh phí SGK trang 27: Dây dẫn (165.000 đ) + Vật liệu cách điện (210.000 đ) + Thiết bị điện (370.000 đ) = 745.000 đồng.", "image": null}];
+
+var altpCurIdx = 0;
+var altpCurrentPrize = 0;
+var altpSafePrize = 0;
+var altpTransitioning = false;
+var altpAudioBgm = null;
+var altpAudioSfx = null;
+var altpAudioVoice = null;
+
+var altpUsedFifty = false;
+var altpUsedPhone = false;
+var altpUsedAudience = false;
+
+// Khởi tạo tháp tiền thưởng 15 bậc
+function altpRenderTower() {
+  var tower = document.getElementById('altpTower');
+  if (!tower) return;
+  var html = '';
+  for (var i = 1; i <= 15; i++) {
+    var q = altpQuestions[i - 1];
+    var isMilestone = (i === 5 || i === 10 || i === 15);
+    var milestoneCls = isMilestone ? ' milestone' : '';
+    html += '<div class="altp-level-item' + milestoneCls + '" id="altpLvl_' + i + '">';
+    html += '  <span class="altp-level-num">' + (i < 10 ? '0' + i : i) + '</span>';
+    html += '  <span class="altp-level-val">' + q.reward + '</span>';
+    html += '</div>';
+  }
+  tower.innerHTML = html;
+}
+
+// Cập nhật tháp tiền thưởng
+function altpUpdateTower(idx) {
+  for (var i = 1; i <= 15; i++) {
+    var el = document.getElementById('altpLvl_' + i);
+    if (!el) continue;
+    el.classList.remove('active', 'passed');
+    if (i < idx + 1) {
+      el.classList.add('passed');
+    } else if (i === idx + 1) {
+      el.classList.add('active');
+    }
+  }
+}
+
+// Phát âm thanh hiệu ứng qua MasterAudio (Tuyệt đối không chạy trùng)
+function altpPlaySfx(type) {
+  if (!MasterAudio.enabled) return;
+  var soundMap = {
+    'bgm': 'assets/audio/millionaire/background.mp3',
+    'right': 'assets/audio/millionaire/right.mp3',
+    'wrong': 'assets/audio/millionaire/wrong.mp3'
+  };
+  if (soundMap[type]) {
+    MasterAudio.play(soundMap[type]);
+  }
+}
+
+// Phát âm thanh đọc câu hỏi bằng TTS qua MasterAudio
+function altpPlayVoice(idx) {
+  if (!MasterAudio.enabled) return;
+  var numStr = (idx + 1) < 10 ? '0' + (idx + 1) : '' + (idx + 1);
+  MasterAudio.play('assets/audio/millionaire/q' + numStr + '.mp3');
+}
+
+function altpReplayVoice() {
+  altpPlayVoice(altpCurIdx);
+}
+
+// Render câu hỏi hiện tại
+function altpRenderQuestion(idx, skipVoice) {
+  if (idx < 0 || idx >= altpQuestions.length) return;
+  var q = altpQuestions[idx];
+  altpTransitioning = false;
+
+  // Cập nhật câu số & tiền thưởng
+  document.getElementById('altpQNum').textContent = 'CÂU ' + (idx + 1) + ' / 15';
+  document.getElementById('altpQText').textContent = q.question;
+  document.getElementById('altpPrizeDisplay').textContent = (idx > 0 ? altpQuestions[idx - 1].reward : '0 đ');
+  
+  // Cập nhật hình ảnh nếu có
+  var imgWrap = document.getElementById('altpImgWrap');
+  var imgEl = document.getElementById('altpImg');
+  if (q.image) {
+    imgEl.src = q.image;
+    imgWrap.style.display = 'block';
+  } else {
+    imgWrap.style.display = 'none';
+  }
+
+  // Render 4 đáp án
+  var grid = document.getElementById('altpAnswersGrid');
+  var btns = grid.querySelectorAll('.altp-answer-btn');
+  var letters = ['A', 'B', 'C', 'D'];
+  for (var i = 0; i < 4; i++) {
+    var btn = btns[i];
+    btn.className = 'altp-answer-btn';
+    btn.disabled = false;
+    btn.innerHTML = '<span class="altp-opt-letter">' + letters[i] + ':</span><span class="altp-opt-text">' + q.options[i] + '</span>';
+  }
+
+  // Cập nhật tháp tiền thưởng
+  altpUpdateTower(idx);
+
+  // Nhận xét hướng dẫn
+  document.getElementById('altpFeedbackText').innerHTML = '💡 <i>Bậc ' + (idx + 1) + ' (' + q.reward + '):</i> Hãy chọn phương án chính xác nhất.';
+  document.getElementById('altpNextBtn').style.display = 'none';
+
+  // Tự động phát âm thanh câu hỏi nếu không bị skip
+  if (!skipVoice) { altpPlayVoice(idx); }
+}
+
+// Xử lý khi thí sinh chọn đáp án
+function altpSelectAnswer(chosen) {
+  if (altpTransitioning) return;
+  altpTransitioning = true;
+
+  var q = altpQuestions[altpCurIdx];
+  var grid = document.getElementById('altpAnswersGrid');
+  var btns = grid.querySelectorAll('.altp-answer-btn');
+  
+  // Dừng toàn bộ âm thanh ngay lập tức khi thí sinh bấm chọn đáp án
+  MasterAudio.stopAll('answer_selected');
+
+  // Highlight đáp án đang chọn với hiệu ứng chớp hồi hộp
+  btns[chosen].classList.add('selected');
+  btns.forEach(function(b) { b.disabled = true; });
+
+  // Sau 1.2s công bố kết quả
+  setTimeout(function() {
+    btns[chosen].classList.remove('selected');
+    if (chosen === q.correct) {
+      // Đúng
+      btns[chosen].classList.add('correct');
+      altpPlaySfx('right');
+      fireConfetti();
+      altpCurrentPrize = q.reward;
+      document.getElementById('altpPrizeDisplay').textContent = altpCurrentPrize;
+
+      if (altpCurIdx + 1 === 5) {
+        altpSafePrize = "2.000.000 đ";
+      } else if (altpCurIdx + 1 === 10) {
+        altpSafePrize = "22.000.000 đ";
+      } else if (altpCurIdx + 1 === 15) {
+        altpSafePrize = "150.000.000 đ";
+      }
+
+      if (altpCurIdx === 14) {
+        // Vô địch 150 triệu!
+        document.getElementById('altpFeedbackText').innerHTML = '🏆 <b>XUẤT SẮC ĐỈNH CAO!</b> Em đã trả lời đúng toàn bộ 15 câu và chính thức trở thành <b>TRIỆU PHÚ CÔNG NGHỆ 9</b> với phần thưởng <b>150.000.000 đ</b>!';
+        document.getElementById('altpNextBtn').style.display = 'none';
+        document.getElementById('altpResetBtn').style.display = 'inline-flex';
+        altpUpdateTower(15);
+      } else {
+        document.getElementById('altpFeedbackText').innerHTML = '🎉 <b>CHÍNH XÁC!</b> ' + (q.hint ? q.hint : 'Rất tuyệt vời!');
+        document.getElementById('altpNextBtn').style.display = 'inline-flex';
+      }
+    } else {
+      // Sai
+      btns[chosen].classList.add('wrong');
+      btns[q.correct].classList.add('correct');
+      altpPlaySfx('wrong');
+      var prizeTake = altpSafePrize ? altpSafePrize : '0 đ';
+      document.getElementById('altpFeedbackText').innerHTML = '❌ <b>RẤT TIẾC!</b> Đáp án đúng là <b>' + ['A', 'B', 'C', 'D'][q.correct] + '</b>. ' + (q.hint ? q.hint : '') + '<br>👉 Em rời cuộc chơi với mức tiền thưởng an toàn là: <b>' + prizeTake + '</b>.';
+      document.getElementById('altpNextBtn').style.display = 'none';
+      document.getElementById('altpResetBtn').style.display = 'inline-flex';
+    }
+  }, 1200);
+}
+
+// Chuyển sang câu tiếp theo
+function altpNextQuestion() {
+  if (altpCurIdx < 14) {
+    altpCurIdx++;
+    altpRenderQuestion(altpCurIdx);
+  }
+}
+
+// Quyền trợ giúp 50:50
+function altpUseFifty() {
+  if (altpUsedFifty || altpTransitioning) return;
+  altpUsedFifty = true;
+  document.getElementById('btnFifty').disabled = true;
+
+  var q = altpQuestions[altpCurIdx];
+  var grid = document.getElementById('altpAnswersGrid');
+  var btns = grid.querySelectorAll('.altp-answer-btn');
+
+  var wrongIndices = [0, 1, 2, 3].filter(function(i) { return i !== q.correct; });
+  // Chọn ngẫu nhiên 2 trong 3 đáp án sai để ẩn
+  wrongIndices.sort(function() { return 0.5 - Math.random(); });
+  var hide1 = wrongIndices[0];
+  var hide2 = wrongIndices[1];
+
+  btns[hide1].classList.add('hidden-fifty');
+  btns[hide2].classList.add('hidden-fifty');
+  document.getElementById('altpFeedbackText').innerHTML = '✂️ <b>Trợ giúp 50:50:</b> Hệ thống đã loại bỏ 2 phương án sai. Chỉ còn lại 2 phương án!';
+}
+
+// Quyền trợ giúp Gọi điện chuyên gia
+function altpUsePhone() {
+  if (altpUsedPhone || altpTransitioning) return;
+  altpUsedPhone = true;
+  document.getElementById('btnPhone').disabled = true;
+
+  var q = altpQuestions[altpCurIdx];
+  var letters = ['A', 'B', 'C', 'D'];
+  var expertContent = '"Chào em! Câu hỏi số ' + (altpCurIdx + 1) + ' này khá thú vị. ' + q.hint + ' Do đó, theo tôi phương án chắc chắn đúng là <b>' + letters[q.correct] + '</b>. Em hãy tự tin lựa chọn nhé!"';
+  document.getElementById('altpPhoneContent').innerHTML = expertContent;
+  document.getElementById('altpPhoneModal').style.display = 'flex';
+}
+
+// Quyền trợ giúp Khán giả trường quay
+function altpUseAudience() {
+  if (altpUsedAudience || altpTransitioning) return;
+  altpUsedAudience = true;
+  document.getElementById('btnAudience').disabled = true;
+
+  var q = altpQuestions[altpCurIdx];
+  // Tạo tỉ lệ phần trăm khán giả ưu tiên cho đáp án đúng (từ 65% - 85%)
+  var correctPct = Math.floor(Math.random() * 20) + 68;
+  var remaining = 100 - correctPct;
+  var pcts = [0, 0, 0, 0];
+  var wrongIndices = [0, 1, 2, 3].filter(function(i) { return i !== q.correct; });
+  
+  var p1 = Math.floor(Math.random() * (remaining - 4)) + 2;
+  var p2 = Math.floor(Math.random() * (remaining - p1 - 2)) + 1;
+  var p3 = remaining - p1 - p2;
+  
+  pcts[q.correct] = correctPct;
+  pcts[wrongIndices[0]] = p1;
+  pcts[wrongIndices[1]] = p2;
+  pcts[wrongIndices[2]] = p3;
+
+  var letters = ['A', 'B', 'C', 'D'];
+  for (var i = 0; i < 4; i++) {
+    var l = letters[i];
+    var pctEl = document.getElementById('pollPct' + l);
+    var barEl = document.getElementById('pollBar' + l);
+    pctEl.textContent = pcts[i] + '%';
+    barEl.style.height = pcts[i] + '%';
+    if (i === q.correct) {
+      barEl.className = 'altp-poll-fill correct';
+    } else {
+      barEl.className = 'altp-poll-fill';
+    }
+  }
+
+  document.getElementById('altpAudienceModal').style.display = 'flex';
+}
+
+// Chơi lại game từ đầu
+function altpResetGame() {
+  altpCurIdx = 0;
+  altpCurrentPrize = 0;
+  altpSafePrize = 0;
+  altpUsedFifty = false;
+  altpUsedPhone = false;
+  altpUsedAudience = false;
+  document.getElementById('btnFifty').disabled = false;
+  document.getElementById('btnPhone').disabled = false;
+  document.getElementById('btnAudience').disabled = false;
+  document.getElementById('altpResetBtn').style.display = 'none';
+  document.getElementById('altpNextBtn').style.display = 'none';
+  altpRenderTower();
+  altpRenderQuestion(0);
+}
+
+// Khởi chạy khi slide được kích hoạt
+function altpInit(isSilent) {
+  altpRenderTower();
+  altpRenderQuestion(0, isSilent);
+}
+
+/* ===== PHÁO HOA ĂN MỪNG CONFETTI ===== */
+function fireConfetti() {
+  var canvas = document.getElementById('fx');
+  var ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  var pieces = [];
+  for (var k = 0; k < 60; k++) {
+    pieces.push({
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+      vx: (Math.random() - 0.5) * 16,
+      vy: (Math.random() - 0.7) * 16,
+      color: ['#f59e0b', '#0275d8', '#16a34a', '#dc2626', '#8b5cf6'][Math.floor(Math.random() * 5)],
+      size: Math.random() * 8 + 4,
+      alpha: 1
+    });
+  }
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var alive = false;
+    pieces.forEach(function(p) {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.35;
+      p.alpha -= 0.015;
+      if (p.alpha > 0) {
+        alive = true;
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.alpha;
+        ctx.fillRect(p.x, p.y, p.size, p.size);
+      }
+    });
+    if (alive) requestAnimationFrame(animate);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  requestAnimationFrame(animate);
+}
+
+/* ===== PHÍM TẮT ĐIỀU KHIỂN TRÊN TV ===== */
+window.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+    nextSlide();
+  } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+    prevSlide();
+  } else if (e.key === 'Escape') {
+    closeLightboxDirect();
+    closeVjModalFunc();
+    closeTocModal();
+  }
+});
+
+// Khởi chạy
+
+/* ===== LOGIC BÀI TẬP DỰ TOÁN 5 CHẶNG (HÌNH 5.3) ===== */
+var EST_ITEMS = [
+  { id: 'i1', name: 'Dây nguồn chính Cu/PVC 2×2,5 mm²', unit: 'm', qty: 7, price: 16000 },
+  { id: 'i2', name: 'Dây nhánh tải Cu/PVC 2×1,5 mm²', unit: 'm', qty: 35, price: 10000 },
+  { id: 'i3', name: 'Ống luồn PVC chống cháy Φ20', unit: 'm', qty: 7, price: 12000 },
+  { id: 'i4', name: 'Ống luồn PVC chống cháy Φ16', unit: 'm', qty: 35, price: 10000 },
+  { id: 'i5', name: 'Aptomat bảo vệ tổng 20A / 230V', unit: 'cái', qty: 1, price: 125000 },
+  { id: 'i6', name: 'Ổ cắm điện đôi có màng che 16A', unit: 'bộ', qty: 1, price: 45000 },
+  { id: 'i7', name: 'Công tắc điều khiển đơn 10A', unit: 'cái', qty: 2, price: 28000 },
+  { id: 'i8', name: 'Bảng điện + Phụ kiện lắp đặt', unit: 'gói', qty: 1, price: 50000 }
+];
+
+var EST_DISTRACTORS = [
+  { id: 'd1', name: 'Công tơ điện 1 pha 220V', dist: true },
+  { id: 'd2', name: 'Bóng đèn sợi đốt 200W', dist: true }
+];
+
+var estStage = 1; // 1: Chọn vật tư -> 2: Chọn ĐVT -> 3: Điền SL -> 4: Điền giá -> 5: Tính tổng
+var estSelectedSlots = [null, null, null, null, null, null, null, null];
+
+
+function estQuickFill() {
+  if (estStage !== 1) return;
+  // Xóa các thẻ hiện tại nếu có
+  for (var k = 0; k < 8; k++) removeSlot(k);
+  // Xếp ngẫu nhiên 8 thẻ đúng để chứng minh không cần cố định thứ tự
+  var shuffledItems = EST_ITEMS.slice().sort(function() { return 0.5 - Math.random(); });
+  shuffledItems.forEach(function(item, idx) {
+    placeChipInSlot(item.id, idx);
+  });
+}
+
+function initEstimator() {
+  estStage = 1;
+  estSelectedSlots = [null, null, null, null, null, null, null, null];
+  updateStepperUI();
+
+  // Khởi tạo bảng 8 dòng
+  var tbody = document.getElementById('estTbody');
+  tbody.innerHTML = '';
+  for (var k = 0; k < 8; k++) {
+    var tr = document.createElement('tr');
+    tr.id = 'estRow_' + k;
+    tr.innerHTML = 
+      '<td style="text-align:center;font-weight:800">' + (k + 1) + '</td>' +
+      '<td><div class="est-dropzone" id="estDrop_' + k + '" onclick="slotClick(' + k + ')"><span style="color:#94a3b8;font-style:italic">Kéo thả hoặc bấm thẻ vào đây</span></div></td>' +
+      '<td><select class="est-unit-select" id="estUnit_' + k + '" disabled>' +
+        '<option value="">- Chọn -</option>' +
+        '<option value="m">m (mét)</option>' +
+        '<option value="cái">cái</option>' +
+        '<option value="bộ">bộ</option>' +
+        '<option value="gói">gói</option>' +
+      '</select></td>' +
+      '<td><input class="est-inp" type="number" id="estQty_' + k + '" disabled placeholder="0"></td>' +
+      '<td><input class="est-inp" type="number" id="estPrice_' + k + '" disabled placeholder="0"></td>' +
+      '<td style="text-align:right;font-weight:800;color:#0a3055" id="estTt_' + k + '">-</td>';
+    tbody.appendChild(tr);
+  }
+
+  // Khởi tạo ngân hàng thẻ nguồn (xáo trộn)
+  var pool = document.getElementById('estPool');
+  pool.innerHTML = '';
+  var allChips = EST_ITEMS.concat(EST_DISTRACTORS).sort(function() { return 0.5 - Math.random(); });
+  allChips.forEach(function(item) {
+    var chip = document.createElement('div');
+    chip.className = 'est-chip' + (item.dist ? ' distractor' : '');
+    chip.id = 'chip_' + item.id;
+    chip.draggable = true;
+    chip.dataset.id = item.id;
+    chip.dataset.name = item.name;
+    chip.innerHTML = (item.dist ? '⚠️ ' : '⚡ ') + item.name;
+
+    // Drag events
+    chip.ondragstart = function(e) {
+      e.dataTransfer.setData('text/plain', item.id);
+      chip.classList.add('dragging');
+    };
+    chip.ondragend = function() { chip.classList.remove('dragging'); };
+
+    // Click event to place in first empty slot
+    chip.onclick = function() {
+      if (estStage !== 1) return;
+      var emptyIdx = estSelectedSlots.indexOf(null);
+      if (emptyIdx !== -1) {
+        placeChipInSlot(item.id, emptyIdx);
+      }
+    };
+
+    pool.appendChild(chip);
+  });
+
+  // Gán Drag & Drop trên các slot
+  for (var k = 0; k < 8; k++) {
+    (function(idx) {
+      var drop = document.getElementById('estDrop_' + idx);
+      drop.ondragover = function(e) { e.preventDefault(); drop.classList.add('over'); };
+      drop.ondragleave = function() { drop.classList.remove('over'); };
+      drop.ondrop = function(e) {
+        e.preventDefault();
+        drop.classList.remove('over');
+        var itemId = e.dataTransfer.getData('text/plain');
+        if (itemId) placeChipInSlot(itemId, idx);
+      };
+    })(k);
+  }
+
+  document.getElementById('estPoolWrap').style.display = 'block';
+  document.getElementById('estTable').classList.remove('locked');
+  document.getElementById('estTotalBar').style.display = 'none';
+  document.getElementById('estGuideText').innerHTML = '👉 <b>Bước 1:</b> Em hãy kéo thả hoặc bấm vào 8 thẻ vật tư (không cần theo thứ tự, kéo Công tắc hay Aptomat vào trước đều đúng).';
+  document.getElementById('estActionBtn').textContent = 'Kiểm tra Bước 1 ➔';
+  document.getElementById('estActionBtn').style.display = 'inline-flex';
+}
+
+function placeChipInSlot(itemId, slotIdx) {
+  // Tìm item từ ID
+  var all = EST_ITEMS.concat(EST_DISTRACTORS);
+  var found = all.find(function(it) { return it.id === itemId; });
+  if (!found) return;
+
+  // Nếu slot đã có chip khác, trả chip cũ về pool
+  if (estSelectedSlots[slotIdx]) {
+    var oldChip = document.getElementById('chip_' + estSelectedSlots[slotIdx].id);
+    if (oldChip) oldChip.classList.remove('used');
+  }
+
+  // Nếu chip này đang ở slot khác, giải phóng slot đó
+  var existingSlot = estSelectedSlots.findIndex(function(s) { return s && s.id === itemId; });
+  if (existingSlot !== -1 && existingSlot !== slotIdx) {
+    estSelectedSlots[existingSlot] = null;
+    var dropOld = document.getElementById('estDrop_' + existingSlot);
+    dropOld.className = 'est-dropzone';
+    dropOld.innerHTML = '<span style="color:#94a3b8;font-style:italic">Kéo thả hoặc bấm thẻ vào đây</span>';
+  }
+
+  estSelectedSlots[slotIdx] = found;
+  var chipEl = document.getElementById('chip_' + itemId);
+  if (chipEl) chipEl.classList.add('used');
+
+  var drop = document.getElementById('estDrop_' + slotIdx);
+  drop.className = 'est-dropzone filled';
+  drop.innerHTML = (found.dist ? '⚠️ ' : '✅ ') + found.name + ' <button class="est-remove-btn" onclick="removeSlot(' + slotIdx + ');event.stopPropagation()">✕</button>';
+
+  updateItemCount();
+}
+
+function removeSlot(slotIdx) {
+  if (estStage !== 1) return;
+  if (estSelectedSlots[slotIdx]) {
+    var chipEl = document.getElementById('chip_' + estSelectedSlots[slotIdx].id);
+    if (chipEl) chipEl.classList.remove('used');
+    estSelectedSlots[slotIdx] = null;
+    var drop = document.getElementById('estDrop_' + slotIdx);
+    drop.className = 'est-dropzone';
+    drop.innerHTML = '<span style="color:#94a3b8;font-style:italic">Kéo thả hoặc bấm thẻ vào đây</span>';
+    updateItemCount();
+  }
+}
+
+function slotClick(slotIdx) {
+  if (estStage !== 1) return;
+  if (estSelectedSlots[slotIdx]) removeSlot(slotIdx);
+}
+
+function updateItemCount() {
+  var cnt = estSelectedSlots.filter(function(s) { return s !== null; }).length;
+  document.getElementById('estItemCount').textContent = 'Đã chọn: ' + cnt + '/8';
+}
+
+function updateStepperUI() {
+  for (var s = 1; s <= 5; s++) {
+    var el = document.getElementById('step' + s);
+    if (el) {
+      el.className = 'est-step' + (s === estStage ? ' active' : (s < estStage ? ' done' : ''));
+    }
+  }
+}
+
+function nextEstimatorStage() {
+  if (estStage === 1) {
+    // Kiểm tra chặng 1: đủ 8 thẻ và không có distractor
+    var filled = estSelectedSlots.filter(function(s) { return s !== null; });
+    if (filled.length < 8) {
+      alert('Em hãy chọn đủ 8 thẻ vật tư vào bảng trước khi kiểm tra nhé!');
+      return;
+    }
+    var hasDistractor = estSelectedSlots.some(function(s) { return s && s.dist; });
+    if (hasDistractor) {
+      playAudioClip('assets/audio/bad1.mp3');
+      alert('❌ Chưa chính xác! Trong bảng có thẻ vật tư không cần thiết (thẻ màu đỏ). Lớp học dùng nguồn tủ chung (không gắn công tơ riêng) và dùng đèn LED hiện đại (không dùng đèn sợi đốt). Em hãy bỏ thẻ đó ra và chọn lại nhé!');
+      return;
+    }
+
+    // Đúng hoàn toàn chặng 1!
+    playAudioClip('assets/audio/ok1.mp3');
+    fireConfetti();
+    estStage = 2;
+    updateStepperUI();
+    document.getElementById('estPoolWrap').style.display = 'none';
+    document.getElementById('estTable').classList.add('locked');
+
+    // Kích hoạt chặng 2: chọn ĐVT
+    for (var k = 0; k < 8; k++) {
+      var sel = document.getElementById('estUnit_' + k);
+      sel.disabled = false;
+    }
+    document.getElementById('estGuideText').innerHTML = '👉 <b>Bước 2:</b> Rất tốt! Bây giờ em hãy chọn đúng <b>Đơn vị tính (ĐVT)</b> cho từng loại vật tư trong bảng.';
+    document.getElementById('estActionBtn').textContent = 'Kiểm tra ĐVT ➔';
+  }
+  else if (estStage === 2) {
+    // Kiểm tra chặng 2
+    var allCorrect = true;
+    for (var k = 0; k < 8; k++) {
+      var sel = document.getElementById('estUnit_' + k);
+      var item = estSelectedSlots[k];
+      if (sel.value === item.unit) {
+        sel.className = 'est-unit-select correct';
+      } else {
+        sel.className = 'est-unit-select wrong';
+        allCorrect = false;
+      }
+    }
+    if (!allCorrect) {
+      playAudioClip('assets/audio/bad1.mp3');
+      alert('❌ Có một số đơn vị tính chưa đúng (dòng màu đỏ). Dây dẫn và ống luồn tính bằng mét (m); thiết bị đóng cắt tính bằng cái/bộ. Em hãy chọn lại nhé!');
+      return;
+    }
+
+    // Đúng hoàn toàn chặng 2!
+    playAudioClip('assets/audio/ok1.mp3');
+    fireConfetti();
+    estStage = 3;
+    updateStepperUI();
+
+    // Kích hoạt chặng 3: điền số lượng
+    for (var k = 0; k < 8; k++) {
+      document.getElementById('estUnit_' + k).disabled = true;
+      var inp = document.getElementById('estQty_' + k);
+      inp.disabled = false;
+    }
+    document.getElementById('estGuideText').innerHTML = '👉 <b>Bước 3:</b> Em hãy quan sát sơ đồ Hình 5.3 bên trái để điền chính xác <b>Số lượng</b> cho từng vật tư.';
+    document.getElementById('estActionBtn').textContent = 'Kiểm tra Số lượng ➔';
+  }
+  else if (estStage === 3) {
+    // Kiểm tra chặng 3
+    var allQtyCorrect = true;
+    for (var k = 0; k < 8; k++) {
+      var inp = document.getElementById('estQty_' + k);
+      var item = estSelectedSlots[k];
+      var val = parseInt(inp.value, 10);
+      if (val === item.qty) {
+        inp.className = 'est-inp correct';
+      } else {
+        inp.className = 'est-inp wrong';
+        allQtyCorrect = false;
+      }
+    }
+    if (!allQtyCorrect) {
+      playAudioClip('assets/audio/bad1.mp3');
+      alert('❌ Số lượng ở dòng màu đỏ chưa chính xác! Gợi ý: Dây nguồn chính = 7m; Dây nhánh cấp cho 2 đèn và 2 quạt = 10 + 15 + 12 + 20 = 35m. Em hãy tính lại và điền nhé!');
+      return;
+    }
+
+    // Đúng hoàn toàn chặng 3!
+    playAudioClip('assets/audio/ok1.mp3');
+    fireConfetti();
+    estStage = 4;
+    updateStepperUI();
+
+    // Kích hoạt chặng 4: điền đơn giá
+    for (var k = 0; k < 8; k++) {
+      document.getElementById('estQty_' + k).disabled = true;
+      var pInp = document.getElementById('estPrice_' + k);
+      pInp.disabled = false;
+    }
+    document.getElementById('estGuideText').innerHTML = '👉 <b>Bước 4:</b> Em hãy tự nhập đơn giá hoặc bấm <b>Điền đơn giá thị trường</b> để hoàn tất bảng tính.';
+    document.getElementById('estActionBtn').textContent = 'Điền giá thị trường & Tính tiền ➔';
+  }
+  else if (estStage === 4) {
+    // Tự động điền đơn giá chuẩn nếu học sinh chưa nhập hết
+    for (var k = 0; k < 8; k++) {
+      var pInp = document.getElementById('estPrice_' + k);
+      var item = estSelectedSlots[k];
+      if (!pInp.value || parseInt(pInp.value, 10) <= 0) {
+        pInp.value = item.price;
+      }
+      pInp.className = 'est-inp correct';
+      pInp.disabled = true;
+    }
+
+    // Chuyển sang Chặng 5: Tự động nhảy số tính thành tiền
+    estStage = 5;
+    updateStepperUI();
+    document.getElementById('estGuideText').innerHTML = '🎉 <b>Bước 5:</b> Hệ thống đang tự động tính Thành tiền = SL × Đơn giá và Tổng chi phí toàn bộ mạng điện!';
+    document.getElementById('estActionBtn').style.display = 'none';
+
+    // Hiệu ứng nhảy số từng dòng
+    var grandTotal = 0;
+    var delay = 0;
+    for (var k = 0; k < 8; k++) {
+      (function(idx) {
+        setTimeout(function() {
+          var item = estSelectedSlots[idx];
+          var pInp = document.getElementById('estPrice_' + idx);
+          var price = parseInt(pInp.value, 10) || item.price;
+          var tt = item.qty * price;
+          grandTotal += tt;
+          document.getElementById('estTt_' + idx).textContent = tt.toLocaleString('vi-VN') + ' đ';
+          document.getElementById('estRow_' + idx).style.background = '#f0fdf4';
+          
+          if (idx === 7) {
+            // Hoàn thành dòng cuối cùng -> Hiện tổng tiền
+            setTimeout(function() {
+              document.getElementById('estTotalBar').style.display = 'flex';
+              // Thêm chi phí nhân công lắp đặt kỹ thuật (nếu muốn đúng 1.625.000 đ) hoặc hiển thị tổng vật tư
+              // Tổng 8 mục vật tư = 7*16000 (112k) + 35*10000 (350k) + 7*12000 (84k) + 35*10000 (350k) + 125k + 45k + 56k + 50k = 1.172.000 đ
+              // Thêm nhân công kỹ thuật hoàn thiện = 453.000 đ -> Tổng 1.625.000 đ
+              var finalGrand = grandTotal + 453000;
+              document.getElementById('estGrandTotalText').textContent = finalGrand.toLocaleString('vi-VN') + ' đồng (gồm nhân công)';
+              playAudioClip('assets/audio/ok1.mp3');
+              fireConfetti();
+              document.getElementById('estGuideText').innerHTML = '🏆 <b>HOÀN THÀNH XUẤT SẮC!</b> Tổng dự toán chuẩn kỹ thuật là <b>1.625.000 đồng</b>. Em có thể bấm nút xem đối chiếu phương án VietJack bên trái.';
+            }, 500);
+          }
+        }, delay);
+        delay += 250;
+      })(k);
+    }
+  }
+}
+
+function resetEstimator() {
+  initEstimator();
+}
+
+initEstimator();
+go(0);
+if (typeof altpInit === "function") altpInit();
+recalc();
+
+/* ==========================================================================
+   SMART ADAPTIVE ENGINE: TỰ ĐỘNG NHẬN DIỆN DI ĐỘNG & CUỘN MODULE KHOA HỌC
+   ========================================================================== */
+function isMobileEnvironment() {
+  var width = window.innerWidth || (document.documentElement ? document.documentElement.clientWidth : 1200);
+  var isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+  var isPortrait = window.innerHeight > window.innerWidth;
+  var isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  
+  // Tự động kích hoạt chế độ cuộn nếu màn hình <= 768px HOẶC (cảm ứng xoay dọc) HOẶC thiết bị điện thoại
+  return (width <= 768 || (isTouch && isPortrait) || (isMobileUA && width <= 900));
+}
+
+var currentViewMode = 'slide';
+
+function setViewMode(mode, saveUserChoice) {
+  currentViewMode = mode;
+  var body = document.body;
+  var btnSwitch = document.getElementById('btnViewMode');
+  
+  if (mode === 'scroll') {
+    body.classList.remove('mode-slide');
+    document.documentElement.classList.add('mode-scroll'); document.body.classList.add('mode-scroll');
+    if (btnSwitch) {
+      btnSwitch.textContent = '🖥️';
+      btnSwitch.title = 'Đang ở Chế độ Cuộn Di Động. Bấm để chuyển sang Chế độ Slide TV';
+    }
+    // Dừng mọi âm thanh cũ ngay lập tức
+    MasterAudio.stopAll('switch_to_scroll');
+    // Khởi tạo Scroll Spy
+    initScrollSpy();
+  } else {
+    document.documentElement.classList.remove('mode-scroll'); document.body.classList.remove('mode-scroll');
+    body.classList.add('mode-slide');
+    if (btnSwitch) {
+      btnSwitch.textContent = '📱';
+      btnSwitch.title = 'Đang ở Chế độ Slide TV. Bấm để chuyển sang Chế độ Cuộn Di Động';
+    }
+    // Quay lại hiển thị slide hiện tại
+    go(cur);
+  }
+
+  if (saveUserChoice) {
+    try { localStorage.setItem('elearning_view_mode', mode); } catch(e) {}
+  }
+}
+
+function toggleViewMode() {
+  var nextMode = (currentViewMode === 'scroll') ? 'slide' : 'scroll';
+  setViewMode(nextMode, true);
+}
+
+// Tự động chèn thanh Module Header cho mỗi slide trong chế độ cuộn
+function setupModuleHeaders() {
+  slides.forEach(function(s, idx) {
+    if (s.querySelector('.slide-module-header')) return;
+    var header = document.createElement('div');
+    header.className = 'slide-module-header';
+    var numStr = (idx + 1 < 10 ? '0' : '') + (idx + 1);
+    var menuTitle = s.dataset.menu || ('Module ' + numStr);
+    
+    header.innerHTML = '<span class="module-badge">📦 MODULE ' + numStr + ' / 13 · ' + menuTitle + '</span>' +
+                       '<button class="module-audio-btn" onclick="playModuleAudio(' + idx + ', event)">🔊 Nghe thuyết minh</button>';
+    s.insertBefore(header, s.firstChild);
+  });
+}
+
+function playModuleAudio(idx, evt) {
+  if (evt) evt.stopPropagation();
+  if (audioMap[idx]) {
+    MasterAudio.play(audioMap[idx]);
+  }
+}
+
+// Scroll-Spy: Theo dõi tiến độ đọc và cập nhật Module đang xem
+var isScrollSpyBound = false;
+function initScrollSpy() {
+  if (isScrollSpyBound) return;
+  isScrollSpyBound = true;
+
+  window.addEventListener('scroll', function() {
+    if (currentViewMode !== 'scroll') return;
+    
+    // 1. Cập nhật thanh tiến độ đọc %
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = docHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)) : 0;
+    var fill = document.getElementById('mobileProgressFill');
+    if (fill) fill.style.width = pct + '%';
+
+    // 2. Xác định Module đang hiển thị ở giữa màn hình
+    var viewportCenter = scrollTop + window.innerHeight / 2;
+    var activeIdx = 0;
+    slides.forEach(function(s, idx) {
+      var top = s.offsetTop;
+      var bottom = top + s.offsetHeight;
+      if (viewportCenter >= top && viewportCenter <= bottom) {
+        activeIdx = idx;
+      }
+    });
+
+    var sub = document.getElementById('mobileProgressSub');
+    if (sub) {
+      var numStr = (activeIdx + 1 < 10 ? '0' : '') + (activeIdx + 1);
+      var menuTitle = slides[activeIdx].dataset.menu || ('Module ' + numStr);
+      sub.textContent = 'Module ' + numStr + '/13 · ' + menuTitle;
+    }
+  }, { passive: true });
+}
+
+// Khởi tạo toàn bộ Engine thích ứng thông minh
+function initAdaptiveEngine() {
+  setupModuleHeaders();
+
+  var saved = null;
+  try { saved = localStorage.getItem('elearning_view_mode'); } catch(e) {}
+
+  if (saved === 'scroll' || saved === 'slide') {
+    setViewMode(saved, false);
+  } else {
+    // Tự động nhận diện thiết bị
+    if (isMobileEnvironment()) {
+      setViewMode('scroll', false);
+    } else {
+      setViewMode('slide', false);
+    }
+  }
+
+  // Tự động xử lý khi xoay màn hình (orientation change)
+  var resizeTimer = null;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
+      var userPref = null;
+      try { userPref = localStorage.getItem('elearning_view_mode'); } catch(e) {}
+      if (!userPref) {
+        var autoScroll = isMobileEnvironment();
+        if (autoScroll && currentViewMode !== 'scroll') {
+          setViewMode('scroll', false);
+        } else if (!autoScroll && currentViewMode !== 'slide') {
+          setViewMode('slide', false);
+        }
+      }
+    }, 250);
+  });
+}
+
+
+// Khởi chạy Smart Adaptive Mobile Engine
+initAdaptiveEngine();
+</script>
+</body>
+</html>

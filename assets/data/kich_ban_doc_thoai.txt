@@ -1,0 +1,43 @@
+KỊCH BẢN LỜI THOẠI BÀI GIẢNG ĐIỆN TỬ CÔNG NGHỆ 9 - BÀI 5
+Tự động chuyển đổi bằng CIT Voice Studio (Khuyến nghị giọng: Trúc Ly hoặc Mai Anh, 48 kHz)
+======================================================================
+
+[c01.mp3] - Slide 1 - Bìa bài học
+Chào mừng các em học sinh đến với môn Công nghệ lớp chín, phân môn Lắp đặt mạng điện trong nhà. Hôm nay chúng ta cùng khám phá Bài 5: Tính toán chi phí cho mạng điện trong nhà, theo bộ sách Kết nối tri thức với cuộc sống.
+
+[c02.mp3] - Slide 2 - Mục tiêu bài học
+Sau bài học này, các em cần đạt được ba mục tiêu: Thứ nhất, trình bày được quy trình ba bước tính toán chi phí. Thứ hai, bóc tách khối lượng vật tư chính xác từ sơ đồ lắp đặt. Và thứ ba, tự lập được bảng dự toán chi phí thực tế cho mạng điện gia đình.
+
+[c02_khoidong.mp3] - Slide 3 - Khởi động Hình 5.1
+Trước khi tìm hiểu quy trình, chúng ta cùng khởi động với nhiệm vụ sắp xếp giá thành sáu thiết bị điện quen thuộc ở Hình 5.1 từ thấp đến cao. Em hãy chạm vào từng thiết bị theo đúng thứ tự nhé!
+
+[c02_babuoctoan.mp3] - Slide 4 - Khám phá Quy trình 3 bước
+Quy trình tính toán chi phí mạng điện gồm đúng ba bước liên hoàn: Bước một, nghiên cứu sơ đồ lắp đặt để định tính chủng loại. Bước hai, lập bảng kê số lượng để định lượng vật tư. Bước ba, tra đơn giá thị trường và lập bảng tính toán chi phí tổng thể.
+
+[c03.mp3] - Slide 5 - Bước 1 Nghiên cứu sơ đồ
+Ở Bước một, chúng ta quan sát bản vẽ để xác định dây nguồn chính, dây nhánh tải, thiết bị bảo vệ aptomat, ổ cắm, công tắc và ống luồn dây bọc cách điện bảo vệ chống cháy.
+
+[c04.mp3] - Slide 6 - Bước 2 Lập bảng kê
+Sang Bước hai, các em căn cứ vào kích thước thực tế trên sơ đồ mặt bằng để đo đạc chiều dài tuyến dây, nhớ cộng thêm mười đến mười lăm phần trăm dự phòng mối nối và uốn góc.
+
+[c05.mp3] - Slide 7 - Bước 3 Tính toán chi phí
+Bước ba là bước tổng hợp tài chính. Các em tra cứu đơn giá thị trường của từng vật tư, áp dụng công thức: Thành tiền bằng Số lượng nhân Đơn giá, sau đó cộng tổng toàn bộ dự toán.
+
+[c06.mp3] - Slide 8 - Thực hành Hình 5.2
+Bây giờ chúng ta cùng thực hành phân tích sơ đồ lắp đặt mạng điện phòng ngủ đơn giản ở Hình 5.2 sách giáo khoa trang hai mươi lăm. Mạch điện này gồm một aptomat hai cực, một công tắc, một bóng đèn và một ổ cắm điện đôi.
+
+[c07.mp3] - Slide 9 - Bảng tính chi phí Hình 5.2
+Đây là bảng tính chi phí mẫu cho mạng điện phòng ngủ. Tổng kinh phí dự toán hoàn chỉnh theo sách giáo khoa trang hai mươi bảy là bảy trăm bốn mươi lăm nghìn đồng.
+
+[c08.mp3] - Slide 10 - Luyện tập Ai là triệu phú
+Chào mừng các em đến với Gameshow Ai Là Triệu Phú! Hãy cùng vượt qua mười lăm câu hỏi để chinh phục phần thưởng đỉnh cao một trăm năm mươi triệu đồng!
+
+[c09.mp3] - Slide 11 - Vận dụng 5 chặng Hình 5.3
+Đây là bài toán thực hành lập dự toán mạng điện lớp học Hình 5.3. Các em hãy tự do kéo thả tám thẻ vật tư cần thiết vào bảng, sau đó hoàn thành từng chặng từ đơn vị tính, số lượng, đơn giá và tính thành tiền.
+
+[c10.mp3] - Slide 12 - Tổng kết
+Các em hãy luôn ghi nhớ quy tắc vàng ba bước: Bước một định tính, Bước hai định lượng, Bước ba định giá. Tuyệt đối không được bỏ qua hoặc đảo lộn bất kỳ bước nào.
+
+[c11.mp3] - Slide 13 - Mở rộng nhiệm vụ
+Về nhà, các em hãy quan sát phòng ngủ hoặc góc học tập của gia đình mình, vẽ lại sơ đồ lắp đặt và tự lập một bảng tính toán chi phí hoàn chỉnh nhé!
+

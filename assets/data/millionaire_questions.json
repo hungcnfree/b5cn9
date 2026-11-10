@@ -1,0 +1,227 @@
+[
+  {
+    "level": 1,
+    "reward": "200.000 đ",
+    "question": "Quy trình tính toán chi phí lắp đặt mạng điện trong nhà gồm có mấy bước?",
+    "options": [
+      "2 bước",
+      "3 bước",
+      "4 bước",
+      "1 bước"
+    ],
+    "correct": 1,
+    "tts_text": "Câu hỏi số một, mức thưởng hai trăm nghìn đồng. Quy trình tính toán chi phí lắp đặt mạng điện trong nhà gồm có mấy bước?",
+    "hint": "Theo SGK Công nghệ 9 Bài 5, quy trình chuẩn gồm đúng 3 bước: Nghiên cứu sơ đồ, Lập bảng kê vật tư thiết bị, và Lập bảng tính toán chi phí.",
+    "image": null
+  },
+  {
+    "level": 2,
+    "reward": "400.000 đ",
+    "question": "Bước đầu tiên cần thực hiện khi tính toán chi phí lắp đặt mạng điện trong nhà là gì?",
+    "options": [
+      "Nghiên cứu sơ đồ lắp đặt mạng điện",
+      "Lập bảng kê số lượng thiết bị",
+      "Lập bảng tính toán chi phí",
+      "Mua sắm vật tư và dụng cụ"
+    ],
+    "correct": 0,
+    "tts_text": "Câu hỏi số hai, mức thưởng bốn trăm nghìn đồng. Bước đầu tiên cần thực hiện khi tính toán chi phí lắp đặt mạng điện trong nhà là gì?",
+    "hint": "Trước khi mua hay tính tiền, người kỹ sư bao giờ cũng phải đọc và nghiên cứu kỹ sơ đồ lắp đặt mạch điện.",
+    "image": null
+  },
+  {
+    "level": 3,
+    "reward": "600.000 đ",
+    "question": "Vật liệu nào dưới đây thuộc nhóm vật liệu cách điện trong lắp đặt mạng điện?",
+    "options": [
+      "Lưỡi dao cầu dao kim loại",
+      "Ống nhựa luồn dây PVC Ø 16 mm",
+      "Cọc tiếp địa bằng thép mạ đồng",
+      "Dây dẫn điện lõi đồng"
+    ],
+    "correct": 1,
+    "tts_text": "Câu hỏi số ba, mức thưởng sáu trăm nghìn đồng. Vật liệu nào dưới đây thuộc nhóm vật liệu cách điện trong lắp đặt mạng điện?",
+    "hint": "Nhựa PVC và băng dính cách điện là những vật liệu cách điện phổ biến nhất để đảm bảo an toàn.",
+    "image": null
+  },
+  {
+    "level": 4,
+    "reward": "1.000.000 đ",
+    "question": "Bước cuối cùng (Bước 3) cần thực hiện khi tính toán chi phí mạng điện trong nhà là gì?",
+    "options": [
+      "Lập bảng tính toán chi phí",
+      "Nghiệm thu đóng điện thử tải",
+      "Lập sơ đồ nguyên lý mạch điện",
+      "Lắp đặt bảng điện chính"
+    ],
+    "correct": 0,
+    "tts_text": "Câu hỏi số bốn, mức thưởng một triệu đồng. Bước cuối cùng cần thực hiện khi tính toán chi phí mạng điện trong nhà là gì?",
+    "hint": "Bước 3 chính là tổng hợp số lượng, tra đơn giá thị trường để Lập bảng tính toán chi phí tổng thể.",
+    "image": null
+  },
+  {
+    "level": 5,
+    "reward": "2.000.000 đ",
+    "question": "Hình bên là thiết bị điện nào có chức năng đóng cắt và tự động ngắt mạch khi có sự cố quá tải, ngắn mạch?",
+    "options": [
+      "Aptomat (Cầu dao tự động)",
+      "Công tơ điện xoay chiều",
+      "Chuông điện gia đình",
+      "Biến áp cách ly"
+    ],
+    "correct": 0,
+    "tts_text": "Câu hỏi số năm, mốc thưởng an toàn hai triệu đồng. Hình bên là thiết bị điện nào có chức năng đóng cắt và tự động ngắt mạch khi có sự cố quá tải, ngắn mạch?",
+    "hint": "Đây là thiết bị an toàn quen thuộc lắp ở đầu mỗi bảng điện hoặc mạng điện nhánh: Aptomat.",
+    "image": "assets/images/millionaire/image_4e3f0c57c40.jpeg"
+  },
+  {
+    "level": 6,
+    "reward": "3.000.000 đ",
+    "question": "Quan sát sơ đồ lắp đặt mạch điện phòng ngủ (Hình 5.2 SGK), mạch điện này sử dụng loại aptomat nào ở đầu nguồn?",
+    "options": [
+      "Cầu dao đảo chiều ba vị trí",
+      "Aptomat ba cực (3P)",
+      "Aptomat hai cực (2P)",
+      "Aptomat một cực"
+    ],
+    "correct": 2,
+    "tts_text": "Câu hỏi số sáu, mức thưởng ba triệu đồng. Quan sát sơ đồ lắp đặt mạch điện phòng ngủ Hình 5.2, mạch điện này sử dụng loại aptomat nào ở đầu nguồn?",
+    "hint": "Nhìn vào đầu nguồn có ký hiệu cắt đồng thời cả 2 dây pha và trung tính, đó là aptomat hai cực 2P.",
+    "image": "assets/images/millionaire/image_9eee55f00b0.png"
+  },
+  {
+    "level": 7,
+    "reward": "6.000.000 đ",
+    "question": "Trong sơ đồ lắp đặt mạng điện phòng ngủ Hình 5.2 SGK bên cạnh, thiết bị nào KHÔNG có mặt trong sơ đồ?",
+    "options": [
+      "Công tắc đơn điều khiển đèn",
+      "Ổ cắm điện đôi",
+      "Quạt trần làm mát",
+      "Bóng đèn chiếu sáng"
+    ],
+    "correct": 2,
+    "tts_text": "Câu hỏi số bảy, mức thưởng sáu triệu đồng. Trong sơ đồ lắp đặt mạng điện phòng ngủ Hình 5.2 bên cạnh, thiết bị nào không có mặt trong sơ đồ?",
+    "hint": "Mạch điện phòng ngủ này chỉ có đèn chiếu sáng, ổ cắm, công tắc và aptomat; hoàn toàn không có quạt trần.",
+    "image": "assets/images/millionaire/image_48e769f61e0.png"
+  },
+  {
+    "level": 8,
+    "reward": "10.000.000 đ",
+    "question": "Công việc “Xác định dây dẫn, thiết bị và dụng cụ điện cần dùng” được thực hiện ở bước nào?",
+    "options": [
+      "Bước 3: Lập bảng tính toán chi phí",
+      "Bước 1: Nghiên cứu sơ đồ lắp đặt mạng điện",
+      "Bước 2: Lập bảng kê số lượng vật liệu, thiết bị",
+      "Bước 4: Thi công hoàn thiện công trình"
+    ],
+    "correct": 1,
+    "tts_text": "Câu hỏi số tám, mức thưởng mười triệu đồng. Công việc xác định dây dẫn, thiết bị và dụng cụ điện cần dùng được thực hiện ở bước nào?",
+    "hint": "Khi quan sát, nghiên cứu kỹ sơ đồ ở Bước 1, ta đã phải xác định rõ các thành phần dây dẫn và thiết bị có mặt trên bản vẽ.",
+    "image": null
+  },
+  {
+    "level": 9,
+    "reward": "14.000.000 đ",
+    "question": "Khi đo đạc và tính chiều dài dây dẫn điện trên sơ đồ lắp đặt, tại sao ta cần cộng thêm từ 10% đến 15% chiều dài?",
+    "options": [
+      "Để bán lại vật tư thừa lấy tiền tiết kiệm",
+      "Để làm tăng điện áp của nguồn điện gia đình",
+      "Để đáp ứng quy định kiểm định của nhà cung cấp điện",
+      "Để dự phòng hao hụt khi uốn cong, đấu nối và tuốt dây"
+    ],
+    "correct": 3,
+    "tts_text": "Câu hỏi số chín, mức thưởng mười bốn triệu đồng. Khi đo đạc và tính chiều dài dây dẫn điện trên sơ đồ lắp đặt, tại sao ta cần cộng thêm từ 10% đến 15% chiều dài?",
+    "hint": "Dây dẫn khi đi qua các góc vuông tường, vào hộp nối hoặc tuốt đầu dây đấu nối luôn bị hao hụt chiều dài.",
+    "image": null
+  },
+  {
+    "level": 10,
+    "reward": "22.000.000 đ",
+    "question": "Để bảo vệ các dây dẫn điện đi ngầm trong tường hoặc đi nổi tránh bị chuột cắn, ẩm ướt và va đập cơ học, giải pháp tiêu chuẩn là gì?",
+    "options": [
+      "Không cần bảo vệ vì vỏ bọc nhựa dây đã đủ bền",
+      "Luồn dây dẫn trong ống bảo vệ cách điện chuyên dụng (PVC)",
+      "Quấn thêm giấy báo xung quanh toàn bộ đường dây",
+      "Dán chặt dây vào tường bằng băng keo hai mặt mỏng"
+    ],
+    "correct": 1,
+    "tts_text": "Câu hỏi số mười, mốc thưởng an toàn hai mươi hai triệu đồng. Để bảo vệ dây dẫn điện đi ngầm trong tường hoặc đi nổi tránh ẩm ướt và va đập, giải pháp tiêu chuẩn là gì?",
+    "hint": "Quy chuẩn kỹ thuật bắt buộc phải luồn dây dẫn vào ống nhựa bảo vệ PVC chống cháy, chống ẩm.",
+    "image": null
+  },
+  {
+    "level": 11,
+    "reward": "30.000.000 đ",
+    "question": "Theo SGK Công nghệ 9 (trang 28), có mấy tiêu chí chính dùng để đánh giá kết quả thực hành tính toán chi phí lắp đặt mạng điện?",
+    "options": [
+      "3 tiêu chí",
+      "5 tiêu chí",
+      "2 tiêu chí",
+      "4 tiêu chí"
+    ],
+    "correct": 0,
+    "tts_text": "Câu hỏi số mười một, mức thưởng ba mươi triệu đồng. Theo sách giáo khoa Công nghệ 9 trang 28, có mấy tiêu chí chính dùng để đánh giá kết quả thực hành?",
+    "hint": "Gồm 3 tiêu chí cốt lõi: Tính chính xác chi phí; Xác định đúng thông số, số lượng; và Tiến hành đúng trình tự các bước.",
+    "image": null
+  },
+  {
+    "level": 12,
+    "reward": "40.000.000 đ",
+    "question": "Quan sát sơ đồ mạng điện lớp học bên cạnh (gồm 2 bóng đèn và 2 quạt trần), phát biểu nào sau đây là SAI?",
+    "options": [
+      "Đồ dùng điện bao gồm 2 đèn và 2 quạt trần",
+      "Bảng điện có công tắc điều khiển quạt",
+      "Bảng điện có công tắc điều khiển đèn",
+      "Đồ dùng điện bao gồm 2 ổ điện và 2 bóng đèn"
+    ],
+    "correct": 3,
+    "tts_text": "Câu hỏi số mười hai, mức thưởng bốn mươi triệu đồng. Quan sát sơ đồ mạng điện lớp học bên cạnh, phát biểu nào sau đây là sai?",
+    "hint": "Ổ cắm điện là thiết bị lấy điện, không phải là đồ dùng điện tiêu thụ điện năng như quạt hay đèn.",
+    "image": "assets/images/millionaire/image_befb97d6870.png"
+  },
+  {
+    "level": 13,
+    "reward": "60.000.000 đ",
+    "question": "Theo Bảng tính Hình 5.3 SGK, nếu đơn giá ống luồn dây PVC Ø 16 mm là 7.000 đ/m và số lượng cần dùng là 20 m, thành tiền là bao nhiêu?",
+    "options": [
+      "140.000 đồng",
+      "120.000 đồng",
+      "210.000 đồng",
+      "160.000 đồng"
+    ],
+    "correct": 0,
+    "tts_text": "Câu hỏi số mười ba, mức thưởng sáu mươi triệu đồng. Theo bảng tính, nếu đơn giá ống luồn dây PVC là bảy nghìn đồng một mét và cần dùng hai mươi mét, thành tiền là bao nhiêu?",
+    "hint": "Thành tiền = Số lượng × Đơn giá = 20 × 7.000 đ = 140.000 đồng.",
+    "image": "assets/images/millionaire/image_2097dd4e550.png"
+  },
+  {
+    "level": 14,
+    "reward": "85.000.000 đ",
+    "question": "Dựa vào bảng tính dự toán mẫu Hình 5.3 SGK, tổng chi phí cho toàn bộ nhóm VẬT LIỆU CÁCH ĐIỆN (ống PVC và băng dính) là bao nhiêu?",
+    "options": [
+      "370.000 đồng",
+      "150.000 đồng",
+      "210.000 đồng",
+      "60.000 đồng"
+    ],
+    "correct": 2,
+    "tts_text": "Câu hỏi số mười bốn, mức thưởng tám mươi lăm triệu đồng. Dựa vào bảng dự toán mẫu Hình 5.3 SGK, tổng chi phí cho toàn bộ nhóm vật liệu cách điện là bao nhiêu?",
+    "hint": "Nhóm vật liệu cách điện gồm Ống PVC (140.000 đ) + Ống chữ T, khớp nối (60.000 đ) + Băng dính cách điện (10.000 đ) = 210.000 đồng.",
+    "image": null
+  },
+  {
+    "level": 15,
+    "reward": "150.000.000 đ",
+    "question": "Dựa vào bảng tính dự toán mẫu Hình 5.3 SGK trang 27, TỔNG KINH PHÍ dự toán hoàn chỉnh cho toàn bộ mạng điện phòng ngủ là bao nhiêu?",
+    "options": [
+      "815.000 đồng",
+      "920.000 đồng",
+      "635.000 đồng",
+      "745.000 đồng"
+    ],
+    "correct": 3,
+    "tts_text": "Câu hỏi số mười lăm, câu hỏi đỉnh cao mức thưởng một trăm năm mươi triệu đồng. Dựa vào bảng tính dự toán mẫu Hình 5.3 sách giáo khoa trang 27, tổng kinh phí dự toán hoàn chỉnh cho toàn bộ mạng điện phòng ngủ là bao nhiêu?",
+    "hint": "Tổng kinh phí SGK trang 27: Dây dẫn (165.000 đ) + Vật liệu cách điện (210.000 đ) + Thiết bị điện (370.000 đ) = 745.000 đồng.",
+    "image": null
+  }
+]
