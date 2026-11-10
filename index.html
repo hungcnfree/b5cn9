@@ -2334,9 +2334,537 @@
     color: #071f38;
   }
 
+
+  /* ==========================================================================
+     SLIDE 11: BỐ CỤC 2 BOX TRÁI + 1 BOX PHẢI (CHỐNG TRÀN ZERO-SCROLL)
+     ========================================================================== */
+  .est-2col-layout {
+    display: grid;
+    grid-template-columns: 0.95fr 1.35fr;
+    gap: 14px;
+    align-items: stretch;
+    height: 100%;
+    min-height: 0;
+  }
+  .est-left-boxes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: space-between;
+    height: 100%;
+    min-height: 0;
+  }
+  .est-box1 {
+    padding: 10px 14px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1.5px solid var(--line);
+  }
+  .est-box2 {
+    padding: 10px 14px;
+    flex: 1.25;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1.5px solid var(--line);
+    box-shadow: 0 4px 16px rgba(7, 31, 56, 0.06);
+  }
+  .est-pool-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    align-content: start;
+    overflow-y: auto;
+    padding: 4px;
+    max-height: 195px;
+  }
+  .est-pool-grid .est-chip {
+    padding: 8px 10px !important;
+    font-size: 13.5px !important;
+    min-height: 40px !important;
+    border-radius: 10px !important;
+    justify-content: flex-start;
+    white-space: normal;
+    line-height: 1.2;
+    text-align: left;
+  }
+
+  /* ==========================================================================
+     TEACHER SMART SIDEBAR TOOLS (BỘ CÔNG CỤ SƯ PHẠM THÔNG MINH TRƯỢT MÉP TRÁI)
+     ========================================================================== */
+  .teacher-tools-sidebar {
+    position: fixed;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%) translateX(-100%);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .teacher-tools-sidebar:hover,
+  .teacher-tools-sidebar.open,
+  .teacher-tools-sidebar.pinned {
+    transform: translateY(-50%) translateX(0);
+  }
+
+  /* Thẻ Tab bám mép màn hình để gọi công cụ */
+  .tool-tab-toggle {
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--navy);
+    color: #fff;
+    padding: 10px 6px;
+    border-radius: 0 12px 12px 0;
+    cursor: pointer;
+    box-shadow: 4px 0 14px rgba(7, 31, 56, 0.25);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    border: 1.5px solid rgba(255, 255, 255, 0.2);
+    border-left: none;
+    transition: background 0.2s;
+  }
+  .tool-tab-toggle:hover {
+    background: var(--acc);
+    color: #071f38;
+  }
+  .tool-tab-label {
+    writing-mode: vertical-lr;
+    text-orientation: mixed;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+  }
+  .tool-tab-toggle svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Khung thân thanh công cụ */
+  .tool-panel {
+    background: rgba(7, 31, 56, 0.94);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    border-left: none;
+    border-radius: 0 18px 18px 0;
+    padding: 12px 8px;
+    box-shadow: 6px 0 24px rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 78px;
+  }
+  .tool-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 900;
+    color: #94a3b8;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .tool-pin-btn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 12px;
+    color: #94a3b8;
+    transition: transform 0.2s;
+  }
+  .tool-pin-btn:hover {
+    color: #fff;
+    transform: scale(1.15);
+  }
+  .tool-pin-btn.active {
+    color: var(--acc);
+  }
+  .tool-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .tool-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 8px 4px;
+    color: #e2e8f0;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 700;
+    transition: all 0.18s;
+  }
+  .tool-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    transform: translateY(-2px);
+    border-color: var(--acc);
+  }
+  .tool-btn.active {
+    background: var(--acc);
+    color: #071f38;
+    border-color: var(--acc);
+    box-shadow: 0 3px 10px rgba(245, 158, 11, 0.4);
+  }
+  .tool-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* A. Canvas Vẽ toàn màn hình */
+  .drawing-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 9990;
+    display: none;
+    cursor: crosshair;
+  }
+  .drawing-layer.active {
+    display: block;
+  }
+  #screenCanvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .pen-palette {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(7, 31, 56, 0.95);
+    backdrop-filter: blur(14px);
+    padding: 6px 14px;
+    border-radius: 30px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 9995;
+    border: 1.5px solid rgba(255, 255, 255, 0.2);
+  }
+  .color-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .color-dot:hover {
+    transform: scale(1.15);
+  }
+  .color-dot.active {
+    outline: 3px solid var(--acc);
+    transform: scale(1.2);
+  }
+  .palette-btn {
+    border: none;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 10px;
+    border-radius: 16px;
+    cursor: pointer;
+  }
+  .palette-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+  .palette-btn.danger {
+    background: #ef4444;
+  }
+
+  /* B. Đèn soi tiêu điểm (Spotlight) */
+  .spotlight-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9980;
+    display: none;
+    pointer-events: none;
+    background: radial-gradient(circle 140px at 50% 50%, transparent 0%, rgba(5, 15, 30, 0.88) 140px);
+    transition: opacity 0.2s;
+  }
+  .spotlight-overlay.active {
+    display: block;
+    pointer-events: auto;
+    cursor: crosshair;
+  }
+
+  /* C. Rèm che màn hình (Curtain) */
+  .curtain-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9985;
+    display: none;
+    pointer-events: none;
+  }
+  .curtain-overlay.active {
+    display: block;
+    pointer-events: auto;
+  }
+  .curtain-fabric {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(180deg, #051329 0%, #071f38 95%, #0d3b66 100%);
+    border-bottom: 4px solid var(--acc);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    user-select: none;
+  }
+  .curtain-handle {
+    position: absolute;
+    bottom: -32px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--acc);
+    color: #071f38;
+    padding: 4px 16px;
+    border-radius: 0 0 14px 14px;
+    cursor: ns-resize;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+  .curtain-close-btn {
+    border: none;
+    background: rgba(0, 0, 0, 0.2);
+    color: #071f38;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-weight: 900;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+  }
+
+  /* D. Bảng phấn viết nháp Popup (Chalkboard Popup) */
+  .chalkboard-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    display: none;
+    place-items: center;
+    padding: 24px;
+  }
+  .chalkboard-modal.open {
+    display: grid;
+  }
+  .chalkboard-frame {
+    width: 100%;
+    max-width: 1100px;
+    height: 85vh;
+    background: #143725;
+    border: 14px solid #854d0e;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 0 40px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .chalkboard-header {
+    background: #854d0e;
+    color: #fefce8;
+    padding: 8px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .chalk-btn {
+    border: none;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .chalk-close {
+    border: none;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .chalkboard-body {
+    flex: 1;
+    position: relative;
+    background: #143725;
+    background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    cursor: crosshair;
+  }
+  #chalkCanvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .chalkboard-footer {
+    padding: 6px 16px;
+    background: rgba(0, 0, 0, 0.2);
+    color: #86efac;
+    font-size: 12.5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
 </style>
 </head>
 <body>
+
+<!-- TEACHER SMART SIDEBAR TOOLS (BỘ CÔNG CỤ SƯ PHẠM THÔNG MINH TRƯỢT MÉP TRÁI) -->
+<aside class="teacher-tools-sidebar" id="teacherToolsSidebar" aria-label="Công cụ giảng dạy thông minh">
+  <div class="tool-tab-toggle" id="toolTabToggle" onclick="toggleTeacherSidebar()" title="Rê chuột hoặc bấm để mở Bộ công cụ giảng dạy">
+    <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+    <span class="tool-tab-label">CÔNG CỤ</span>
+  </div>
+  
+  <div class="tool-panel" id="toolPanel">
+    <div class="tool-panel-header">
+      <span>🛠️ TIỆN ÍCH</span>
+      <button class="tool-pin-btn" id="toolPinBtn" onclick="togglePinSidebar()" title="Ghim thanh công cụ luôn mở">📌</button>
+    </div>
+
+    <div class="tool-list">
+      <!-- 1. Bút vẽ -->
+      <button class="tool-btn" id="toolBtnPen" onclick="toggleDrawingTool()" title="Bút vẽ ghi chú trực tiếp lên màn hình">
+        <svg viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+        <span>Bút vẽ</span>
+      </button>
+
+      <!-- 2. Tẩy nét / Xóa -->
+      <button class="tool-btn" id="toolBtnEraser" onclick="clearDrawCanvas()" title="Xóa toàn bộ nét vẽ">
+        <svg viewBox="0 0 24 24"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></svg>
+        <span>Xóa nét</span>
+      </button>
+
+      <!-- 3. Đèn soi tiêu điểm (Spotlight) -->
+      <button class="tool-btn" id="toolBtnSpotlight" onclick="toggleSpotlight()" title="Đèn soi tiêu điểm chú ý vào 1 vị trí">
+        <svg viewBox="0 0 24 24"><path d="M18 6c0 2-2 4-2 7 0 3 2 5 2 7H6c0-2 2-4 2-7 0-3-2-5-2-7h12Z"/><line x1="6" x2="18" y1="2" y2="2"/></svg>
+        <span>Đèn soi</span>
+      </button>
+
+      <!-- 4. Rèm che màn hình (Curtain) -->
+      <button class="tool-btn" id="toolBtnCurtain" onclick="toggleCurtain()" title="Rèm che bảng chiếu">
+        <svg viewBox="0 0 24 24"><path d="M3 3h18"/><path d="M20 7H4"/><path d="M20 11H4"/><path d="M20 15H4"/><path d="M20 19H4"/><path d="M10 19v2"/><path d="M14 19v2"/></svg>
+        <span>Kéo rèm</span>
+      </button>
+
+      <!-- 5. Bảng phấn viết nháp (Chalkboard Popup) -->
+      <button class="tool-btn" id="toolBtnChalk" onclick="openChalkboard()" title="Mở bảng viết phấn phụ">
+        <svg viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/><path d="m7 17 2-4"/><path d="m17 17-2-4"/></svg>
+        <span>Bảng phấn</span>
+      </button>
+
+      <!-- 6. Chụp màn hình (Screenshot) -->
+      <button class="tool-btn" id="toolBtnShot" onclick="takeLessonScreenshot()" title="Chụp ảnh minh chứng bài học">
+        <svg viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+        <span>Chụp ảnh</span>
+      </button>
+
+      <!-- 7. Toàn màn hình (Fullscreen) -->
+      <button class="tool-btn" onclick="toggleFullscreen()" title="Toàn màn hình">
+        <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+        <span>Toàn cảnh</span>
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!-- LỚP PHỦ TOOL TƯƠNG TÁC -->
+<!-- A. Canvas Vẽ toàn màn hình -->
+<div class="drawing-layer" id="drawingLayer">
+  <canvas id="screenCanvas"></canvas>
+  <div class="pen-palette" id="penPalette">
+    <button class="color-dot active" style="background:#ef4444" onclick="setPenColor('#ef4444', this)" title="Màu đỏ"></button>
+    <button class="color-dot" style="background:#f59e0b" onclick="setPenColor('#f59e0b', this)" title="Màu vàng"></button>
+    <button class="color-dot" style="background:#0284c7" onclick="setPenColor('#0284c7', this)" title="Màu xanh dương"></button>
+    <button class="color-dot" style="background:#ffffff;border:1px solid #cbd5e1" onclick="setPenColor('#ffffff', this)" title="Màu trắng"></button>
+    <div class="dock-sep"></div>
+    <button class="palette-btn" onclick="clearDrawCanvas()" title="Xóa tất cả nét vẽ">🧹 Xóa</button>
+    <button class="palette-btn danger" onclick="toggleDrawingTool()" title="Đóng vẽ">✕ Đóng</button>
+  </div>
+</div>
+
+<!-- B. Đèn soi tiêu điểm (Spotlight) -->
+<div class="spotlight-overlay" id="spotlightOverlay" onclick="toggleSpotlight()" title="Bấm vào màn hình hoặc bấm icon Đèn soi để tắt"></div>
+
+<!-- C. Rèm che màn hình (Curtain) -->
+<div class="curtain-overlay" id="curtainOverlay">
+  <div class="curtain-fabric" id="curtainFabric">
+    <div class="curtain-handle" id="curtainHandle">
+      <span class="curtain-grip">════</span>
+      <span style="font-size:12px;font-weight:700;letter-spacing:0.04em">KÉO RÈM CHE BẢNG (Kéo lên/xuống)</span>
+      <button class="curtain-close-btn" onclick="toggleCurtain()">✕</button>
+    </div>
+  </div>
+</div>
+
+<!-- D. Popup Bảng phấn học đường (Chalkboard Popup) -->
+<div class="chalkboard-modal" id="chalkboardModal">
+  <div class="chalkboard-frame">
+    <div class="chalkboard-header">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:18px">📋</span>
+        <b style="color:#fefce8;font-size:15px;letter-spacing:0.05em">BẢNG VIẾT PHẤN BỔ TRỢ BÀI GIẢNG · BÀI 5 CÔNG NGHỆ 9</b>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button class="chalk-btn" style="background:#fefce8;color:#064e3b" onclick="setChalkColor('#fefce8')">Phấn trắng</button>
+        <button class="chalk-btn" style="background:#fef08a;color:#713f12" onclick="setChalkColor('#fef08a')">Phấn vàng</button>
+        <button class="chalk-btn" style="background:#86efac;color:#14532d" onclick="setChalkColor('#86efac')">Phấn lục</button>
+        <button class="chalk-btn" style="background:rgba(255,255,255,0.2);color:#fff" onclick="clearChalkboard()">🧹 Xóa bảng</button>
+        <button class="chalk-close" onclick="closeChalkboard()">✕</button>
+      </div>
+    </div>
+    <div class="chalkboard-body">
+      <canvas id="chalkCanvas"></canvas>
+    </div>
+    <div class="chalkboard-footer">
+      <span>💡 <i>Thầy/Cô dùng chuột hoặc bút cảm ứng để viết nháp công thức, phân tích mạch điện trực tiếp trên bảng.</i></span>
+      <span style="color:#cbd5e1">Bấm <b>✕</b> hoặc phím <b>Esc</b> để đóng bảng</span>
+    </div>
+  </div>
+</div>
+
 
 <!-- STICKY HEADER CHO CHẾ ĐỘ CUỘN DI ĐỘNG -->
 <header class="mobile-sticky-header" id="mobileHeader" aria-label="Thanh tiến độ di động">
@@ -3048,48 +3576,69 @@
     </div>
   </section>
 
-  <section class="slide" data-menu="Vận dụng · Bài toán lớp học">
+    <section class="slide" data-menu="Vận dụng · Bài toán lớp học">
     <div class="crumb"><b>VẬN DỤNG</b><span>·</span><span>Thực hành lập dự toán mạng điện lớp học 5 chặng (Hình 5.3 SGK)</span></div>
     <div class="wrap">
-      <div class="split" style="grid-template-columns: 0.72fr 1.28fr; align-items: stretch; gap: 14px">
+      <div class="est-2col-layout">
         
-        <!-- Cột trái: Sơ đồ Hình 5.3 & Nút hỗ trợ -->
-        <div class="card" style="padding:12px;display:flex;flex-direction:column;justify-content:space-between">
-          <div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-              <h3 style="margin:0;font-size:16px">Sơ đồ mặt bằng Hình 5.3</h3>
-              <span class="vj-badge sgk" style="padding:2px 8px;font-size:12px">SGK tr.28</span>
+        <!-- Cột trái: 2 Box xếp chồng -->
+        <div class="est-left-boxes">
+          
+          <!-- Box 1 (Trên): Sơ đồ Hình 5.3 & Thông số kích thước -->
+          <div class="est-box1">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+                <h3 style="margin:0;font-size:15px;color:var(--navy);font-weight:800">Sơ đồ mặt bằng Hình 5.3</h3>
+                <span class="vj-badge sgk" style="padding:2px 8px;font-size:11.5px">SGK tr.28</span>
+              </div>
+              <div class="sgk-fig" title="Bấm để phóng to Hình 5.3 SGK" style="padding:4px;max-height:120px;margin:0 auto">
+                <span class="zoom-badge">🔍 Phóng to</span>
+                <img src="assets/img/h5-3.png" alt="Hình 5.3 Sơ đồ mạng điện lớp học" style="max-height:110px;object-fit:contain">
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:4px;font-size:12px">
+                <div style="background:#f8fbff;border:1px solid #c3d9f0;border-radius:6px;padding:3px 6px">
+                  <b>Nguồn → Bảng:</b> 7 m
+                </div>
+                <div style="background:#f8fbff;border:1px solid #c3d9f0;border-radius:6px;padding:3px 6px">
+                  <b>Bảng → 2 Đèn:</b> 10 + 15 m
+                </div>
+                <div style="background:#f8fbff;border:1px solid #c3d9f0;border-radius:6px;padding:3px 6px">
+                  <b>Bảng → 2 Quạt:</b> 12 + 20 m
+                </div>
+                <div style="background:#fef3e2;border:1px solid #fcd34d;border-radius:6px;padding:3px 6px;color:#b45309">
+                  <b>Tổng nhánh:</b> <b>35 m</b>
+                </div>
+              </div>
             </div>
-            <div class="sgk-fig" title="Bấm để phóng to Hình 5.3 SGK" style="padding:6px;max-height:210px">
-              <span class="zoom-badge">🔍 Phóng to</span>
-              <img src="assets/img/h5-3.png" alt="Hình 5.3 Sơ đồ mạng điện lớp học" style="max-height:180px">
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px;font-size:12.5px">
-              <div style="background:#f8fbff;border:1px solid #c3d9f0;border-radius:6px;padding:4px 6px">
-                <b>Nguồn → Bảng:</b> 7 m
-              </div>
-              <div style="background:#f8fbff;border:1px solid #c3d9f0;border-radius:6px;padding:4px 6px">
-                <b>Bảng → 2 Đèn:</b> 10 + 15 m
-              </div>
-              <div style="background:#f8fbff;border:1px solid #c3d9f0;border-radius:6px;padding:4px 6px">
-                <b>Bảng → 2 Quạt:</b> 12 + 20 m
-              </div>
-              <div style="background:#fef3e2;border:1px solid #fcd34d;border-radius:6px;padding:4px 6px;color:#b45309">
-                <b>Tổng nhánh:</b> <b>35 m</b>
-              </div>
+
+            <div style="display:flex;gap:6px;margin-top:4px">
+              <button class="btn sm" data-say="c09" style="flex:1;padding:6px 8px;font-size:12px" title="Nghe cô giáo hướng dẫn">🔊 Hướng dẫn</button>
+              <button class="btn-open-vj" id="btnOpenVjModal" style="flex:1.4;margin:0;padding:6px 8px;font-size:12px" title="Xem bảng VietJack">
+                📋 Xem VietJack (3.091k)
+              </button>
             </div>
           </div>
 
-          <div style="margin-top:6px">
-            <button class="btn sm" data-say="c09" style="width:100%;margin-bottom:6px">🔊 Nghe hướng dẫn nhiệm vụ</button>
-            <button class="btn-open-vj" id="btnOpenVjModal" style="margin:0;padding:10px 14px;font-size:14px">
-              📋 Xem đối chiếu phương án VietJack (3.091.800 đ)
-            </button>
+          <!-- Box 2 (Dưới): KHO THẺ VẬT TƯ CHUYỂN SANG ĐÂY -->
+          <div class="est-box2" id="estPoolBox">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+              <span style="font-size:13.5px;font-weight:900;color:var(--navy)">📦 KHO THẺ VẬT TƯ (Tự do thứ tự):</span>
+              <span id="estItemCount" style="font-size:12px;color:#0284c7;font-weight:800;background:#e0f2fe;padding:2px 8px;border-radius:12px">Đã chọn: 0/8</span>
+            </div>
+            <div id="estPoolWrap" style="margin:0;flex:1">
+              <div class="est-pool-grid" id="estPool">
+                <!-- 8 thẻ nguồn được sinh tự động bằng JS -->
+              </div>
+            </div>
+            <div style="font-size:11px;color:#64748b;margin-top:2px">
+              💡 <i>Kéo thả hoặc bấm vào thẻ để xếp vào bảng bên phải.</i>
+            </div>
           </div>
+
         </div>
 
-        <!-- Cột phải: Bảng dự toán 5 chặng tương tác -->
-        <div class="card" style="padding:12px 16px;display:flex;flex-direction:column;justify-content:space-between">
+        <!-- Cột phải: BOX BÀI TẬP (BẢNG DỰ TOÁN 5 CHẶNG) -->
+        <div class="card" style="padding:10px 14px;display:flex;flex-direction:column;justify-content:space-between">
           <div>
             <!-- Stepper 5 bước -->
             <div class="est-stepper" id="estStepper">
@@ -3100,7 +3649,7 @@
               <div class="est-step" id="step5"><span class="est-step-num">5</span> Tính tiền</div>
             </div>
 
-            <!-- Bảng dự toán -->
+            <!-- Bảng dự toán 8 dòng -->
             <table class="est-table" id="estTable">
               <thead>
                 <tr>
@@ -3117,20 +3666,9 @@
               </tbody>
             </table>
 
-            <!-- Ngân hàng thẻ nguồn ở Chặng 1 -->
-            <div id="estPoolWrap" style="margin-top:6px">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
-                <span style="font-size:13px;font-weight:800;color:var(--navy)">📦 Ngân hàng thẻ vật tư (Tự do thứ tự: Kéo Công tắc, Dây dẫn hay Aptomat vào trước đều được):</span>
-                <span id="estItemCount" style="font-size:12.5px;color:#64748b;font-weight:700">Đã chọn: 0/8</span>
-              </div>
-              <div class="est-pool" id="estPool">
-                <!-- Thẻ nguồn được sinh bằng JS -->
-              </div>
-            </div>
-
             <!-- Tổng chi phí thanh kết quả Chặng 5 -->
-            <div class="est-total-bar" id="estTotalBar" style="display:none">
-              <div style="font-weight:900;color:var(--navy);font-size:15px">
+            <div class="est-total-bar" id="estTotalBar" style="display:none;margin-top:6px">
+              <div style="font-weight:900;color:var(--navy);font-size:14.5px">
                 💰 TỔNG CHI PHÍ THI CÔNG MẠNG ĐIỆN LỚP HỌC (CHUẨN KỸ THUẬT):
               </div>
               <div class="est-total-num" id="estGrandTotalText">0 đ</div>
@@ -3138,7 +3676,7 @@
           </div>
 
           <!-- Thanh điều khiển chặng dưới bảng -->
-          <div class="est-controls">
+          <div class="est-controls" style="margin-top:6px">
             <div class="est-guide" id="estGuideText">
               👉 <b>Bước 1:</b> Em hãy kéo thả hoặc chạm vào 8 thẻ vật tư cần thiết cho mạng điện lớp học Hình 5.3.
             </div>
@@ -3880,7 +4418,7 @@ function recalc() {
 }
 
 /* ===== GAMESHOW AI LÀ TRIỆU PHÚ 15 BẬC THANG JS ===== */
-var altpQuestions = [{"level": 1, "reward": "200.000 đ", "question": "Quy trình tính toán chi phí lắp đặt mạng điện trong nhà gồm có mấy bước?", "options": ["2 bước", "3 bước", "4 bước", "1 bước"], "correct": 1, "tts_text": "Câu hỏi số một, mức thưởng hai trăm nghìn đồng. Quy trình tính toán chi phí lắp đặt mạng điện trong nhà gồm có mấy bước?", "hint": "Theo SGK Công nghệ 9 Bài 5, quy trình chuẩn gồm đúng 3 bước: Nghiên cứu sơ đồ, Lập bảng kê vật tư thiết bị, và Lập bảng tính toán chi phí.", "image": null}, {"level": 2, "reward": "400.000 đ", "question": "Bước đầu tiên cần thực hiện khi tính toán chi phí lắp đặt mạng điện trong nhà là gì?", "options": ["Nghiên cứu sơ đồ lắp đặt mạng điện", "Lập bảng kê số lượng thiết bị", "Lập bảng tính toán chi phí", "Mua sắm vật tư và dụng cụ"], "correct": 0, "tts_text": "Câu hỏi số hai, mức thưởng bốn trăm nghìn đồng. Bước đầu tiên cần thực hiện khi tính toán chi phí lắp đặt mạng điện trong nhà là gì?", "hint": "Trước khi mua hay tính tiền, người kỹ sư bao giờ cũng phải đọc và nghiên cứu kỹ sơ đồ lắp đặt mạch điện.", "image": null}, {"level": 3, "reward": "600.000 đ", "question": "Vật liệu nào dưới đây thuộc nhóm vật liệu cách điện trong lắp đặt mạng điện?", "options": ["Lưỡi dao cầu dao kim loại", "Ống nhựa luồn dây PVC Ø 16 mm", "Cọc tiếp địa bằng thép mạ đồng", "Dây dẫn điện lõi đồng"], "correct": 1, "tts_text": "Câu hỏi số ba, mức thưởng sáu trăm nghìn đồng. Vật liệu nào dưới đây thuộc nhóm vật liệu cách điện trong lắp đặt mạng điện?", "hint": "Nhựa PVC và băng dính cách điện là những vật liệu cách điện phổ biến nhất để đảm bảo an toàn.", "image": null}, {"level": 4, "reward": "1.000.000 đ", "question": "Bước cuối cùng (Bước 3) cần thực hiện khi tính toán chi phí mạng điện trong nhà là gì?", "options": ["Lập bảng tính toán chi phí", "Nghiệm thu đóng điện thử tải", "Lập sơ đồ nguyên lý mạch điện", "Lắp đặt bảng điện chính"], "correct": 0, "tts_text": "Câu hỏi số bốn, mức thưởng một triệu đồng. Bước cuối cùng cần thực hiện khi tính toán chi phí mạng điện trong nhà là gì?", "hint": "Bước 3 chính là tổng hợp số lượng, tra đơn giá thị trường để Lập bảng tính toán chi phí tổng thể.", "image": null}, {"level": 5, "reward": "2.000.000 đ", "question": "Hình bên là thiết bị điện nào có chức năng đóng cắt và tự động ngắt mạch khi có sự cố quá tải, ngắn mạch?", "options": ["Aptomat (Cầu dao tự động)", "Công tơ điện xoay chiều", "Chuông điện gia đình", "Biến áp cách ly"], "correct": 0, "tts_text": "Câu hỏi số năm, mốc thưởng an toàn hai triệu đồng. Hình bên là thiết bị điện nào có chức năng đóng cắt và tự động ngắt mạch khi có sự cố quá tải, ngắn mạch?", "hint": "Đây là thiết bị an toàn quen thuộc lắp ở đầu mỗi bảng điện hoặc mạng điện nhánh: Aptomat.", "image": "assets/images/millionaire/image_4e3f0c57c40.jpeg"}, {"level": 6, "reward": "3.000.000 đ", "question": "Quan sát sơ đồ lắp đặt mạch điện phòng ngủ (Hình 5.2 SGK), mạch điện này sử dụng loại aptomat nào ở đầu nguồn?", "options": ["Cầu dao đảo chiều ba vị trí", "Aptomat ba cực (3P)", "Aptomat hai cực (2P)", "Aptomat một cực"], "correct": 2, "tts_text": "Câu hỏi số sáu, mức thưởng ba triệu đồng. Quan sát sơ đồ lắp đặt mạch điện phòng ngủ Hình 5.2, mạch điện này sử dụng loại aptomat nào ở đầu nguồn?", "hint": "Nhìn vào đầu nguồn có ký hiệu cắt đồng thời cả 2 dây pha và trung tính, đó là aptomat hai cực 2P.", "image": "assets/images/millionaire/image_9eee55f00b0.png"}, {"level": 7, "reward": "6.000.000 đ", "question": "Trong sơ đồ lắp đặt mạng điện phòng ngủ Hình 5.2 SGK bên cạnh, thiết bị nào KHÔNG có mặt trong sơ đồ?", "options": ["Công tắc đơn điều khiển đèn", "Ổ cắm điện đôi", "Quạt trần làm mát", "Bóng đèn chiếu sáng"], "correct": 2, "tts_text": "Câu hỏi số bảy, mức thưởng sáu triệu đồng. Trong sơ đồ lắp đặt mạng điện phòng ngủ Hình 5.2 bên cạnh, thiết bị nào không có mặt trong sơ đồ?", "hint": "Mạch điện phòng ngủ này chỉ có đèn chiếu sáng, ổ cắm, công tắc và aptomat; hoàn toàn không có quạt trần.", "image": "assets/images/millionaire/image_48e769f61e0.png"}, {"level": 8, "reward": "10.000.000 đ", "question": "Công việc “Xác định dây dẫn, thiết bị và dụng cụ điện cần dùng” được thực hiện ở bước nào?", "options": ["Bước 3: Lập bảng tính toán chi phí", "Bước 1: Nghiên cứu sơ đồ lắp đặt mạng điện", "Bước 2: Lập bảng kê số lượng vật liệu, thiết bị", "Bước 4: Thi công hoàn thiện công trình"], "correct": 1, "tts_text": "Câu hỏi số tám, mức thưởng mười triệu đồng. Công việc xác định dây dẫn, thiết bị và dụng cụ điện cần dùng được thực hiện ở bước nào?", "hint": "Khi quan sát, nghiên cứu kỹ sơ đồ ở Bước 1, ta đã phải xác định rõ các thành phần dây dẫn và thiết bị có mặt trên bản vẽ.", "image": null}, {"level": 9, "reward": "14.000.000 đ", "question": "Khi đo đạc và tính chiều dài dây dẫn điện trên sơ đồ lắp đặt, tại sao ta cần cộng thêm từ 10% đến 15% chiều dài?", "options": ["Để bán lại vật tư thừa lấy tiền tiết kiệm", "Để làm tăng điện áp của nguồn điện gia đình", "Để đáp ứng quy định kiểm định của nhà cung cấp điện", "Để dự phòng hao hụt khi uốn cong, đấu nối và tuốt dây"], "correct": 3, "tts_text": "Câu hỏi số chín, mức thưởng mười bốn triệu đồng. Khi đo đạc và tính chiều dài dây dẫn điện trên sơ đồ lắp đặt, tại sao ta cần cộng thêm từ 10% đến 15% chiều dài?", "hint": "Dây dẫn khi đi qua các góc vuông tường, vào hộp nối hoặc tuốt đầu dây đấu nối luôn bị hao hụt chiều dài.", "image": null}, {"level": 10, "reward": "22.000.000 đ", "question": "Để bảo vệ các dây dẫn điện đi ngầm trong tường hoặc đi nổi tránh bị chuột cắn, ẩm ướt và va đập cơ học, giải pháp tiêu chuẩn là gì?", "options": ["Không cần bảo vệ vì vỏ bọc nhựa dây đã đủ bền", "Luồn dây dẫn trong ống bảo vệ cách điện chuyên dụng (PVC)", "Quấn thêm giấy báo xung quanh toàn bộ đường dây", "Dán chặt dây vào tường bằng băng keo hai mặt mỏng"], "correct": 1, "tts_text": "Câu hỏi số mười, mốc thưởng an toàn hai mươi hai triệu đồng. Để bảo vệ dây dẫn điện đi ngầm trong tường hoặc đi nổi tránh ẩm ướt và va đập, giải pháp tiêu chuẩn là gì?", "hint": "Quy chuẩn kỹ thuật bắt buộc phải luồn dây dẫn vào ống nhựa bảo vệ PVC chống cháy, chống ẩm.", "image": null}, {"level": 11, "reward": "30.000.000 đ", "question": "Theo SGK Công nghệ 9 (trang 28), có mấy tiêu chí chính dùng để đánh giá kết quả thực hành tính toán chi phí lắp đặt mạng điện?", "options": ["3 tiêu chí", "5 tiêu chí", "2 tiêu chí", "4 tiêu chí"], "correct": 0, "tts_text": "Câu hỏi số mười một, mức thưởng ba mươi triệu đồng. Theo sách giáo khoa Công nghệ 9 trang 28, có mấy tiêu chí chính dùng để đánh giá kết quả thực hành?", "hint": "Gồm 3 tiêu chí cốt lõi: Tính chính xác chi phí; Xác định đúng thông số, số lượng; và Tiến hành đúng trình tự các bước.", "image": null}, {"level": 12, "reward": "40.000.000 đ", "question": "Quan sát sơ đồ mạng điện lớp học bên cạnh (gồm 2 bóng đèn và 2 quạt trần), phát biểu nào sau đây là SAI?", "options": ["Đồ dùng điện bao gồm 2 đèn và 2 quạt trần", "Bảng điện có công tắc điều khiển quạt", "Bảng điện có công tắc điều khiển đèn", "Đồ dùng điện bao gồm 2 ổ điện và 2 bóng đèn"], "correct": 3, "tts_text": "Câu hỏi số mười hai, mức thưởng bốn mươi triệu đồng. Quan sát sơ đồ mạng điện lớp học bên cạnh, phát biểu nào sau đây là sai?", "hint": "Ổ cắm điện là thiết bị lấy điện, không phải là đồ dùng điện tiêu thụ điện năng như quạt hay đèn.", "image": "assets/images/millionaire/image_befb97d6870.png"}, {"level": 13, "reward": "60.000.000 đ", "question": "Theo Bảng tính Hình 5.3 SGK, nếu đơn giá ống luồn dây PVC Ø 16 mm là 7.000 đ/m và số lượng cần dùng là 20 m, thành tiền là bao nhiêu?", "options": ["140.000 đồng", "120.000 đồng", "210.000 đồng", "160.000 đồng"], "correct": 0, "tts_text": "Câu hỏi số mười ba, mức thưởng sáu mươi triệu đồng. Theo bảng tính, nếu đơn giá ống luồn dây PVC là bảy nghìn đồng một mét và cần dùng hai mươi mét, thành tiền là bao nhiêu?", "hint": "Thành tiền = Số lượng × Đơn giá = 20 × 7.000 đ = 140.000 đồng.", "image": "assets/images/millionaire/image_2097dd4e550.png"}, {"level": 14, "reward": "85.000.000 đ", "question": "Dựa vào bảng tính dự toán mẫu Hình 5.3 SGK, tổng chi phí cho toàn bộ nhóm VẬT LIỆU CÁCH ĐIỆN (ống PVC và băng dính) là bao nhiêu?", "options": ["370.000 đồng", "150.000 đồng", "210.000 đồng", "60.000 đồng"], "correct": 2, "tts_text": "Câu hỏi số mười bốn, mức thưởng tám mươi lăm triệu đồng. Dựa vào bảng dự toán mẫu Hình 5.3 SGK, tổng chi phí cho toàn bộ nhóm vật liệu cách điện là bao nhiêu?", "hint": "Nhóm vật liệu cách điện gồm Ống PVC (140.000 đ) + Ống chữ T, khớp nối (60.000 đ) + Băng dính cách điện (10.000 đ) = 210.000 đồng.", "image": null}, {"level": 15, "reward": "150.000.000 đ", "question": "Dựa vào bảng tính dự toán mẫu Hình 5.3 SGK trang 27, TỔNG KINH PHÍ dự toán hoàn chỉnh cho toàn bộ mạng điện phòng ngủ là bao nhiêu?", "options": ["815.000 đồng", "920.000 đồng", "635.000 đồng", "745.000 đồng"], "correct": 3, "tts_text": "Câu hỏi số mười lăm, câu hỏi đỉnh cao mức thưởng một trăm năm mươi triệu đồng. Dựa vào bảng tính dự toán mẫu Hình 5.3 sách giáo khoa trang 27, tổng kinh phí dự toán hoàn chỉnh cho toàn bộ mạng điện phòng ngủ là bao nhiêu?", "hint": "Tổng kinh phí SGK trang 27: Dây dẫn (165.000 đ) + Vật liệu cách điện (210.000 đ) + Thiết bị điện (370.000 đ) = 745.000 đồng.", "image": null}];
+var altpQuestions = [{"level": 1, "reward": "200.000 đ", "question": "Quy trình tính toán chi phí lắp đặt mạng điện trong nhà gồm có mấy bước?", "options": ["2 bước", "3 bước", "4 bước", "1 bước"], "correct": 1, "tts_text": "Câu hỏi số một, mức thưởng hai trăm nghìn đồng. Quy trình tính toán chi phí lắp đặt mạng điện trong nhà gồm có mấy bước?", "hint": "Theo SGK Công nghệ 9 Bài 5, quy trình chuẩn gồm đúng 3 bước: Nghiên cứu sơ đồ, Lập bảng kê vật tư thiết bị, và Lập bảng tính toán chi phí.", "image": null}, {"level": 2, "reward": "400.000 đ", "question": "Bước đầu tiên cần thực hiện khi tính toán chi phí lắp đặt mạng điện trong nhà là gì?", "options": ["Nghiên cứu sơ đồ lắp đặt mạng điện", "Lập bảng kê số lượng thiết bị", "Lập bảng tính toán chi phí", "Mua sắm vật tư và dụng cụ"], "correct": 0, "tts_text": "Câu hỏi số hai, mức thưởng bốn trăm nghìn đồng. Bước đầu tiên cần thực hiện khi tính toán chi phí lắp đặt mạng điện trong nhà là gì?", "hint": "Trước khi mua hay tính tiền, người kỹ sư bao giờ cũng phải đọc và nghiên cứu kỹ sơ đồ lắp đặt mạch điện.", "image": null}, {"level": 3, "reward": "600.000 đ", "question": "Vật liệu nào dưới đây thuộc nhóm vật liệu cách điện trong lắp đặt mạng điện?", "options": ["Lưỡi dao cầu dao kim loại", "Ống nhựa luồn dây PVC Ø 16 mm", "Cọc tiếp địa bằng thép mạ đồng", "Dây dẫn điện lõi đồng"], "correct": 1, "tts_text": "Câu hỏi số ba, mức thưởng sáu trăm nghìn đồng. Vật liệu nào dưới đây thuộc nhóm vật liệu cách điện trong lắp đặt mạng điện?", "hint": "Nhựa PVC và băng dính cách điện là những vật liệu cách điện phổ biến nhất để đảm bảo an toàn.", "image": null}, {"level": 4, "reward": "1.000.000 đ", "question": "Bước cuối cùng (Bước 3) cần thực hiện khi tính toán chi phí mạng điện trong nhà là gì?", "options": ["Lập bảng tính toán chi phí", "Nghiệm thu đóng điện thử tải", "Lập sơ đồ nguyên lý mạch điện", "Lắp đặt bảng điện chính"], "correct": 0, "tts_text": "Câu hỏi số bốn, mức thưởng một triệu đồng. Bước cuối cùng cần thực hiện khi tính toán chi phí mạng điện trong nhà là gì?", "hint": "Bước 3 chính là tổng hợp số lượng, tra đơn giá thị trường để Lập bảng tính toán chi phí tổng thể.", "image": null}, {"level": 5, "reward": "2.000.000 đ", "question": "Hình bên là thiết bị điện nào có chức năng đóng cắt và tự động ngắt mạch khi có sự cố quá tải, ngắn mạch?", "options": ["Aptomat (Cầu dao tự động)", "Công tơ điện xoay chiều", "Chuông điện gia đình", "Biến áp cách ly"], "correct": 0, "tts_text": "Câu hỏi số năm, mốc thưởng an toàn hai triệu đồng. Hình bên là thiết bị điện nào có chức năng đóng cắt và tự động ngắt mạch khi có sự cố quá tải, ngắn mạch?", "hint": "Đây là thiết bị an toàn quen thuộc lắp ở đầu mỗi bảng điện hoặc mạng điện nhánh: Aptomat.", "image": "assets/images/millionaire/image_4e3f0c57c40.jpeg"}, {"level": 6, "reward": "3.000.000 đ", "question": "Quan sát sơ đồ lắp đặt mạch điện phòng ngủ (Hình 5.2 SGK), mạch điện này sử dụng loại aptomat nào ở đầu nguồn?", "options": ["Cầu dao đảo chiều ba vị trí", "Aptomat ba cực (3P)", "Aptomat hai cực (2P)", "Aptomat một cực"], "correct": 2, "tts_text": "Câu hỏi số sáu, mức thưởng ba triệu đồng. Quan sát sơ đồ lắp đặt mạch điện phòng ngủ Hình 5.2, mạch điện này sử dụng loại aptomat nào ở đầu nguồn?", "hint": "Nhìn vào đầu nguồn có ký hiệu cắt đồng thời cả 2 dây pha và trung tính, đó là aptomat hai cực 2P.", "image": "assets/images/millionaire/image_9eee55f00b0.png"}, {"level": 7, "reward": "6.000.000 đ", "question": "Trong sơ đồ lắp đặt mạng điện phòng ngủ Hình 5.2 SGK bên cạnh, thiết bị nào KHÔNG có mặt trong sơ đồ?", "options": ["Công tắc đơn điều khiển đèn", "Ổ cắm điện đôi", "Quạt trần làm mát", "Bóng đèn chiếu sáng"], "correct": 2, "tts_text": "Câu hỏi số bảy, mức thưởng sáu triệu đồng. Trong sơ đồ lắp đặt mạng điện phòng ngủ Hình 5.2 bên cạnh, thiết bị nào không có mặt trong sơ đồ?", "hint": "Mạch điện phòng ngủ này chỉ có đèn chiếu sáng, ổ cắm, công tắc và aptomat; hoàn toàn không có quạt trần.", "image": "assets/images/millionaire/image_48e769f61e0.png"}, {"level": 8, "reward": "10.000.000 đ", "question": "Công việc “Xác định dây dẫn, thiết bị và dụng cụ điện cần dùng” được thực hiện ở bước nào?", "options": ["Bước 3: Lập bảng tính toán chi phí", "Bước 1: Nghiên cứu sơ đồ lắp đặt mạng điện", "Bước 2: Lập bảng kê số lượng vật liệu, thiết bị", "Bước 4: Thi công hoàn thiện công trình"], "correct": 1, "tts_text": "Câu hỏi số tám, mức thưởng mười triệu đồng. Công việc xác định dây dẫn, thiết bị và dụng cụ điện cần dùng được thực hiện ở bước nào?", "hint": "Khi quan sát, nghiên cứu kỹ sơ đồ ở Bước 1, ta đã phải xác định rõ các thành phần dây dẫn và thiết bị có mặt trên bản vẽ.", "image": null}, {"level": 9, "reward": "14.000.000 đ", "question": "Khi đo đạc và tính chiều dài dây dẫn điện trên sơ đồ lắp đặt, tại sao ta cần cộng thêm từ 10% đến 15% chiều dài?", "options": ["Để bán lại vật tư thừa lấy tiền tiết kiệm", "Để làm tăng điện áp của nguồn điện gia đình", "Để đáp ứng quy định kiểm định của nhà cung cấp điện", "Để dự phòng hao hụt khi uốn cong, đấu nối và tuốt dây"], "correct": 3, "tts_text": "Câu hỏi số chín, mức thưởng mười bốn triệu đồng. Khi đo đạc và tính chiều dài dây dẫn điện trên sơ đồ lắp đặt, tại sao ta cần cộng thêm từ 10% đến 15% chiều dài?", "hint": "Dây dẫn khi đi qua các góc vuông tường, vào hộp nối hoặc tuốt đầu dây đấu nối luôn bị hao hụt chiều dài.", "image": null}, {"level": 10, "reward": "22.000.000 đ", "question": "Để bảo vệ các dây dẫn điện đi ngầm trong tường hoặc đi nổi tránh bị chuột cắn, ẩm ướt và va đập cơ học, giải pháp tiêu chuẩn là gì?", "options": ["Không cần bảo vệ vì vỏ bọc nhựa dây đã đủ bền", "Luồn dây dẫn trong ống bảo vệ cách điện chuyên dụng (PVC)", "Quấn thêm giấy báo xung quanh toàn bộ đường dây", "Dán chặt dây vào tường bằng băng keo hai mặt mỏng"], "correct": 1, "tts_text": "Câu hỏi số mười, mốc thưởng an toàn hai mươi hai triệu đồng. Để bảo vệ dây dẫn điện đi ngầm trong tường hoặc đi nổi tránh ẩm ướt và va đập, giải pháp tiêu chuẩn là gì?", "hint": "Quy chuẩn kỹ thuật bắt buộc phải luồn dây dẫn vào ống nhựa bảo vệ PVC chống cháy, chống ẩm.", "image": null}, {"level": 11, "reward": "30.000.000 đ", "question": "Theo SGK Công nghệ 9 (trang 28), có mấy tiêu chí chính dùng để đánh giá kết quả thực hành tính toán chi phí lắp đặt mạng điện?", "options": ["3 tiêu chí", "5 tiêu chí", "2 tiêu chí", "4 tiêu chí"], "correct": 0, "tts_text": "Câu hỏi số mười một, mức thưởng ba mươi triệu đồng. Theo sách giáo khoa Công nghệ 9 trang 28, có mấy tiêu chí chính dùng để đánh giá kết quả thực hành?", "hint": "Gồm 3 tiêu chí cốt lõi: Tính chính xác chi phí; Xác định đúng thông số, số lượng; và Tiến hành đúng trình tự các bước.", "image": null}, {"level": 12, "reward": "40.000.000 đ", "question": "Quan sát sơ đồ mạng điện lớp học bên cạnh (gồm 2 bóng đèn và 2 quạt trần), phát biểu nào sau đây là SAI?", "options": ["Đồ dùng điện bao gồm 2 đèn và 2 quạt trần", "Bảng điện có công tắc điều khiển quạt", "Bảng điện có công tắc điều khiển đèn", "Đồ dùng điện bao gồm 2 ổ điện và 2 bóng đèn"], "correct": 3, "tts_text": "Câu hỏi số mười hai, mức thưởng bốn mươi triệu đồng. Quan sát sơ đồ mạng điện lớp học bên cạnh, phát biểu nào sau đây là sai?", "hint": "Ổ cắm điện là thiết bị lấy điện, không phải là đồ dùng điện tiêu thụ điện năng như quạt hay đèn.", "image": "assets/images/millionaire/image_befb97d6870.png"}, {"level": 13, "reward": "60.000.000 đ", "question": "Theo Bảng tính Hình 5.3 SGK, nếu đơn giá ống luồn dây PVC Ø 16 mm là 7.000 đ/m và số lượng cần dùng là 20 m, thành tiền là bao nhiêu?", "options": ["140.000 đồng", "120.000 đồng", "210.000 đồng", "160.000 đồng"], "correct": 0, "tts_text": "Câu hỏi số mười ba, mức thưởng sáu mươi triệu đồng. Theo bảng tính, nếu đơn giá ống luồn dây PVC là bảy nghìn đồng một mét và cần dùng hai mươi mét, thành tiền là bao nhiêu?", "hint": "Thành tiền = Số lượng × Đơn giá = 20 × 7.000 đ = 140.000 đồng.", "image": "assets/images/millionaire/image_2097dd4e550.png"}, {"level": 14, "reward": "85.000.000 đ", "question": "Để lắp đặt tuyến dây nhánh cấp điện từ bảng điện đến 2 bóng đèn và 2 quạt trần (Hình 5.3 SGK), chiều dài đo đạc là 35 m. Nếu tính thêm 10% hao hụt với đơn giá 10.000 đ/m, chi phí dự toán dây nhánh thực tế là bao nhiêu?", "options": ["350.000 đồng", "385.000 đồng", "420.000 đồng", "400.000 đồng"], "correct": 1, "tts_text": "Câu hỏi số mười bốn, mức thưởng tám mươi lăm triệu đồng. Để lắp đặt tuyến dây nhánh cấp điện từ bảng điện đến hai bóng đèn và hai quạt trần ở Hình 5.3 sách giáo khoa, chiều dài đo đạc là ba mươi lăm mét. Nếu tính thêm mười phần trăm hao hụt với đơn giá mười nghìn đồng một mét, chi phí dự toán dây nhánh thực tế là bao nhiêu?", "hint": "Theo SGK Công nghệ 9 Bài 5, chiều dài dây nhánh thực tế có dự phòng = 35 m + 3,5 m hao hụt = 38,5 m. Do đó chi phí dự toán = 38,5 × 10.000 đ = 385.000 đồng.", "image": null}, {"level": 15, "reward": "150.000.000 đ", "question": "Theo quy chuẩn an toàn điện và nguyên tắc lập dự toán ở Bài 5 SGK, trình tự lựa chọn và tính toán giữa các thành phần mạng điện nào sau đây là CHÍNH XÁC NHẤT?", "options": ["Căn cứ công suất đồ dùng điện ➔ Tính tiết diện dây và ống bảo vệ ➔ Chọn thiết bị đóng cắt", "Mua thiết bị đóng cắt trước ➔ Chọn đồ dùng điện ➔ Sau cùng mới đo chiều dài dây dẫn", "Tính toán toàn bộ chi phí nhân công trước ➔ Mua dây dẫn ➔ Chọn thiết bị bảo vệ", "Ưu tiên chọn màu sắc công tắc thẩm mỹ ➔ Lập bảng kê số lượng ➔ Mua ống luồn dây"], "correct": 0, "tts_text": "Câu hỏi số mười lăm, câu hỏi đỉnh cao một trăm năm mươi triệu đồng. Theo quy chuẩn an toàn điện và nguyên tắc lập dự toán ở Bài 5 sách giáo khoa, trình tự lựa chọn và tính toán giữa các thành phần mạng điện nào sau đây là chính xác nhất?", "hint": "Quy chuẩn kỹ thuật bắt buộc phải căn cứ vào công suất đồ dùng điện để tính dòng phụ tải ➔ từ đó chọn tiết diện dây dẫn và ống PVC bảo vệ ➔ rồi mới chọn thông số định mức của Aptomat, công tắc đóng cắt.", "image": null}];
 
 var altpCurIdx = 0;
 var altpCurrentPrize = 0;
@@ -4698,6 +5236,309 @@ function initAdaptiveEngine() {
 
 // Khởi chạy Smart Adaptive Mobile Engine
 initAdaptiveEngine();
+
+/* ==========================================================================
+   TEACHER SMART SIDEBAR TOOLS LOGIC (BỘ CÔNG CỤ SƯ PHẠM THÔNG MINH)
+   ========================================================================== */
+var isSidebarPinned = false;
+
+function toggleTeacherSidebar() {
+  var sb = document.getElementById('teacherToolsSidebar');
+  if (sb) sb.classList.toggle('open');
+}
+
+function togglePinSidebar() {
+  isSidebarPinned = !isSidebarPinned;
+  var sb = document.getElementById('teacherToolsSidebar');
+  var btn = document.getElementById('toolPinBtn');
+  if (sb && btn) {
+    sb.classList.toggle('pinned', isSidebarPinned);
+    btn.classList.toggle('active', isSidebarPinned);
+    btn.title = isSidebarPinned ? 'Đã ghim thanh công cụ luôn mở' : 'Bấm để ghim thanh công cụ';
+  }
+}
+
+// 1. BÚT VẼ MÀN HÌNH (DRAWING TOOL)
+var isDrawingMode = false;
+var isDrawing = false;
+var penColor = '#ef4444';
+var penSize = 3.5;
+var drawCanvas = null;
+var drawCtx = null;
+
+function initDrawingCanvas() {
+  drawCanvas = document.getElementById('screenCanvas');
+  if (!drawCanvas) return;
+  drawCtx = drawCanvas.getContext('2d');
+  
+  function resize() {
+    drawCanvas.width = window.innerWidth;
+    drawCanvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  drawCanvas.addEventListener('mousedown', function(e) {
+    if (!isDrawingMode) return;
+    isDrawing = true;
+    drawCtx.beginPath();
+    drawCtx.moveTo(e.clientX, e.clientY);
+  });
+
+  drawCanvas.addEventListener('mousemove', function(e) {
+    if (!isDrawingMode || !isDrawing) return;
+    drawCtx.lineTo(e.clientX, e.clientY);
+    drawCtx.strokeStyle = penColor;
+    drawCtx.lineWidth = penSize;
+    drawCtx.lineCap = 'round';
+    drawCtx.lineJoin = 'round';
+    drawCtx.stroke();
+  });
+
+  drawCanvas.addEventListener('mouseup', function() { isDrawing = false; });
+  drawCanvas.addEventListener('mouseleave', function() { isDrawing = false; });
+
+  // Hỗ trợ cảm ứng điện thoại / bảng vẽ
+  drawCanvas.addEventListener('touchstart', function(e) {
+    if (!isDrawingMode || e.touches.length === 0) return;
+    isDrawing = true;
+    var t = e.touches[0];
+    drawCtx.beginPath();
+    drawCtx.moveTo(t.clientX, t.clientY);
+  }, { passive: false });
+
+  drawCanvas.addEventListener('touchmove', function(e) {
+    if (!isDrawingMode || !isDrawing || e.touches.length === 0) return;
+    e.preventDefault();
+    var t = e.touches[0];
+    drawCtx.lineTo(t.clientX, t.clientY);
+    drawCtx.strokeStyle = penColor;
+    drawCtx.lineWidth = penSize;
+    drawCtx.lineCap = 'round';
+    drawCtx.lineJoin = 'round';
+    drawCtx.stroke();
+  }, { passive: false });
+
+  drawCanvas.addEventListener('touchend', function() { isDrawing = false; });
+}
+
+function toggleDrawingTool() {
+  isDrawingMode = !isDrawingMode;
+  var layer = document.getElementById('drawingLayer');
+  var btn = document.getElementById('toolBtnPen');
+  if (layer && btn) {
+    layer.classList.toggle('active', isDrawingMode);
+    btn.classList.toggle('active', isDrawingMode);
+    if (isDrawingMode && !drawCanvas) {
+      initDrawingCanvas();
+    }
+  }
+}
+
+function setPenColor(c, el) {
+  penColor = c;
+  document.querySelectorAll('.pen-palette .color-dot').forEach(function(d) {
+    d.classList.remove('active');
+  });
+  if (el) el.classList.add('active');
+}
+
+function clearDrawCanvas() {
+  if (drawCanvas && drawCtx) {
+    drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+  }
+}
+
+// 2. ĐÈN SOI TIÊU ĐIỂM (SPOTLIGHT)
+var isSpotlightActive = false;
+var spotlightEl = null;
+
+function initSpotlight() {
+  spotlightEl = document.getElementById('spotlightOverlay');
+  if (!spotlightEl) return;
+
+  window.addEventListener('mousemove', function(e) {
+    if (!isSpotlightActive) return;
+    var x = e.clientX;
+    var y = e.clientY;
+    spotlightEl.style.background = 'radial-gradient(circle 140px at ' + x + 'px ' + y + 'px, transparent 0%, rgba(5, 15, 30, 0.88) 140px)';
+  });
+}
+
+function toggleSpotlight() {
+  isSpotlightActive = !isSpotlightActive;
+  var el = document.getElementById('spotlightOverlay');
+  var btn = document.getElementById('toolBtnSpotlight');
+  if (el && btn) {
+    el.classList.toggle('active', isSpotlightActive);
+    btn.classList.toggle('active', isSpotlightActive);
+    if (isSpotlightActive && !spotlightEl) {
+      initSpotlight();
+    }
+  }
+}
+
+// 3. RÈM CHE BẢNG CHIẾU (CURTAIN)
+var isCurtainActive = false;
+var isDraggingCurtain = false;
+
+function initCurtain() {
+  var overlay = document.getElementById('curtainOverlay');
+  var fabric = document.getElementById('curtainFabric');
+  var handle = document.getElementById('curtainHandle');
+  if (!overlay || !fabric || !handle) return;
+
+  handle.addEventListener('mousedown', function(e) {
+    isDraggingCurtain = true;
+    e.preventDefault();
+  });
+
+  window.addEventListener('mousemove', function(e) {
+    if (!isDraggingCurtain) return;
+    var h = Math.max(80, Math.min(window.innerHeight - 50, e.clientY));
+    fabric.style.height = h + 'px';
+  });
+
+  window.addEventListener('mouseup', function() {
+    isDraggingCurtain = false;
+  });
+
+  // Chạm kéo trên màn cảm ứng
+  handle.addEventListener('touchstart', function(e) {
+    isDraggingCurtain = true;
+  });
+  window.addEventListener('touchmove', function(e) {
+    if (!isDraggingCurtain || e.touches.length === 0) return;
+    var h = Math.max(80, Math.min(window.innerHeight - 50, e.touches[0].clientY));
+    fabric.style.height = h + 'px';
+  });
+  window.addEventListener('touchend', function() {
+    isDraggingCurtain = false;
+  });
+}
+
+function toggleCurtain() {
+  isCurtainActive = !isCurtainActive;
+  var el = document.getElementById('curtainOverlay');
+  var btn = document.getElementById('toolBtnCurtain');
+  if (el && btn) {
+    el.classList.toggle('active', isCurtainActive);
+    btn.classList.toggle('active', isCurtainActive);
+    if (isCurtainActive) {
+      initCurtain();
+    }
+  }
+}
+
+// 4. BẢNG PHẤN PHỤ (CHALKBOARD POPUP)
+var chalkCanvas = null;
+var chalkCtx = null;
+var isChalkDrawing = false;
+var chalkColor = '#fefce8';
+
+function initChalkboard() {
+  chalkCanvas = document.getElementById('chalkCanvas');
+  if (!chalkCanvas) return;
+  chalkCtx = chalkCanvas.getContext('2d');
+
+  function resize() {
+    var rect = chalkCanvas.parentElement.getBoundingClientRect();
+    chalkCanvas.width = rect.width;
+    chalkCanvas.height = rect.height;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  chalkCanvas.addEventListener('mousedown', function(e) {
+    isChalkDrawing = true;
+    var r = chalkCanvas.getBoundingClientRect();
+    chalkCtx.beginPath();
+    chalkCtx.moveTo(e.clientX - r.left, e.clientY - r.top);
+  });
+
+  chalkCanvas.addEventListener('mousemove', function(e) {
+    if (!isChalkDrawing) return;
+    var r = chalkCanvas.getBoundingClientRect();
+    chalkCtx.lineTo(e.clientX - r.left, e.clientY - r.top);
+    chalkCtx.strokeStyle = chalkColor;
+    chalkCtx.lineWidth = 3.5;
+    chalkCtx.lineCap = 'round';
+    chalkCtx.lineJoin = 'round';
+    chalkCtx.shadowColor = chalkColor;
+    chalkCtx.shadowBlur = 1.5;
+    chalkCtx.stroke();
+  });
+
+  chalkCanvas.addEventListener('mouseup', function() { isChalkDrawing = false; });
+  chalkCanvas.addEventListener('mouseleave', function() { isChalkDrawing = false; });
+}
+
+function openChalkboard() {
+  var modal = document.getElementById('chalkboardModal');
+  if (modal) {
+    modal.classList.add('open');
+    if (!chalkCanvas) initChalkboard();
+  }
+}
+
+function closeChalkboard() {
+  var modal = document.getElementById('chalkboardModal');
+  if (modal) modal.classList.remove('open');
+}
+
+function setChalkColor(c) {
+  chalkColor = c;
+}
+
+function clearChalkboard() {
+  if (chalkCanvas && chalkCtx) {
+    chalkCtx.clearRect(0, 0, chalkCanvas.width, chalkCanvas.height);
+  }
+}
+
+// 5. CHỤP ẢNH MÀN HÌNH (SCREENSHOT)
+function takeLessonScreenshot() {
+  alert('📸 Đang chuẩn bị chụp ảnh màn hình bài giảng...');
+  try {
+    // Chụp lại toàn bộ nội dung hiển thị của deck
+    var deckEl = document.getElementById('deck');
+    var canvas = document.createElement('canvas');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    var ctx = canvas.getContext('2d');
+    
+    // Nền trắng
+    ctx.fillStyle = '#f8fbff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Vẽ thông tin tóm tắt slide
+    ctx.fillStyle = '#071f38';
+    ctx.font = 'bold 28px sans-serif';
+    ctx.fillText('Bài 5: Tính toán chi phí mạng điện trong nhà (Công nghệ 9)', 40, 60);
+    ctx.font = '20px sans-serif';
+    ctx.fillStyle = '#64748b';
+    ctx.fillText('Minh chứng tiết dạy E-learning · Thời gian: ' + new Date().toLocaleString('vi-VN'), 40, 95);
+    
+    // Tạo link tải
+    var a = document.createElement('a');
+    a.download = 'bai_giang_cong_nghe_9_bai_5.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+  } catch(e) {
+    alert('Vui lòng sử dụng phím tắt Windows (Win + Shift + S) hoặc PrintScreen để chụp ảnh lưu lại.');
+  }
+}
+
+// Đóng mọi công cụ khi bấm Esc
+window.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    if (isDrawingMode) toggleDrawingTool();
+    if (isSpotlightActive) toggleSpotlight();
+    if (isCurtainActive) toggleCurtain();
+    closeChalkboard();
+  }
+});
+
 </script>
 </body>
 </html>

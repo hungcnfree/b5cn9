@@ -197,31 +197,31 @@
   {
     "level": 14,
     "reward": "85.000.000 đ",
-    "question": "Dựa vào bảng tính dự toán mẫu Hình 5.3 SGK, tổng chi phí cho toàn bộ nhóm VẬT LIỆU CÁCH ĐIỆN (ống PVC và băng dính) là bao nhiêu?",
+    "question": "Để lắp đặt tuyến dây nhánh cấp điện từ bảng điện đến 2 bóng đèn và 2 quạt trần (Hình 5.3 SGK), chiều dài đo đạc là 35 m. Nếu tính thêm 10% hao hụt với đơn giá 10.000 đ/m, chi phí dự toán dây nhánh thực tế là bao nhiêu?",
     "options": [
-      "370.000 đồng",
-      "150.000 đồng",
-      "210.000 đồng",
-      "60.000 đồng"
+      "350.000 đồng",
+      "385.000 đồng",
+      "420.000 đồng",
+      "400.000 đồng"
     ],
-    "correct": 2,
-    "tts_text": "Câu hỏi số mười bốn, mức thưởng tám mươi lăm triệu đồng. Dựa vào bảng dự toán mẫu Hình 5.3 SGK, tổng chi phí cho toàn bộ nhóm vật liệu cách điện là bao nhiêu?",
-    "hint": "Nhóm vật liệu cách điện gồm Ống PVC (140.000 đ) + Ống chữ T, khớp nối (60.000 đ) + Băng dính cách điện (10.000 đ) = 210.000 đồng.",
+    "correct": 1,
+    "tts_text": "Câu hỏi số mười bốn, mức thưởng tám mươi lăm triệu đồng. Để lắp đặt tuyến dây nhánh cấp điện từ bảng điện đến hai bóng đèn và hai quạt trần ở Hình 5.3 sách giáo khoa, chiều dài đo đạc là ba mươi lăm mét. Nếu tính thêm mười phần trăm hao hụt với đơn giá mười nghìn đồng một mét, chi phí dự toán dây nhánh thực tế là bao nhiêu?",
+    "hint": "Theo SGK Công nghệ 9 Bài 5, chiều dài dây nhánh thực tế có dự phòng = 35 m + 3,5 m hao hụt = 38,5 m. Do đó chi phí dự toán = 38,5 × 10.000 đ = 385.000 đồng.",
     "image": null
   },
   {
     "level": 15,
     "reward": "150.000.000 đ",
-    "question": "Dựa vào bảng tính dự toán mẫu Hình 5.3 SGK trang 27, TỔNG KINH PHÍ dự toán hoàn chỉnh cho toàn bộ mạng điện phòng ngủ là bao nhiêu?",
+    "question": "Theo quy chuẩn an toàn điện và nguyên tắc lập dự toán ở Bài 5 SGK, trình tự lựa chọn và tính toán giữa các thành phần mạng điện nào sau đây là CHÍNH XÁC NHẤT?",
     "options": [
-      "815.000 đồng",
-      "920.000 đồng",
-      "635.000 đồng",
-      "745.000 đồng"
+      "Căn cứ công suất đồ dùng điện ➔ Tính tiết diện dây và ống bảo vệ ➔ Chọn thiết bị đóng cắt",
+      "Mua thiết bị đóng cắt trước ➔ Chọn đồ dùng điện ➔ Sau cùng mới đo chiều dài dây dẫn",
+      "Tính toán toàn bộ chi phí nhân công trước ➔ Mua dây dẫn ➔ Chọn thiết bị bảo vệ",
+      "Ưu tiên chọn màu sắc công tắc thẩm mỹ ➔ Lập bảng kê số lượng ➔ Mua ống luồn dây"
     ],
-    "correct": 3,
-    "tts_text": "Câu hỏi số mười lăm, câu hỏi đỉnh cao mức thưởng một trăm năm mươi triệu đồng. Dựa vào bảng tính dự toán mẫu Hình 5.3 sách giáo khoa trang 27, tổng kinh phí dự toán hoàn chỉnh cho toàn bộ mạng điện phòng ngủ là bao nhiêu?",
-    "hint": "Tổng kinh phí SGK trang 27: Dây dẫn (165.000 đ) + Vật liệu cách điện (210.000 đ) + Thiết bị điện (370.000 đ) = 745.000 đồng.",
+    "correct": 0,
+    "tts_text": "Câu hỏi số mười lăm, câu hỏi đỉnh cao một trăm năm mươi triệu đồng. Theo quy chuẩn an toàn điện và nguyên tắc lập dự toán ở Bài 5 sách giáo khoa, trình tự lựa chọn và tính toán giữa các thành phần mạng điện nào sau đây là chính xác nhất?",
+    "hint": "Quy chuẩn kỹ thuật bắt buộc phải căn cứ vào công suất đồ dùng điện để tính dòng phụ tải ➔ từ đó chọn tiết diện dây dẫn và ống PVC bảo vệ ➔ rồi mới chọn thông số định mức của Aptomat, công tắc đóng cắt.",
     "image": null
   }
 ]
